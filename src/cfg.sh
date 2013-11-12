@@ -1,6 +1,15 @@
 ################################################################################
 ################################################################################
 
+SOAF_CFG_GLOB="/etc/soaf/soaf.sh"
+SOAF_CFG_HOME="$HOME/.soaf/soaf.sh"
+SOAF_CFG_LIST="$SOAF_CFG_GLOB $SOAF_CFG_HOME $SOAF_CFG_LIST_EXT"
+
+SOAF_USAGE_VAR_LIST="ACTION"
+
+################################################################################
+################################################################################
+
 soaf_cfg_set() {
 	local VAR="$1"
 	local VAL="$2"
@@ -11,39 +20,12 @@ soaf_cfg_set() {
 ################################################################################
 ################################################################################
 
-soaf_cfg_set SOAF_ROLL_SIZE "4"
-soaf_cfg_set SOAF_ROLL_FILE_SIZE "100000"
-
-soaf_cfg_set SOAF_LOG_LEVEL "$SOAF_LOG_INFO"
-
-soaf_cfg_set SOAF_ACTION "usage"
-
-
-GENTOP_ACTION_EXT_LIST=""
-
-GENTOP_TASK=""
-
-
-GENTOP_LOG_DIR="/var/log/gentop"
-
-GENTOP_SYNC_INTERVAL=7
-
-GENTOP_LOG_LEVEL="INFO "
-
-GENTOP_PORTAGE_DIR="/usr/portage"
-
-GENTOP_ROLL_FILE_SIZE="100000"
-
-GENTOP_DAEMON_INACTIVE=""
-
-################################################################################
-################################################################################
-
-SOAF_CFG_GLOB="/etc/soaf/soaf.sh"
-SOAF_CFG_HOME="$HOME/.soaf/soaf.sh"
-SOAF_CFG_LIST="$SOAF_CFG_GLOB $SOAF_CFG_HOME $SOAF_CFG_LIST_EXT"
-
-SOAF_USAGE_VAR_LIST="ACTION $SOAF_USAGE_VAR_LIST_EXT"
+soaf_cfg_user() {
+	local VAR_PRE="$1"
+	local USAGE_VAR_LIST="$2"
+	SOAF_USER_VAR_PRE="$VAR_PRE"
+	SOAF_USER_USAGE_VAR_LIST="$USAGE_VAR_LIST"
+}
 
 ################################################################################
 ################################################################################
@@ -64,6 +46,24 @@ soaf_parse_arg() {
 ################################################################################
 ################################################################################
 
+soaf_mng_glob_var_loop() {
+	local VAR_PRE="$1"
+	local LIST="$2"
+	for var in $LIST
+	do
+		eval VAL=\"\$$var\"
+		[ -n "$VAL" ] && eval ${VAR_PRE}_$var=\"$VAL\"
+	done
+}
+
+soaf_mng_glob_var() {
+	soaf_mng_glob_var_loop "SOAF" "$SOAF_USAGE_VAR_LIST"
+	soaf_mng_glob_var_loop "$SOAF_USER_VAR_PRE" "$SOAF_USER_USAGE_VAR_LIST"
+}
+
+################################################################################
+################################################################################
+
 for cfg in $SOAF_CFG_LIST
 do
 	[ -f $cfg ] && . $cfg
@@ -73,13 +73,4 @@ while [ $# -ge 1 ]
 do
 	soaf_parse_arg "$1"
 	shift
-done
-
-for var in $SOAF_USAGE_VAR_LIST
-do
-	eval VAL=\"\$$var\"
-	if [ -n "$VAL" ]
-	then
-		eval SOAF_$var=\"$VAL\"
-	fi
 done

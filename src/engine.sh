@@ -34,7 +34,7 @@ soaf_engine() {
 	then
 		soaf_init
 	fi
-	local VAR_FN=$(soaf_map_get "${GENTOP_ACTION}_FN"
+	local VAR_FN=$(soaf_map_get "${GENTOP_ACTION}_FN")
 	eval local FN=\"\$$VAR_FN\"
 	if [ -z "$FN" ]
 	then
@@ -42,4 +42,35 @@ soaf_engine() {
 	else
 		$FN
 	fi
+}
+
+
+################################################################################
+################################################################################
+
+GENTOP_VAR_MKDIR_LIST="GENTOP_LOG_DAEMON_DIR"
+
+################################################################################
+################################################################################
+
+GENTOP_LOG_FILE="$GENTOP_LOG_DIR/gentop.log"
+
+################################################################################
+################################################################################
+
+gentop_init_mkdir() {
+	if [ ! -d $GENTOP_LOG_DIR ]
+	then
+		mkdir -p $GENTOP_LOG_DIR
+		gentop_log_info "Directory created : [$GENTOP_LOG_DIR]."
+	fi
+	for var_dir in $GENTOP_VAR_MKDIR_LIST
+	do
+		eval local DIR=\"\$$var_dir\"
+		if [ ! -d $DIR ]
+		then
+			gentop_log_info "Create directory : [$DIR]."
+			mkdir -p $DIR
+		fi
+	done
 }

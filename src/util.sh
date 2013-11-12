@@ -47,12 +47,12 @@ soaf_cmd_info() {
 ################################################################################
 ################################################################################
 
-gentop_day_curr() {
+soaf_day_curr() {
 	local DAY_CURR=$(date '+%j')
 	echo $DAY_CURR
 }
 
-gentop_day_upd_file() {
+soaf_day_upd_file() {
 	local DAY_CURR=$1
 	local FILE="$2"
 	local ROLL_NATURE="$3"
@@ -60,10 +60,10 @@ gentop_day_upd_file() {
 	echo $DAY_CURR > $FILE
 }
 
-gentop_day_since_last() {
+soaf_day_since_last() {
 	local DAY_CURR=$1
 	local FILE="$2"
-	[ -z "$DAY_CURR" ] && DAY_CURR=$(gentop_day_curr)
+	[ -z "$DAY_CURR" ] && DAY_CURR=$(soaf_day_curr)
 	local DAY_LAST=""
 	[ -f "$FILE" ] && DAY_LAST=$(cat $FILE | head -1)
 	[ -z "$DAY_LAST" ] && DAY_LAST=1
@@ -79,7 +79,7 @@ gentop_day_since_last() {
 ################################################################################
 ################################################################################
 
-gentop_to_upper() {
+soaf_to_upper() {
 	local VAL="$1"
 	local VAL_TO_UPPER=$(echo "$VAL" | tr 'a-z' 'A-Z')
 	echo "$VAL_TO_UPPER"
@@ -88,13 +88,10 @@ gentop_to_upper() {
 ################################################################################
 ################################################################################
 
-gentop_mkdir() {
+soaf_mkdir() {
 	local DIR="$1"
 	if [ -n "$DIR" ]
 	then
-		if [ ! -d "$DIR" ]
-		then
-			gentop_cmd_info "mkdir -p $DIR"
-		fi
+		[ ! -d "$DIR" ] && gentop_cmd_info "mkdir -p $DIR"
 	fi
 }

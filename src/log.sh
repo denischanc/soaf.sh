@@ -6,10 +6,16 @@ SOAF_LOG_WARN="WARN "
 SOAF_LOG_INFO="INFO "
 SOAF_LOG_DEBUG="DEBUG"
 
+SOAF_LOG_ROLL_NATURE_INT="soaf_log"
+
 ################################################################################
 ################################################################################
 
-SOAF_LOG_ROLL_NATURE="soaf_log"
+soaf_cfg_set SOAF_LOG_LEVEL "$SOAF_LOG_INFO"
+
+soaf_cfg_set SOAF_LOG_ROLL_NATURE "$SOAF_LOG_ROLL_NATURE_INT"
+
+soaf_cfg_set SOAF_LOG_FILE "soaf.log"
 
 ################################################################################
 ################################################################################
@@ -34,10 +40,10 @@ soaf_log() {
 	local LEVEL_GLOB_NUM=$(soaf_log_num_level "$SOAF_LOG_LEVEL")
 	if [ $LEVEL_LOC_NUM -ge $LEVEL_GLOB_NUM ]
 	then
+		soaf_roll_nature $SOAF_LOG_ROLL_NATURE
 		cat << _EOF_ >> $SOAF_LOG_FILE
 [$(date '+%x_%X')][$LEVEL]  $MSG
 _EOF_
-		soaf_roll_nature $SOAF_LOG_ROLL_NATURE
 	fi
 }
 
