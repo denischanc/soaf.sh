@@ -9,19 +9,17 @@ SOAF_LOG_DEBUG="DEBUG"
 ################################################################################
 ################################################################################
 
-GENTOP_ROLL_NATURE_LOG="log"
-log_ROLL_FILE="$GENTOP_LOG_FILE"
-log_ROLL_COND_FN="gentop_roll_cond_gt_size"
+SOAF_LOG_ROLL_NATURE="soaf_log"
 
 ################################################################################
 ################################################################################
 
-gentop_log_num_level() {
+soaf_log_num_level() {
 	local LEVEL="$1"
 	case "$LEVEL" in
-		"$GENTOP_LOG_INFO") echo "2";;
-		"$GENTOP_LOG_WARN") echo "3";;
-		"$GENTOP_LOG_ERR") echo "4";;
+		"$SOAF_LOG_INFO") echo "2";;
+		"$SOAF_LOG_WARN") echo "3";;
+		"$SOAF_LOG_ERR") echo "4";;
 		*) echo "1";;
 	esac
 }
@@ -29,45 +27,46 @@ gentop_log_num_level() {
 ################################################################################
 ################################################################################
 
-gentop_log() {
+soaf_log() {
 	local LEVEL="$1"
 	local MSG="$2"
-	local LEVEL_LOC_NUM=$(gentop_log_num_level "$LEVEL")
-	local LEVEL_GLOB_NUM=$(gentop_log_num_level "$GENTOP_LOG_LEVEL")
+	local LEVEL_LOC_NUM=$(soaf_log_num_level "$LEVEL")
+	local LEVEL_GLOB_NUM=$(soaf_log_num_level "$SOAF_LOG_LEVEL")
 	if [ $LEVEL_LOC_NUM -ge $LEVEL_GLOB_NUM ]
 	then
-		cat << _EOF_ >> $GENTOP_LOG_FILE
+		cat << _EOF_ >> $SOAF_LOG_FILE
 [$(date '+%x_%X')][$LEVEL]  $MSG
 _EOF_
+		soaf_roll_nature $SOAF_LOG_ROLL_NATURE
 	fi
 }
 
 ################################################################################
 ################################################################################
 
-gentop_log_err() {
+soaf_log_err() {
 	local MSG="$1"
-	gentop_log "$GENTOP_LOG_ERR" "$MSG"
+	soaf_log "$SOAF_LOG_ERR" "$MSG"
 }
 
-gentop_log_warn() {
+soaf_log_warn() {
 	local MSG="$1"
-	gentop_log "$GENTOP_LOG_WARN" "$MSG"
+	soaf_log "$SOAF_LOG_WARN" "$MSG"
 }
 
-gentop_log_info() {
+soaf_log_info() {
 	local MSG="$1"
-	gentop_log "$GENTOP_LOG_INFO" "$MSG"
+	soaf_log "$SOAF_LOG_INFO" "$MSG"
 }
 
-gentop_log_debug() {
+soaf_log_debug() {
 	local MSG="$1"
-	gentop_log "$GENTOP_LOG_DEBUG" "$MSG"
+	soaf_log "$SOAF_LOG_DEBUG" "$MSG"
 }
 
 ################################################################################
 ################################################################################
 
-gentop_log_init() {
-	gentop_roll_nature "$GENTOP_ROLL_NATURE_LOG"
+soaf_log_init() {
+	soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE $SOAF_LOG_FILE
 }
