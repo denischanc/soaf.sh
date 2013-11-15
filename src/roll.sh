@@ -4,6 +4,8 @@
 soaf_cfg_set SOAF_ROLL_SIZE "4"
 soaf_cfg_set SOAF_ROLL_FILE_SIZE "100000"
 
+soaf_info_add_var SOAF_ROLL_FILE_SIZE
+
 ################################################################################
 ################################################################################
 
@@ -84,7 +86,7 @@ soaf_roll_nature() {
 		then
 			if [ -n "$COND_FN" ]
 			then
-				eval local ROLL_PROC=\$\($COND_FN "$FILE" $NATURE\)
+				eval local ROLL_PROC=\$\($COND_FN \"\$FILE\" \$NATURE\)
 			else
 				local ROLL_PROC="OK"
 			fi

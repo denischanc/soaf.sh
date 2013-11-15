@@ -1,15 +1,20 @@
 ################################################################################
 ################################################################################
 
+soaf_cfg_set SOAF_ACTION "usage"
+
+soaf_info_add_var SOAF_ACTION
+
+################################################################################
+################################################################################
+
 soaf_create_action() {
 	local ACTION="$1"
 	local FN="$2"
+	local USAGE_FN="$3"
 	SOAF_ACTION_LIST="$SOAF_ACTION_LIST $ACTION"
-	if [ -n "$NO_INIT" ]
-	then
-		SOAF_ACTION_NOINIT_LIST="$SOAF_ACTION_NOINIT_LIST $ACTION"
-	fi
 	soaf_map_extend $ACTION "FN" $FN
+	soaf_map_extend $ACTION "USAGE_FN" $USAGE_FN
 }
 
 soaf_no_init_action() {
@@ -27,8 +32,6 @@ soaf_action_init_proc() {
 	soaf_no_init_action "$ACTION"
 }
 
-soaf_action_init() {
-	soaf_action_init_proc "usage" soaf_usage
-	soaf_action_init_proc "version" soaf_version
-	soaf_action_init_proc "info" soaf_info
-}
+soaf_action_init_proc "usage" soaf_usage
+soaf_action_init_proc "version" soaf_version
+soaf_action_init_proc "info" soaf_info

@@ -1,18 +1,23 @@
 ################################################################################
 ################################################################################
 
+soaf_info_add_var SOAF_NOEXEC_PROG_LIST
+
+################################################################################
+################################################################################
+
 soaf_map_extend() {
 	local NAME="$1"
 	local FIELD="$2"
 	local VAL="$3"
-	eval ${NAME}__$FIELD=\"$VAL\"
+	eval ${NAME}__$FIELD=\"\$VAL\"
 }
 
 soaf_map_get() {
 	local NAME="$1"
 	local FIELD="$2"
 	local DFT="$3"
-	eval local VAL=\"\${${NAME}__$FIELD:-$DFT}\"
+	eval local VAL=\"\${${NAME}__$FIELD:-\$DFT}\"
 	echo "$VAL"
 }
 
@@ -56,7 +61,7 @@ soaf_day_upd_file() {
 	local DAY_CURR=$1
 	local FILE="$2"
 	local ROLL_NATURE="$3"
-	[ -n "$ROLL_NATURE" ] && gentop_roll_nature "$ROLL_NATURE"
+	[ -n "$ROLL_NATURE" ] && soaf_roll_nature "$ROLL_NATURE"
 	echo $DAY_CURR > $FILE
 }
 
@@ -90,8 +95,18 @@ soaf_to_upper() {
 
 soaf_mkdir() {
 	local DIR="$1"
+	local LOG_LEVEL="$2"
 	if [ -n "$DIR" ]
 	then
-		[ ! -d "$DIR" ] && gentop_cmd_info "mkdir -p $DIR"
+		if [ ! -d "$DIR" ]
+		then
+			soaf_cmd "mkdir -p $DIR"
+			if [ $SOAF_RET -eq 0 ]
+			then
+				soaf_log "$LOG_LEVEL" "Directory created : [$DIR]."
+			else
+				soaf_log_err "Directory not created : [$DIR]."
+			fi
+		fi
 	fi
 }

@@ -1,76 +1,68 @@
 ################################################################################
 ################################################################################
 
-gentop_usage() {
-	gentop_version
-	cat << _EOF_
-usage: $0 ([variable]=[value])*
-variable: [$(echo $GENTOP_USAGE_VAR_LIST | tr ' ' '|')]
-ACTION: [$(echo $GENTOP_ACTION_LIST | tr ' ' '|')]
-(ACTION=task)TASK: [$(echo $GENTOP_TASK_LIST | tr ' ' '|')]
-_EOF_
+### VAR_LIST : SOAF_VAR_MKDIR_LIST
+
+################################################################################
+################################################################################
+
+soaf_usage() {
+	local USAGE_VAR_LIST=$(soaf_map_get $SOAF_USER_MAP "USAGE_VAR_LIST")
+	USAGE_VAR_LIST="$SOAF_USAGE_VAR_LIST $USAGE_VAR_LIST"
+	soaf_dis_title "USAGE"
+	soaf_dis_txt "usage: $0 ([variable]=[value])*"
+	soaf_dis_txt "variable: [$(echo $USAGE_VAR_LIST | tr ' ' '|')]"
+	soaf_dis_txt "ACTION: [$(echo $SOAF_ACTION_LIST | tr ' ' '|')]"
+	for action in $SOAF_ACTION_LIST
+	do
+		local USAGE_FN=$(soaf_map_get $action "USAGE_FN")
+		if [ -n "$USAGE_FN" ]
+		then
+			soaf_dis_title "ACTION=$action"
+			$USAGE_FN
+		fi
+	done
 }
 
 ################################################################################
 ################################################################################
 
-gentop_init() {
-	gentop_init_mkdir
-	gentop_log_init
+soaf_init_mkdir() {
+	for var in $SOAF_VAR_MKDIR_LIST
+	do
+		eval local DIR=\"\$$var\"
+		soaf_mkdir "$DIR" $SOAF_LOG_INFO
+	done
+}
+
+soaf_init() {
+	soaf_log_init
+	soaf_init_mkdir
+	local INIT_FN=$(soaf_map_get $SOAF_USER_MAP "INIT_FN")
+	[ -n "$INIT_FN" ] && $INIT_FN
 }
 
 ################################################################################
 ################################################################################
 
 soaf_engine() {
-	local IS_ACTION="$(echo $SOAF_ACTION_LIST | grep -w $SOAF_ACTION)"
+	soaf_mng_glob_var
+	local IS_ACTION=$(echo $SOAF_ACTION_LIST | grep -w "$SOAF_ACTION")
 	if [ -z "$IS_ACTION" ]
 	then
 		soaf_usage
 		exit
 	fi
-	local NOINIT="$(echo $SOAF_ACTION_NOINIT_LIST | grep -w $SOAF_ACTION)"
+	local NOINIT=$(echo $SOAF_ACTION_NOINIT_LIST | grep -w "$SOAF_ACTION")
 	if [ -z "$NOINIT" ]
 	then
 		soaf_init
 	fi
-	local VAR_FN=$(soaf_map_get "${GENTOP_ACTION}_FN")
-	eval local FN=\"\$$VAR_FN\"
+	local FN=$(soaf_map_get $SOAF_ACTION "FN")
 	if [ -z "$FN" ]
 	then
-		echo "No variable : $VAR_FN."
+		soaf_dis_txt "No function defined for action [$SOAF_ACTION]."
 	else
 		$FN
 	fi
-}
-
-
-################################################################################
-################################################################################
-
-GENTOP_VAR_MKDIR_LIST="GENTOP_LOG_DAEMON_DIR"
-
-################################################################################
-################################################################################
-
-GENTOP_LOG_FILE="$GENTOP_LOG_DIR/gentop.log"
-
-################################################################################
-################################################################################
-
-gentop_init_mkdir() {
-	if [ ! -d $GENTOP_LOG_DIR ]
-	then
-		mkdir -p $GENTOP_LOG_DIR
-		gentop_log_info "Directory created : [$GENTOP_LOG_DIR]."
-	fi
-	for var_dir in $GENTOP_VAR_MKDIR_LIST
-	do
-		eval local DIR=\"\$$var_dir\"
-		if [ ! -d $DIR ]
-		then
-			gentop_log_info "Create directory : [$DIR]."
-			mkdir -p $DIR
-		fi
-	done
 }
