@@ -4,8 +4,7 @@
 soaf_cfg_set() {
 	local VAR="$1"
 	local VAL="$2"
-	eval local PREV_VAL=\"\$$VAR\"
-	[ -z "$PREV_VAL" ] && eval $VAR=\"\$VAL\"
+	eval $VAR=\${$VAR:-\$VAL}
 }
 
 ################################################################################
@@ -21,14 +20,11 @@ soaf_cfg_set SOAF_CFG_LOC "$HOME/.soaf/soaf.sh"
 
 soaf_parse_arg() {
 	local ARG="$1"
-	if [ -n "$(echo $ARG | grep =)" ]
+	local VAR_TMP=$(echo "$ARG" | awk -F= '{print $1}')
+	local VAL_TMP=$(echo "$ARG" | awk -F= '{print $2}')
+	if [ -n "$VAR_TMP" ]
 	then
-		local VAR_TMP=$(echo "$ARG" | awk -F= '{print $1}')
-		local VAL_TMP=$(echo "$ARG" | awk -F= '{print $2}')
-		if [ -n "$VAR_TMP" ]
-		then
-			eval $VAR_TMP=\"\$VAL_TMP\"
-		fi
+		eval $VAR_TMP=\"\$VAL_TMP\"
 	fi
 }
 

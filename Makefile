@@ -45,5 +45,5 @@ dist-clean:
 	rm -rf $$DIST $$DIST.tar.xz
 
 clean:
-	rm -f $(EXE)
+	rm -f $(EXE) soaf.log
 	make dist-clean

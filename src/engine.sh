@@ -9,10 +9,12 @@
 soaf_usage() {
 	local USAGE_VAR_LIST=$(soaf_map_get $SOAF_USER_MAP "USAGE_VAR_LIST")
 	USAGE_VAR_LIST="$SOAF_USAGE_VAR_LIST $USAGE_VAR_LIST"
-	soaf_dis_title "USAGE"
-	soaf_dis_txt "usage: $0 ([variable]=[value])*"
-	soaf_dis_txt "variable: [$(echo $USAGE_VAR_LIST | tr ' ' '|')]"
-	soaf_dis_txt "ACTION: [$(echo $SOAF_ACTION_LIST | tr ' ' '|')]"
+	cat << _EOF_
+${SOAF_TITLE_PRE}USAGE
+${SOAF_TXT_PRE}usage: $0 ([variable]=[value])*
+${SOAF_TXT_PRE}variable: [$(echo $USAGE_VAR_LIST | tr ' ' '|')]
+${SOAF_TXT_PRE}ACTION: [$(echo $SOAF_ACTION_LIST | tr ' ' '|')]
+_EOF_
 	for action in $SOAF_ACTION_LIST
 	do
 		local USAGE_FN=$(soaf_map_get $action "USAGE_FN")
