@@ -31,7 +31,3 @@ soaf_action_init_proc() {
 	soaf_create_action "$ACTION" "$FN"
 	soaf_no_init_action "$ACTION"
 }
-
-soaf_action_init_proc "usage" soaf_usage
-soaf_action_init_proc "version" soaf_version
-soaf_action_init_proc "info" soaf_info

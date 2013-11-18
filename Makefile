@@ -9,14 +9,15 @@ EXE = src/soaf.sh
 
 EXE_SRC_LIST = \
   src/version.sh \
+  src/cfg.sh \
   src/util.sh \
   src/user.sh \
-  src/cfg.sh \
   src/display.sh \
   src/roll.sh \
   src/log.sh \
   src/engine.sh \
-  src/action.sh
+  src/action.sh \
+  src/init.sh
 
 EXTRA_DIST = Makefile
 

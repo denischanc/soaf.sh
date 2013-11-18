@@ -1,23 +1,20 @@
 ################################################################################
 ################################################################################
 
-SOAF_CFG_GLOB="/etc/soaf/soaf.sh"
-SOAF_CFG_HOME="$HOME/.soaf/soaf.sh"
-SOAF_CFG_LIST="$SOAF_CFG_GLOB $SOAF_CFG_HOME $SOAF_CFG_LIST_EXT"
-
-SOAF_USAGE_VAR_LIST="ACTION"
-
-soaf_info_add_var SOAF_CFG_LIST
-
-################################################################################
-################################################################################
-
 soaf_cfg_set() {
 	local VAR="$1"
 	local VAL="$2"
 	eval local PREV_VAL=\"\$$VAR\"
 	[ -z "$PREV_VAL" ] && eval $VAR=\"\$VAL\"
 }
+
+################################################################################
+################################################################################
+
+SOAF_USAGE_VAR_LIST="ACTION"
+
+soaf_cfg_set SOAF_CFG_GLOB "/etc/soaf/soaf.sh"
+soaf_cfg_set SOAF_CFG_LOC "$HOME/.soaf/soaf.sh"
 
 ################################################################################
 ################################################################################
@@ -54,17 +51,3 @@ soaf_mng_glob_var() {
 	local USAGE_VAR_LIST=$(soaf_map_get $SOAF_USER_MAP "USAGE_VAR_LIST")
 	soaf_mng_glob_var_loop "$VAR_PRE" "$USAGE_VAR_LIST"
 }
-
-################################################################################
-################################################################################
-
-for cfg in $SOAF_CFG_LIST
-do
-	[ -f $cfg ] && . $cfg
-done
-
-while [ $# -ge 1 ]
-do
-	soaf_parse_arg "$1"
-	shift
-done
