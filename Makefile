@@ -1,5 +1,5 @@
 
-.PHONY: all clean dist
+.PHONY: all clean dist dist-clean install
 
 DIST_NAME = soaf
 DIST_VERSION = \
@@ -19,7 +19,7 @@ EXE_SRC_LIST = \
   src/action.sh \
   src/init.sh
 
-EXTRA_DIST = Makefile
+EXTRA_DIST = Makefile test.sh
 
 all: $(EXE)
 
@@ -27,7 +27,7 @@ $(EXE): $(EXE_SRC_LIST)
 	cat $(EXE_SRC_LIST) > $@
 
 dist:
-	make dist-clean; \
+	@make dist-clean; \
 	DIST=$(DIST_NAME)-$(DIST_VERSION); \
 	mkdir $$DIST; \
 	for f in $(EXE_SRC_LIST) $(EXTRA_DIST); \
@@ -41,8 +41,13 @@ dist:
 	rm -rf $$DIST
 
 dist-clean:
-	DIST=$(DIST_NAME)-$(DIST_VERSION); \
+	@DIST=$(DIST_NAME)-$(DIST_VERSION); \
 	rm -rf $$DIST $$DIST.tar.xz
+
+install: all
+	@[ -z "$(INSTALL_DIR)" ] && (echo "Add INSTALL_DIR=..."; exit 1)
+	@mkdir -p $(INSTALL_DIR)/lib
+	cp $(EXE) $(INSTALL_DIR)/lib
 
 clean:
 	rm -f $(EXE) soaf.log
