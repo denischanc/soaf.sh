@@ -1,11 +1,15 @@
 
-.PHONY: all clean dist dist-clean install
+.PHONY: all dist-gz dist-bz dist-xz dist dist-clean install clean
 
-DIST_NAME = soaf
+SRC_DIR = src
+VER_FILE = $(SRC_DIR)/version.sh
+
+DIST_NAME = \
+  $(shell grep "_NAME=" $(VER_FILE) | awk -F\" '{print $$2}')
 DIST_VERSION = \
-  $(shell grep "_VERSION=" src/version.sh | awk -F\" '{print $$2}')
+  $(shell grep "_VERSION=" $(VER_FILE) | awk -F\" '{print $$2}')
 
-EXE = src/soaf.sh
+EXE = $(SRC_DIR)/$(DIST_NAME).sh
 
 EXE_SRC_LIST = \
   src/version.sh \
@@ -21,10 +25,35 @@ EXE_SRC_LIST = \
 
 EXTRA_DIST = Makefile test.sh
 
+EXTRA_CLEAN = $(DIST_NAME).log
+
+INSTALL_BIN_FILE_LIST =
+INSTALL_LIB_FILE_LIST = $(EXE)
+
+DIST_TAR_Z = J
+DIST_TAR_EXT = .tar.xz
+
+ifeq ($(MAKECMDGOALS),install)
+ifeq ($(INSTALL_DIR),)
+$(error Define INSTALL_DIR variable)
+endif
+INSTALL_BIN_DIR = $(INSTALL_DIR)/bin
+INSTALL_LIB_DIR = $(INSTALL_DIR)/lib
+endif
+
 all: $(EXE)
 
 $(EXE): $(EXE_SRC_LIST)
 	cat $(EXE_SRC_LIST) > $@
+
+dist-gz:
+	make dist DIST_TAR_Z="z" DIST_TAR_EXT=".tar.gz"
+
+dist-bz:
+	make dist DIST_TAR_Z="j" DIST_TAR_EXT=".tar.bz2"
+
+dist-xz:
+	make dist
 
 dist:
 	@make dist-clean; \
@@ -37,18 +66,34 @@ dist:
 		mkdir -p $$(dirname $$DST); \
 		cp $$SRC $$DST; \
 	done; \
-	tar cvJf $$DIST.tar.xz $$DIST; \
+	tar cv$(DIST_TAR_Z)f $$DIST$(DIST_TAR_EXT) $$DIST; \
 	rm -rf $$DIST
 
 dist-clean:
-	@DIST=$(DIST_NAME)-$(DIST_VERSION); \
-	rm -rf $$DIST $$DIST.tar.xz
+	rm -rf $(DIST_NAME)-$(DIST_VERSION)*
 
 install: all
-	@[ -z "$(INSTALL_DIR)" ] && (echo "Add INSTALL_DIR=..."; exit 1)
-	@mkdir -p $(INSTALL_DIR)/lib
-	cp $(EXE) $(INSTALL_DIR)/lib
+	@rm -rf $(INSTALL_DIR)
+	@if [ -n "$(INSTALL_BIN_FILE_LIST)" ]; \
+	then \
+		mkdir -p $(INSTALL_BIN_DIR); \
+		for f in $(INSTALL_BIN_FILE_LIST); \
+		do \
+			echo "Copy: [$$f]->[$(INSTALL_BIN_DIR)]"; \
+			cp $$f $(INSTALL_BIN_DIR); \
+			chmod a+x $(INSTALL_BIN_DIR)/$$(basename $$f); \
+		done; \
+	fi
+	@if [ -n "$(INSTALL_LIB_FILE_LIST)" ]; \
+	then \
+		mkdir -p $(INSTALL_LIB_DIR); \
+		for f in $(INSTALL_LIB_FILE_LIST); \
+		do \
+			echo "Copy: [$$f]->[$(INSTALL_LIB_DIR)]"; \
+			cp $$f $(INSTALL_LIB_DIR); \
+		done; \
+	fi
 
 clean:
-	rm -f $(EXE) soaf.log
+	rm -rf $(EXE) $(EXTRA_CLEAN)
 	make dist-clean
