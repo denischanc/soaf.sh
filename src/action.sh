@@ -9,16 +9,16 @@ soaf_info_add_var SOAF_ACTION
 ################################################################################
 
 soaf_create_action() {
-	local ACTION="$1"
-	local FN="$2"
-	local USAGE_FN="$3"
+	local ACTION=$1
+	local FN=$2
+	local USAGE_FN=$3
 	SOAF_ACTION_LIST="$SOAF_ACTION_LIST $ACTION"
 	soaf_map_extend $ACTION "FN" $FN
 	soaf_map_extend $ACTION "USAGE_FN" $USAGE_FN
 }
 
 soaf_no_init_action() {
-	local ACTION="$1"
+	local ACTION=$1
 	SOAF_ACTION_NOINIT_LIST="$SOAF_ACTION_NOINIT_LIST $ACTION"
 }
 
@@ -26,8 +26,8 @@ soaf_no_init_action() {
 ################################################################################
 
 soaf_action_init_proc() {
-	local ACTION="$1"
-	local FN="$2"
+	local ACTION=$1
+	local FN=$2
 	soaf_create_action "$ACTION" "$FN"
 	soaf_no_init_action "$ACTION"
 }

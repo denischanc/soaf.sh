@@ -2,8 +2,8 @@
 ################################################################################
 
 soaf_cfg_set() {
-	local VAR="$1"
-	local VAL="$2"
+	local VAR=$1
+	local VAL=$2
 	eval $VAR=\${$VAR:-\$VAL}
 }
 
@@ -19,12 +19,12 @@ soaf_cfg_set SOAF_CFG_LOC "$HOME/.soaf/soaf.sh"
 ################################################################################
 
 soaf_parse_arg() {
-	local ARG="$1"
+	local ARG=$1
 	local VAR_TMP=$(echo "$ARG" | awk -F= '{print $1}')
 	local VAL_TMP=$(echo "$ARG" | awk -F= '{print $2}')
 	if [ -n "$VAR_TMP" ]
 	then
-		eval $VAR_TMP=\"\$VAL_TMP\"
+		eval $VAR_TMP=\$VAL_TMP
 	fi
 }
 
@@ -32,12 +32,12 @@ soaf_parse_arg() {
 ################################################################################
 
 soaf_mng_glob_var_loop() {
-	local VAR_PRE="$1"
-	local LIST="$2"
+	local VAR_PRE=$1
+	local LIST=$2
 	for var in $LIST
 	do
-		eval local VAL_TMP=\"\$$var\"
-		[ -n "$VAL_TMP" ] && eval ${VAR_PRE}_$var=\"\$VAL_TMP\"
+		eval local VAL_TMP=\$$var
+		[ -n "$VAL_TMP" ] && eval ${VAR_PRE}_$var=\$VAL_TMP
 	done
 }
 

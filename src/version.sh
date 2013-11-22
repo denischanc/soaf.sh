@@ -21,7 +21,7 @@ soaf_info_add_var SOAF_VERSION
 ################################################################################
 
 soaf_version() {
-	local VER="$SOAF_NAME-$SOAF_VERSION"
+	local VER=$SOAF_NAME-$SOAF_VERSION
 	local USER_VER_FN=$(soaf_map_get $SOAF_USER_MAP "VERSION_FN")
 	if [ -n "$USER_VER_FN" ]
 	then
@@ -36,7 +36,7 @@ soaf_version() {
 soaf_info() {
 	for var in $SOAF_INFO_VAR_LIST
 	do
-		eval local VAL=\"\$$var\"
+		eval local VAL=\$$var
 		soaf_dis_txt "$var = [$VAL]"
 	done
 }

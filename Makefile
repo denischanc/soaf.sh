@@ -44,7 +44,13 @@ endif
 all: $(EXE)
 
 $(EXE): $(EXE_SRC_LIST)
-	cat $(EXE_SRC_LIST) > $@
+	@rm -f $@
+	@for f in $(EXE_SRC_LIST); \
+	do \
+		echo "Cat: [$$f]->[$@]"; \
+		echo "### File : [$$f]" >> $@; \
+		cat $$f >> $@; \
+	done
 
 dist-gz:
 	make dist DIST_TAR_Z="z" DIST_TAR_EXT=".tar.gz"
