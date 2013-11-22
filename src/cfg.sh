@@ -12,8 +12,8 @@ soaf_cfg_set() {
 
 SOAF_USAGE_VAR_LIST="ACTION"
 
-soaf_cfg_set SOAF_CFG_GLOB "/etc/soaf/soaf.sh"
-soaf_cfg_set SOAF_CFG_LOC "$HOME/.soaf/soaf.sh"
+soaf_cfg_set SOAF_CFG_GLOB "/etc/$SOAF_NAME/soaf.sh"
+soaf_cfg_set SOAF_CFG_LOC "$HOME/.$SOAF_NAME/soaf.sh"
 
 ################################################################################
 ################################################################################

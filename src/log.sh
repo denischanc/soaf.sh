@@ -15,7 +15,7 @@ soaf_cfg_set SOAF_LOG_LEVEL "$SOAF_LOG_INFO"
 
 soaf_cfg_set SOAF_LOG_ROLL_NATURE "$SOAF_LOG_ROLL_NATURE_INT"
 
-soaf_cfg_set SOAF_LOG_FILE "soaf.log"
+soaf_cfg_set SOAF_LOG_FILE "$SOAF_NAME.log"
 
 soaf_info_add_var SOAF_LOG_LEVEL SOAF_LOG_FILE
 
