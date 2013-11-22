@@ -9,7 +9,7 @@ DIST_NAME = \
 DIST_VERSION = \
   $(shell grep "_VERSION=" $(VER_FILE) | awk -F\" '{print $$2}')
 
-EXE = $(SRC_DIR)/$(DIST_NAME).sh
+EXE = $(SRC_DIR)/$(DIST_NAME)
 
 EXE_SRC_LIST = \
   src/version.sh \
