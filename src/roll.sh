@@ -1,8 +1,8 @@
 ################################################################################
 ################################################################################
 
-soaf_cfg_set SOAF_ROLL_SIZE "4"
-soaf_cfg_set SOAF_ROLL_FILE_SIZE "100000"
+SOAF_ROLL_SIZE="4"
+SOAF_ROLL_FILE_SIZE="100000"
 
 soaf_info_add_var SOAF_ROLL_FILE_SIZE
 
