@@ -1,34 +1,10 @@
 
 .PHONY: all dist-gz dist-bz dist-xz dist dist-clean install clean
 
-SRC_DIR = src
-VER_FILE = $(SRC_DIR)/version.sh
+include Makefile.cfg
 
-DIST_NAME = \
-  $(shell grep "_NAME=" $(VER_FILE) | awk -F\" '{print $$2}')
-DIST_VERSION = \
-  $(shell grep "_VERSION=" $(VER_FILE) | awk -F\" '{print $$2}')
-
-EXE = $(SRC_DIR)/$(DIST_NAME)
-
-EXE_SRC_LIST = \
-  src/version.sh \
-  src/cfg.sh \
-  src/util.sh \
-  src/user.sh \
-  src/display.sh \
-  src/roll.sh \
-  src/log.sh \
-  src/engine.sh \
-  src/action.sh \
-  src/init.sh
-
-EXTRA_DIST = Makefile test.sh
-
-EXTRA_CLEAN = $(DIST_NAME).log
-
-INSTALL_BIN_FILE_LIST =
-INSTALL_LIB_FILE_LIST = $(EXE)
+INSTALL_BIN_FILE_LIST += $(EXE_TGT)
+INSTALL_LIB_FILE_LIST += $(LIB_TGT)
 
 DIST_TAR_Z = J
 DIST_TAR_EXT = .tar.xz
@@ -41,11 +17,21 @@ INSTALL_BIN_DIR = $(INSTALL_DIR)/bin
 INSTALL_LIB_DIR = $(INSTALL_DIR)/lib
 endif
 
-all: $(EXE)
+all: $(EXE_TGT) $(LIB_TGT)
 
-$(EXE): $(EXE_SRC_LIST)
-	@rm -f $@
+$(EXE_TGT): $(EXE_SRC_LIST)
+	@echo "#!/bin/sh" > $@
 	@for f in $(EXE_SRC_LIST); \
+	do \
+		echo "Cat: [$$f]->[$@]"; \
+		echo "### File : [$$f]" >> $@; \
+		cat $$f >> $@; \
+	done
+	@chmod a+x $@
+
+$(LIB_TGT): $(LIB_SRC_LIST)
+	@rm -f $@
+	@for f in $(LIB_SRC_LIST); \
 	do \
 		echo "Cat: [$$f]->[$@]"; \
 		echo "### File : [$$f]" >> $@; \
@@ -65,7 +51,7 @@ dist:
 	@make dist-clean; \
 	DIST=$(DIST_NAME)-$(DIST_VERSION); \
 	mkdir $$DIST; \
-	for f in $(EXE_SRC_LIST) $(EXTRA_DIST); \
+	for f in $(EXE_SRC_LIST) $(LIB_SRC_LIST) $(EXTRA_DIST); \
 	do \
 		SRC=$$f; \
 		DST=$$DIST/$$f; \
@@ -101,5 +87,5 @@ install: all
 	fi
 
 clean:
-	rm -rf $(EXE) $(EXTRA_CLEAN)
+	rm -rf $(EXE_TGT) $(LIB_TGT) $(EXTRA_CLEAN)
 	make dist-clean
