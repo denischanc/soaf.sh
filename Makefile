@@ -24,7 +24,7 @@ $(EXE_TGT): $(EXE_SRC_LIST)
 	@for f in $(EXE_SRC_LIST); \
 	do \
 		echo "Cat: [$$f]->[$@]"; \
-		echo "### File : [$$f]" >> $@; \
+		echo "### Dist=[$(DIST_NAME)] File=[$$f]" >> $@; \
 		cat $$f >> $@; \
 	done
 	@chmod a+x $@
@@ -34,7 +34,7 @@ $(LIB_TGT): $(LIB_SRC_LIST)
 	@for f in $(LIB_SRC_LIST); \
 	do \
 		echo "Cat: [$$f]->[$@]"; \
-		echo "### File : [$$f]" >> $@; \
+		echo "### Dist=[$(DIST_NAME)] File=[$$f]" >> $@; \
 		cat $$f >> $@; \
 	done
 
