@@ -39,9 +39,10 @@ soaf_cmd() {
 	else
 		local CMD_PROG_VAR=$(echo $CMD_PROG | tr '.-' '__')
 		local NOEXEC_FN=$(soaf_map_get $CMD_PROG_VAR "NOEXEC_FN")
+		SOAF_RET=""
 		if [ -n "$NOEXEC_FN" ]
 		then
-			eval SOAF_RET=\$\($NOEXEC_FN \"\$CMD\" \$CMD_PROG\)
+			$NOEXEC_FN "$CMD" $CMD_PROG
 		fi
 		SOAF_RET=${SOAF_RET:-0}
 	fi
