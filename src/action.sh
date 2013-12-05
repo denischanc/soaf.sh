@@ -13,8 +13,8 @@ soaf_create_action() {
 	local FN=$2
 	local USAGE_FN=$3
 	SOAF_ACTION_LIST="$SOAF_ACTION_LIST $ACTION"
-	soaf_map_extend $ACTION "FN" $FN
-	soaf_map_extend $ACTION "USAGE_FN" $USAGE_FN
+	soaf_map_extend $ACTION "ACTION_FN" $FN
+	soaf_map_extend $ACTION "ACTION_USAGE_FN" $USAGE_FN
 }
 
 soaf_no_init_action() {

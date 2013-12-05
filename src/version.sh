@@ -13,7 +13,7 @@ soaf_info_add_var() {
 ################################################################################
 
 SOAF_NAME="soaf.sh"
-SOAF_VERSION="0.1.1"
+SOAF_VERSION="0.2.0"
 
 soaf_info_add_var SOAF_VERSION
 

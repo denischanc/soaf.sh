@@ -3,6 +3,8 @@
 
 ### VAR_LIST : SOAF_VAR_MKDIR_LIST
 
+soaf_usage_add_var ACTION
+
 ################################################################################
 ################################################################################
 
@@ -17,7 +19,7 @@ ${SOAF_TXT_PRE}ACTION: [$(echo $SOAF_ACTION_LIST | tr ' ' '|')]
 _EOF_
 	for action in $SOAF_ACTION_LIST
 	do
-		local USAGE_FN=$(soaf_map_get $action "USAGE_FN")
+		local USAGE_FN=$(soaf_map_get $action "ACTION_USAGE_FN")
 		if [ -n "$USAGE_FN" ]
 		then
 			soaf_dis_title "ACTION=$action"
@@ -40,6 +42,7 @@ soaf_init_mkdir() {
 soaf_init() {
 	soaf_log_init
 	soaf_init_mkdir
+	soaf_task_init
 	local INIT_FN=$(soaf_map_get $SOAF_USER_MAP "INIT_FN")
 	[ -n "$INIT_FN" ] && $INIT_FN
 }
@@ -60,7 +63,7 @@ soaf_engine() {
 	then
 		soaf_init
 	fi
-	local FN=$(soaf_map_get $SOAF_ACTION "FN")
+	local FN=$(soaf_map_get $SOAF_ACTION "ACTION_FN")
 	if [ -z "$FN" ]
 	then
 		soaf_dis_txt "No function defined for action [$SOAF_ACTION]."
