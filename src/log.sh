@@ -41,7 +41,12 @@ soaf_log() {
 	local LEVEL_GLOB_NUM=$(soaf_log_num_level "$SOAF_LOG_LEVEL")
 	if [ $LEVEL_LOC_NUM -ge $LEVEL_GLOB_NUM ]
 	then
-		soaf_roll_nature $SOAF_LOG_ROLL_NATURE
+		if [ -z "$SOAF_LOG_ROLL_IN" ]
+		then
+			SOAF_LOG_ROLL_IN="OK"
+			soaf_roll_nature $SOAF_LOG_ROLL_NATURE
+			SOAF_LOG_ROLL_IN=""
+		fi
 		cat << _EOF_ >> $SOAF_LOG_FILE
 [$(date '+%x_%X')][$LEVEL]  $MSG
 _EOF_

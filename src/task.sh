@@ -86,14 +86,16 @@ soaf_do_task_valid() {
 	local TASK_UPPER=$(soaf_to_upper $TASK)
 	local TASK_LOG_DIR=$(soaf_map_get $TASK "TASK_LOG_DIR")
 	soaf_mkdir $TASK_LOG_DIR
-	local TASK_INPROG_FILE=$TASK_LOG_DIR/inprog
+	local TASK_INPROG_FILE=$TASK_LOG_DIR/inprog.$TASK
 	if [ ! -f $TASK_INPROG_FILE ]
 	then
 		touch $TASK_INPROG_FILE
 		soaf_do_task_process $TASK $TASK_UPPER $TASK_LOG_DIR
 		rm -f $TASK_INPROG_FILE
 	else
-		soaf_log_warn "$TASK_UPPER already in progress ..."
+		local MSG="$TASK_UPPER already in progress"
+		MSG="$MSG (file : [$TASK_INPROG_FILE]) ..."
+		soaf_log_warn "$MSG"
 	fi
 }
 
