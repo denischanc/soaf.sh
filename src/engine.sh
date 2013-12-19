@@ -50,7 +50,7 @@ soaf_init() {
 ################################################################################
 
 soaf_engine() {
-	soaf_task_init
+	soaf_job_init
 	soaf_mng_glob_var
 	local IS_ACTION=$(echo $SOAF_ACTION_LIST | grep -w "$SOAF_ACTION")
 	if [ -z "$IS_ACTION" ]
