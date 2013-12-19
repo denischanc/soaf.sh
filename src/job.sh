@@ -25,8 +25,8 @@ soaf_job() {
 	if [ -z "$SOAF_JOB_RET" ]
 	then
 		cat << _EOF_
-${SOAF_TXT_PRE}Unable to process job : '$SOAF_JOB'.
-${SOAF_TXT_PRE}  See log file : '$SOAF_LOG_FILE'.
+${SOAF_TXT_PRE}Unable to process job : [$SOAF_JOB].
+${SOAF_TXT_PRE}  See log file : [$SOAF_LOG_FILE].
 _EOF_
 	fi
 }
@@ -68,7 +68,7 @@ soaf_do_job_process() {
 	local CMD=$(soaf_map_get $JOB "JOB_CMD")
 	if [ -z "$CMD" ]
 	then
-		soaf_log_err "No command for job : '$JOB' ???"
+		soaf_log_err "No command for job : [$JOB] ???"
 	else
 		CMD="$CMD > $LOG_JOB_FILE 2> $LOG_JOB_ERR_FILE"
 		soaf_log_info "Start $JOB_UPPER ..."
@@ -91,7 +91,7 @@ soaf_do_job_valid() {
 	local JOB_UPPER=$(soaf_to_upper $JOB)
 	local JOB_LOG_DIR=$(soaf_map_get $JOB "JOB_LOG_DIR")
 	soaf_mkdir $JOB_LOG_DIR
-	local JOB_INPROG_FILE=$JOB_LOG_DIR/inprog.$JOB
+	local JOB_INPROG_FILE=$JOB_LOG_DIR/$JOB.inprog
 	if [ ! -f $JOB_INPROG_FILE ]
 	then
 		touch $JOB_INPROG_FILE
@@ -115,7 +115,7 @@ soaf_do_job() {
 	then
 		soaf_do_job_valid $JOB
 	else
-		soaf_log_err "Unknown job : '$JOB'."
+		soaf_log_err "Unknown job : [$JOB]."
 	fi
 }
 
