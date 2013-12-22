@@ -24,6 +24,7 @@ soaf_create_state_nature() {
 	local NATURE=$1
 	local WORK_DIR=$2
 	local ENTRY_STATE=$3
+	SOAF_STATE_NATURE_LIST="$SOAF_STATE_NATURE_LIST $NATURE"
 	soaf_map_extend $NATURE "STATE_WORK_DIR" $WORK_DIR
 	soaf_map_extend $NATURE "ENTRY_STATE" $ENTRY_STATE
 }
@@ -103,7 +104,7 @@ soaf_state_get_next() {
 	then
 		NEXT_STATE=$($FN $STATE $NATURE $WORK_DIR)
 	else
-		eval NEXT_STATE=$(soaf_map_get $STATE "NEXT_STATE")
+		NEXT_STATE=$(soaf_map_get $STATE "NEXT_STATE")
 	fi
 	echo "$NEXT_STATE"
 }
@@ -121,7 +122,7 @@ soaf_state_process() {
 	local NEXT_STATE=$(soaf_state_get_next $STATE $NATURE $WORK_DIR)
 	soaf_state_set "$NEXT_STATE" $NATURE $WORK_DIR
 	local FN=$(soaf_map_get $NEXT_STATE "STATE_FN")
-	[ -z "$FN" ] && FN="soaf_state_dft_work"
+	[ -z "$FN" ] && FN=soaf_state_dft_work
 	SOAF_STATE_PROC_RET=""
 	$FN "$NEXT_STATE" $NATURE $WORK_DIR
 	local WAIT_STATE=$STATE
@@ -142,9 +143,9 @@ soaf_state_active() {
 	[ ! -f $STATE_INACTIVE_FILE ] && echo "OK"
 }
 
-soaf_state_engine() {
+soaf_state_engine_valid() {
 	local NATURE=$1
-	local WORK_DIR=$(soaf_map_get $NATURE "STATE_WORK_DIR" ".")
+	local WORK_DIR=$(soaf_map_get $NATURE "STATE_WORK_DIR" .)
 	local ACTIVE=$(soaf_state_active $NATURE $WORK_DIR)
 	local STATE=$(soaf_state_get $NATURE $WORK_DIR)
 	local WAIT=$(echo $SOAF_WAIT_STATE_LIST | grep -w "$STATE")
@@ -152,6 +153,19 @@ soaf_state_engine() {
 	then
 		soaf_state_process $STATE $NATURE $WORK_DIR
 	else
-		soaf_log_debug "Daemon not active or in work state : [$STATE]."
+		local MSG="State nature [$NATURE] :"
+		MSG="$MSG not active or in work state [$STATE]."
+		soaf_log_debug "$MSG"
+	fi
+}
+
+soaf_state_engine() {
+	local NATURE=$1
+	local NATURE_VALID=$(echo $SOAF_STATE_NATURE_LIST | grep -w "$NATURE")
+	if [ -n "$NATURE_VALID" ]
+	then
+		soaf_state_engine_valid $NATURE
+	else
+		soaf_log_err "Unknown state nature : [$NATURE]."
 	fi
 }
