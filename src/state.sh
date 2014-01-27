@@ -151,6 +151,7 @@ soaf_state_engine_valid() {
 	local WAIT=$(echo $SOAF_WAIT_STATE_LIST | grep -w "$STATE")
 	if [ -n "$ACTIVE" -a -n "$WAIT" ]
 	then
+		soaf_mkdir $WORK_DIR
 		soaf_state_process $STATE $NATURE $WORK_DIR
 	else
 		local MSG="State nature [$NATURE] :"

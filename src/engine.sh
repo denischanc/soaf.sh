@@ -35,7 +35,7 @@ soaf_init_mkdir() {
 	for var in $SOAF_VAR_MKDIR_LIST
 	do
 		eval local DIR=\$$var
-		soaf_mkdir "$DIR" "$SOAF_LOG_INFO"
+		soaf_mkdir "$DIR" $SOAF_LOG_INFO
 	done
 }
 

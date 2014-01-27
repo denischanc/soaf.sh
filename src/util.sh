@@ -26,20 +26,19 @@ soaf_map_get() {
 
 soaf_cmd() {
 	local CMD=$1
-	local LOG_LEVEL=$2
-	[ -z "$LOG_LEVEL" ] && LOG_LEVEL=$SOAF_LOG_DEBUG
-	soaf_log "$LOG_LEVEL" "Execute command : [$CMD]."
+	local LOG_LEVEL=${2:-$SOAF_LOG_DEBUG}
+	soaf_log $LOG_LEVEL "Execute command : [$CMD]."
 	local CMD_PROG=$(echo "$CMD" | awk '{print $1}')
 	local NOEXEC_PROG=$(echo "$SOAF_NOEXEC_PROG_LIST" | grep -w "$CMD_PROG")
 	if [ -z "$NOEXEC_PROG" ]
 	then
 		eval "$CMD"
 		SOAF_RET=$?
-		soaf_log "$LOG_LEVEL" "Command return : [$SOAF_RET]."
+		soaf_log $LOG_LEVEL "Command return : [$SOAF_RET]."
 	else
 		local CMD_PROG_VAR=$(echo $CMD_PROG | tr '.-' '__')
 		local NOEXEC_FN=$(soaf_map_get $CMD_PROG_VAR "NOEXEC_FN")
-		SOAF_RET=""
+		SOAF_RET=
 		if [ -n "$NOEXEC_FN" ]
 		then
 			$NOEXEC_FN "$CMD" $CMD_PROG
@@ -99,7 +98,7 @@ soaf_to_upper() {
 
 soaf_mkdir() {
 	local DIR=$1
-	local LOG_LEVEL=$2
+	local LOG_LEVEL=${2:-$SOAF_LOG_DEBUG}
 	if [ -n "$DIR" ]
 	then
 		if [ ! -d "$DIR" ]
@@ -107,7 +106,7 @@ soaf_mkdir() {
 			soaf_cmd "mkdir -p $DIR"
 			if [ $SOAF_RET -eq 0 ]
 			then
-				soaf_log "$LOG_LEVEL" "Directory created : [$DIR]."
+				soaf_log $LOG_LEVEL "Directory created : [$DIR]."
 			else
 				soaf_log_err "Directory not created : [$DIR]."
 			fi

@@ -1,8 +1,8 @@
 ################################################################################
 ################################################################################
 
-soaf_cfg_set SOAF_CFG_GLOB "/etc/$SOAF_NAME/soaf.sh"
-soaf_cfg_set SOAF_CFG_LOC "$HOME/.$SOAF_NAME/soaf.sh"
+soaf_cfg_set SOAF_CFG_GLOB /etc/$SOAF_NAME/cfg.sh
+soaf_cfg_set SOAF_CFG_LOC $HOME/.$SOAF_NAME/cfg.sh
 
 SOAF_CFG_LIST="$SOAF_CFG_GLOB $SOAF_CFG_LOC"
 
