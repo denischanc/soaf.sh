@@ -1,9 +1,9 @@
 ################################################################################
 ################################################################################
 
-SOAF_LOG_ERR="ERR  "
-SOAF_LOG_WARN="WARN "
-SOAF_LOG_INFO="INFO "
+SOAF_LOG_ERR="ERR__"
+SOAF_LOG_WARN="WARN_"
+SOAF_LOG_INFO="INFO_"
 SOAF_LOG_DEBUG="DEBUG"
 
 SOAF_LOG_ROLL_NATURE_INT="soaf_log"

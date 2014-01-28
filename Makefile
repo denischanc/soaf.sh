@@ -17,9 +17,13 @@ INSTALL_BIN_DIR = $(INSTALL_DIR)/bin
 INSTALL_LIB_DIR = $(INSTALL_DIR)/lib
 endif
 
+MAKEFILE_LIST = Makefile Makefile.cfg
+
+DIST_FILE_LIST = $(MAKEFILE_LIST) $(EXE_SRC_LIST) $(LIB_SRC_LIST) $(EXTRA_DIST)
+
 all: $(EXE_TGT) $(LIB_TGT)
 
-$(EXE_TGT): $(EXE_SRC_LIST)
+$(EXE_TGT): $(EXE_SRC_LIST) $(MAKEFILE_LIST)
 	@echo "#!/bin/sh" > $@
 	@for f in $(EXE_SRC_LIST); \
 	do \
@@ -29,7 +33,7 @@ $(EXE_TGT): $(EXE_SRC_LIST)
 	done
 	@chmod a+x $@
 
-$(LIB_TGT): $(LIB_SRC_LIST)
+$(LIB_TGT): $(LIB_SRC_LIST) $(MAKEFILE_LIST)
 	@rm -f $@
 	@for f in $(LIB_SRC_LIST); \
 	do \
@@ -51,7 +55,7 @@ dist:
 	@make dist-clean; \
 	DIST=$(DIST_NAME)-$(DIST_VERSION); \
 	mkdir $$DIST; \
-	for f in $(EXE_SRC_LIST) $(LIB_SRC_LIST) $(EXTRA_DIST); \
+	for f in $(DIST_FILE_LIST); \
 	do \
 		SRC=$$f; \
 		DST=$$DIST/$$f; \
