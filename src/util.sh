@@ -113,3 +113,21 @@ soaf_mkdir() {
 		fi
 	fi
 }
+
+soaf_rmdir() {
+	local DIR=$1
+	local LOG_LEVEL=${2:-$SOAF_LOG_DEBUG}
+	if [ -n "$DIR" ]
+	then
+		if [ -d "$DIR" ]
+		then
+			soaf_cmd "rm -rf $DIR"
+			if [ $SOAF_RET -eq 0 ]
+			then
+				soaf_log $LOG_LEVEL "Directory removed : [$DIR]."
+			else
+				soaf_log_err "Directory not removed : [$DIR]."
+			fi
+		fi
+	fi
+}
