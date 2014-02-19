@@ -28,6 +28,6 @@ soaf_no_init_action() {
 soaf_action_init_proc() {
 	local ACTION=$1
 	local FN=$2
-	soaf_create_action "$ACTION" "$FN"
-	soaf_no_init_action "$ACTION"
+	soaf_create_action $ACTION $FN
+	soaf_no_init_action $ACTION
 }

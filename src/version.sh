@@ -2,11 +2,8 @@
 ################################################################################
 
 soaf_info_add_var() {
-	while [ $# -ge 1 ]
-	do
-		SOAF_INFO_VAR_LIST="$SOAF_INFO_VAR_LIST $1"
-		shift
-	done
+	local VAR_LIST=$1
+	SOAF_INFO_VAR_LIST="$SOAF_INFO_VAR_LIST $VAR_LIST"
 }
 
 ################################################################################

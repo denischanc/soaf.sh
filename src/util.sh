@@ -49,7 +49,7 @@ soaf_cmd() {
 
 soaf_cmd_info() {
 	local CMD=$1
-	soaf_cmd "$CMD" "$SOAF_LOG_INFO"
+	soaf_cmd "$CMD" $SOAF_LOG_INFO
 }
 
 ################################################################################
@@ -64,7 +64,7 @@ soaf_day_upd_file() {
 	local DAY_CURR=$1
 	local FILE=$2
 	local ROLL_NATURE=$3
-	[ -n "$ROLL_NATURE" ] && soaf_roll_nature "$ROLL_NATURE"
+	[ -n "$ROLL_NATURE" ] && soaf_roll_nature $ROLL_NATURE
 	echo "$DAY_CURR" > $FILE
 }
 
@@ -72,7 +72,7 @@ soaf_day_since_last() {
 	local DAY_CURR=$1
 	local FILE=$2
 	[ -z "$DAY_CURR" ] && DAY_CURR=$(soaf_day_curr)
-	local DAY_LAST=""
+	local DAY_LAST=
 	[ -f "$FILE" ] && DAY_LAST=$(cat $FILE | head -1)
 	[ -z "$DAY_LAST" ] && DAY_LAST=1
 	local DAY_DIFF=$(expr $DAY_CURR \- $DAY_LAST 2> /dev/null)

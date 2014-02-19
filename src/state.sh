@@ -123,7 +123,7 @@ soaf_state_process() {
 	soaf_state_set "$NEXT_STATE" $NATURE $WORK_DIR
 	local FN=$(soaf_map_get $NEXT_STATE "STATE_FN")
 	[ -z "$FN" ] && FN=soaf_state_dft_work
-	SOAF_STATE_PROC_RET=""
+	SOAF_STATE_PROC_RET=
 	$FN "$NEXT_STATE" $NATURE $WORK_DIR
 	local WAIT_STATE=$STATE
 	if [ -n "$SOAF_STATE_PROC_RET" ]
