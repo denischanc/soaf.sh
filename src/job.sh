@@ -109,7 +109,7 @@ soaf_do_job_valid() {
 
 soaf_do_job() {
 	local JOB=$1
-	SOAF_JOB_RET=""
+	SOAF_JOB_RET=
 	local JOB_VALID=$(echo $SOAF_JOB_LIST | grep -w "$JOB")
 	if [ -n "$JOB_VALID" ]
 	then
