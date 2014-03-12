@@ -21,7 +21,7 @@ soaf_cfg_set() {
 soaf_parse_arg() {
 	local ARG=$1
 	local VAR_TMP=$(echo "$ARG" | awk -F= '{print $1}')
-	local VAL_TMP=$(echo "$ARG" | awk -F= '{print $2}')
+	local VAL_TMP=$(echo "$ARG" | sed -e 's/[^=]*=//')
 	if [ -n "$VAR_TMP" ]
 	then
 		eval $VAR_TMP=\$VAL_TMP
