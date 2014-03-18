@@ -19,12 +19,12 @@ soaf_cfg_set() {
 ################################################################################
 
 soaf_parse_arg() {
-	local ARG=$1
-	local VAR_TMP=$(echo "$ARG" | awk -F= '{print $1}')
-	local VAL_TMP=$(echo "$ARG" | sed -e 's/[^=]*=//')
-	if [ -n "$VAR_TMP" ]
+	local __ARG_TMP=$1
+	local __VAR_TMP=$(echo "$__ARG_TMP" | awk -F= '{print $1}')
+	if [ -n "$__VAR_TMP" ]
 	then
-		eval $VAR_TMP=\$VAL_TMP
+		local __VAL_TMP=$(echo "$__ARG_TMP" | sed -e "s/^$__VAR_TMP=//")
+		eval $__VAR_TMP=\$__VAL_TMP
 	fi
 }
 
