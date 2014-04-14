@@ -1,3 +1,5 @@
-soaf.sh*
-ps.log*
-ps-err.log*
+soaf.sh-*.tar.*
+src/soaf.sh
+ps.log
+ps-err.log
+test.log
