@@ -31,9 +31,5 @@ soaf_version() {
 ################################################################################
 
 soaf_info() {
-	for var in $SOAF_INFO_VAR_LIST
-	do
-		eval local VAL=\$$var
-		soaf_dis_txt "$var = [$VAL]"
-	done
+	soaf_dis_var_list "$SOAF_INFO_VAR_LIST"
 }

@@ -33,6 +33,7 @@ soaf_prop_file_list_add() {
 	local FILE=$1
 	local VAR=$2
 	local VAL=$3
+	local SEP=${4:- }
 	local VAL_LIST=$(soaf_prop_file_get $FILE $VAR)
-	soaf_prop_file_set $FILE $VAR "$VAL_LIST $VAL"
+	soaf_prop_file_set $FILE $VAR "$VAL_LIST$SEP$VAL"
 }

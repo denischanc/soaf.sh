@@ -29,3 +29,16 @@ soaf_dis_txt_off() {
 	done
 	echo "$TXT_PRE$MSG"
 }
+
+################################################################################
+################################################################################
+
+soaf_dis_var_list() {
+	local VAR_LIST=$1
+	local var
+	for var in $VAR_LIST
+	do
+		eval local VAL=\$$var
+		soaf_dis_txt "$var = [$VAL]"
+	done
+}
