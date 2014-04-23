@@ -47,3 +47,21 @@ soaf_mng_glob_var() {
 	local USAGE_VAR_LIST=$(soaf_map_get $SOAF_USER_MAP "USAGE_VAR_LIST")
 	soaf_mng_glob_var_loop "$VAR_PRE" "$USAGE_VAR_LIST"
 }
+
+################################################################################
+################################################################################
+
+soaf_check_var_list() {
+	local VAR_LIST=$1
+	local RET="OK" var VAL
+	for var in $VAR_LIST
+	do
+		eval VAL=\$$var
+		if [ -z "$VAL" ]
+		then
+			soaf_log_err "Empty variable : [$var] ???"
+			RET=
+		fi
+	done
+	SOAF_CHECK_RET=$RET
+}
