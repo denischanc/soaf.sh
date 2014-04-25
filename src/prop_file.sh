@@ -21,8 +21,8 @@ soaf_prop_file_get() {
 	local VAR=$2
 	if [ -f $FILE ]
 	then
-		local VAL=$(grep "^$VAR=" $FILE | sed -e "s/^$VAR=//")
-		echo "$VAL"
+		local VAR_LINE=$(grep "^$VAR=" $FILE 2> /dev/null)
+		echo "${VAR_LINE#$VAR=}"
 	fi
 }
 

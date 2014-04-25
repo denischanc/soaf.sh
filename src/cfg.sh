@@ -23,7 +23,7 @@ soaf_parse_arg() {
 	local __VAR_TMP=$(echo "$__ARG_TMP" | awk -F= '{print $1}')
 	if [ -n "$__VAR_TMP" ]
 	then
-		local __VAL_TMP=$(echo "$__ARG_TMP" | sed -e "s/^$__VAR_TMP=//")
+		local __VAL_TMP=${__ARG_TMP#$__VAR_TMP=}
 		eval $__VAR_TMP=\$__VAL_TMP
 	fi
 }
