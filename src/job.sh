@@ -24,10 +24,8 @@ soaf_job() {
 	soaf_do_job $SOAF_JOB
 	if [ -z "$SOAF_JOB_RET" ]
 	then
-		cat << _EOF_
-${SOAF_TXT_PRE}Unable to process job : [$SOAF_JOB].
-${SOAF_TXT_PRE}  See log file : [$SOAF_LOG_FILE].
-_EOF_
+		soaf_dis_txt "Unable to process job : [$SOAF_JOB]."
+		soaf_dis_txt "  See log file : [$SOAF_LOG_FILE]."
 	fi
 }
 

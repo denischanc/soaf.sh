@@ -36,7 +36,7 @@ test_display_usage() {
 	soaf_dis_txt "Display NAME = VAL."
 }
 
-soaf_create_action display test_display test_display_usage
+soaf_create_action "display" test_display test_display_usage
 
 ################################################################################
 ################################################################################
@@ -48,6 +48,29 @@ soaf_info_add_var TEST_SPACE
 ################################################################################
 
 soaf_create_job "ps" "ps -ef" $TEST_HOME 1
+
+################################################################################
+################################################################################
+
+TEST_PROP_NATURE="test_prop"
+TEST_TEST_PROP="test"
+
+soaf_create_prop_file_nature $TEST_PROP_NATURE $TEST_HOME/test.prop
+### soaf_create_prop_file_nature $TEST_PROP_NATURE $TEST_HOME/test.prop ":"
+
+test_prop_file() {
+	rm -f $(soaf_map_get $TEST_PROP_NATURE "PROP_FILE")
+	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.0"
+	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.1"
+	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.10"
+	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.11"
+	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.0"
+	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.1"
+	local RESULT=$(soaf_prop_file_get $TEST_PROP_NATURE $TEST_TEST_PROP)
+	soaf_dis_txt "Result : [$RESULT]"
+}
+
+soaf_create_action "prop_file" test_prop_file
 
 ################################################################################
 ################################################################################
