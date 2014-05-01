@@ -6,7 +6,7 @@ SOAF_ROLL_FILE_SIZE=100000
 
 SOAF_ROLL_COMPRESS_CMD="xz"
 
-soaf_info_add_var SOAF_ROLL_FILE_SIZE SOAF_ROLL_COMPRESS_CMD
+soaf_info_add_var "SOAF_ROLL_FILE_SIZE SOAF_ROLL_COMPRESS_CMD"
 
 ################################################################################
 ################################################################################
