@@ -4,7 +4,9 @@
 SOAF_ROLL_SIZE=5
 SOAF_ROLL_FILE_SIZE=100000
 
-soaf_info_add_var SOAF_ROLL_FILE_SIZE
+SOAF_ROLL_COMPRESS_CMD="xz"
+
+soaf_info_add_var SOAF_ROLL_FILE_SIZE SOAF_ROLL_COMPRESS_CMD
 
 ################################################################################
 ################################################################################
@@ -49,7 +51,7 @@ soaf_roll_proc_file() {
 		local FILE_ROLL=$FILE-$(date '+%F-%H%M%S')
 		soaf_cmd "mv -f $FILE $FILE_ROLL"
 		local NO_COMPRESS=$(soaf_map_get $NATURE "ROLL_NO_COMPRESS")
-		[ -z "$NO_COMPRESS" ] && soaf_cmd "gzip $FILE_ROLL"
+		[ -z "$NO_COMPRESS" ] && soaf_cmd "$SOAF_ROLL_COMPRESS_CMD $FILE_ROLL"
 	fi
 }
 
