@@ -66,8 +66,9 @@ test_prop_file() {
 	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.11"
 	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.0"
 	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.1"
-	local RESULT=$(soaf_prop_file_get $TEST_PROP_NATURE $TEST_TEST_PROP)
-	soaf_dis_txt "Result : [$RESULT]"
+	soaf_prop_file_get $TEST_PROP_NATURE $TEST_TEST_PROP
+	soaf_dis_txt "Ret : [$SOAF_PROP_FILE_RET]"
+	soaf_dis_txt "Val : [$SOAF_PROP_FILE_VAL]"
 }
 
 soaf_create_action "prop_file" test_prop_file
