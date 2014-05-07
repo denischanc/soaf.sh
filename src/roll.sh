@@ -19,6 +19,7 @@ soaf_create_roll_nature() {
 	soaf_map_extend $NATURE "ROLL_FILE" $ROLL_FILE
 	soaf_map_extend $NATURE "ROLL_SIZE" $ROLL_SIZE
 	soaf_map_extend $NATURE "ROLL_COND_FN" $ROLL_COND_FN
+	[ "$ROLL_SIZE" = "1" ] && soaf_roll_no_compress $NATURE
 }
 
 soaf_create_roll_cond_gt_nature() {
