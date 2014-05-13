@@ -1,12 +1,12 @@
 ################################################################################
 ################################################################################
 
-SOAF_ROLL_SIZE=5
+SOAF_ROLL_SIZE=4
 SOAF_ROLL_FILE_SIZE=100000
 
 SOAF_ROLL_COMPRESS_CMD="xz"
 
-soaf_info_add_var "SOAF_ROLL_FILE_SIZE SOAF_ROLL_COMPRESS_CMD"
+soaf_info_add_var "SOAF_ROLL_SIZE SOAF_ROLL_FILE_SIZE SOAF_ROLL_COMPRESS_CMD"
 
 ################################################################################
 ################################################################################
@@ -19,7 +19,6 @@ soaf_create_roll_nature() {
 	soaf_map_extend $NATURE "ROLL_FILE" $ROLL_FILE
 	soaf_map_extend $NATURE "ROLL_SIZE" $ROLL_SIZE
 	soaf_map_extend $NATURE "ROLL_COND_FN" $ROLL_COND_FN
-	[ "$ROLL_SIZE" = "1" ] && soaf_roll_no_compress $NATURE
 }
 
 soaf_create_roll_cond_gt_nature() {
@@ -41,38 +40,35 @@ soaf_roll_no_compress() {
 ################################################################################
 
 soaf_roll_proc_file() {
-	local FILE=$1
-	local NATURE=$2
-	local FILE_SIZE=$(stat -c %s $FILE 2> /dev/null)
+	local NATURE=$1
+	local FILE=$2
+	local FILE_SIZE=$(stat -c %s $FILE 2>> $SOAF_LOG_FILE)
 	[ -z "$FILE_SIZE" ] && FILE_SIZE=1
 	if [ $FILE_SIZE -eq 0 ]
 	then
-		soaf_cmd "rm -f $FILE"
+		soaf_rm $FILE
 	else
 		local FILE_ROLL=$FILE-$(date '+%F-%H%M%S')
-		soaf_cmd "mv -f $FILE $FILE_ROLL"
+		soaf_cmd "mv -f $FILE $FILE_ROLL 2>> $SOAF_LOG_FILE"
 		local NO_COMPRESS=$(soaf_map_get $NATURE "ROLL_NO_COMPRESS")
-		[ -z "$NO_COMPRESS" ] && soaf_cmd "$SOAF_ROLL_COMPRESS_CMD $FILE_ROLL"
+		if [ -z "$NO_COMPRESS" ]
+		then
+			soaf_cmd "$SOAF_ROLL_COMPRESS_CMD $FILE_ROLL 2>> $SOAF_LOG_FILE"
+		fi
 	fi
 }
 
 ################################################################################
 ################################################################################
 
-soaf_roll_get_file_list() {
-	local FILE=$1
-	local FILE_DN=$(dirname $FILE)
-	local FILE_BN=$(basename $FILE)
-	find $FILE_DN -name "${FILE_BN}-*" -a -type f | sort
-}
-
 soaf_roll_clean() {
 	local FILE=$1
-	local SIZE=$(expr $2 \- 1)
-	for f in $(soaf_roll_get_file_list $FILE | head -n-$SIZE)
-	do
-		soaf_cmd "rm -f $f"
-	done
+	local SIZE=$2
+	local FILE_DN=$(dirname $FILE)
+	local FILE_BN=$(basename $FILE)
+	local FILE_LIST=$(find $FILE_DN -name "$FILE_BN-*" -a -type f \
+		2>> $SOAF_LOG_FILE | sort | head -n-$SIZE | tr '\n' ' ')
+	soaf_rm "$FILE_LIST"
 }
 
 ################################################################################
@@ -84,21 +80,28 @@ soaf_roll_nature() {
 	if [ -n "$FILE" ]
 	then
 		local SIZE=$(soaf_map_get $NATURE "ROLL_SIZE" $SOAF_ROLL_SIZE)
-		local COND_FN=$(soaf_map_get $NATURE "ROLL_COND_FN")
 		if [ -f "$FILE" ]
 		then
+			local COND_FN=$(soaf_map_get $NATURE "ROLL_COND_FN")
 			if [ -n "$COND_FN" ]
 			then
-				eval local ROLL_PROC=\$\($COND_FN \$FILE \$NATURE\)
+				SOAF_ROLL_COND_FN_RET=
+				$COND_FN $NATURE $FILE
+				local ROLL_PROC=$SOAF_ROLL_COND_FN_RET
 			else
 				local ROLL_PROC="OK"
 			fi
-			[ -n "$ROLL_PROC" ] && soaf_roll_proc_file $FILE $NATURE
+			if [ -n "$ROLL_PROC" ]
+			then
+				if [ $SIZE -ne 0 ]
+				then
+					soaf_roll_proc_file $NATURE $FILE
+				else
+					soaf_rm $FILE
+				fi
+			fi
 		fi
-		if [ $SIZE -ge 1 ]
-		then
-			soaf_roll_clean $FILE $SIZE
-		fi
+		[ $SIZE -ge 0 ] && soaf_roll_clean $FILE $SIZE
 	fi
 }
 
@@ -106,12 +109,12 @@ soaf_roll_nature() {
 ################################################################################
 
 soaf_roll_cond_gt_size() {
-	local FILE=$1
-	local NATURE=$2
+	local NATURE=$1
+	local FILE=$2
 	local SIZE=$(soaf_map_get $NATURE "ROLL_FILE_SIZE" $SOAF_ROLL_FILE_SIZE)
 	local FILE_SIZE=$(stat -c %s $FILE 2> /dev/null)
 	if [ -n "$FILE_SIZE" ]
 	then
-		[ $FILE_SIZE -gt $SIZE ] && echo "OK"
+		[ $FILE_SIZE -gt $SIZE ] && SOAF_ROLL_COND_FN_RET="OK"
 	fi
 }
