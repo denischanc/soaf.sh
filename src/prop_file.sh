@@ -84,6 +84,25 @@ soaf_prop_file_list_add() {
 	fi
 }
 
+soaf_prop_file_list_rm() {
+	local NATURE=$1
+	local PROP=$2
+	local VAL=$3
+	local FILE=$(soaf_map_get $NATURE "PROP_FILE")
+	local SEP=$(soaf_map_get $NATURE "PROP_SEP")
+	soaf_prop_file_get $NATURE $PROP
+	if [ -n "$SOAF_PROP_FILE_RET" ]
+	then
+		local VAL_LIST=$SOAF_PROP_FILE_VAL
+		if [ -n "$VAL_LIST" ]
+		then
+			VAL_LIST=$(echo "$VAL_LIST" | tr "$SEP" "\n" | \
+				grep -v "^$VAL\$" | tr "\n" "$SEP" | sed -e "s£$SEP\$££")
+			soaf_prop_file_set $NATURE $PROP "$VAL_LIST"
+		fi
+	fi
+}
+
 ################################################################################
 ################################################################################
 

@@ -62,6 +62,7 @@ soaf_create_prop_file_nature $TEST_PROP_NATURE $TEST_HOME/test.prop
 
 test_prop_file() {
 	rm -f $(soaf_map_get $TEST_PROP_NATURE "PROP_FILE")
+	###-------------------------------------------------------------------------
 	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.0"
 	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.1"
 	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.10"
@@ -71,6 +72,21 @@ test_prop_file() {
 	soaf_prop_file_get $TEST_PROP_NATURE $TEST_TEST_PROP
 	soaf_dis_txt "Ret : [$SOAF_PROP_FILE_RET]"
 	soaf_dis_txt "Val : [$SOAF_PROP_FILE_VAL]"
+	###-------------------------------------------------------------------------
+	soaf_prop_file_list_rm $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.11"
+	soaf_prop_file_list_rm $TEST_PROP_NATURE $TEST_TEST_PROP "3.15"
+	soaf_prop_file_list_rm $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.1"
+	soaf_prop_file_get $TEST_PROP_NATURE $TEST_TEST_PROP
+	soaf_dis_txt "Ret : [$SOAF_PROP_FILE_RET]"
+	soaf_dis_txt "Val : [$SOAF_PROP_FILE_VAL]"
+	###-------------------------------------------------------------------------
+	soaf_prop_file_list_rm $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.0"
+	soaf_prop_file_list_rm $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.10"
+	soaf_prop_file_list_rm $TEST_PROP_NATURE $TEST_TEST_PROP "3.15"
+	soaf_prop_file_get $TEST_PROP_NATURE $TEST_TEST_PROP
+	soaf_dis_txt "Ret : [$SOAF_PROP_FILE_RET]"
+	soaf_dis_txt "Val : [$SOAF_PROP_FILE_VAL]"
+	###-------------------------------------------------------------------------
 }
 
 soaf_create_action "prop_file" test_prop_file
