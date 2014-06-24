@@ -37,6 +37,8 @@ soaf_log_num_level() {
 soaf_log() {
 	local LEVEL=$1
 	local MSG=$2
+	local NAME=$3
+	[ -n "$NAME" ] && LEVEL=$(soaf_map_get $NAME "LOG_LEVEL" $LEVEL)
 	local LEVEL_LOC_NUM=$(soaf_log_num_level $LEVEL)
 	local LEVEL_GLOB_NUM=$(soaf_log_num_level $SOAF_LOG_LEVEL)
 	if [ $LEVEL_LOC_NUM -ge $LEVEL_GLOB_NUM ]
@@ -47,6 +49,7 @@ soaf_log() {
 			soaf_roll_nature $SOAF_LOG_ROLL_NATURE
 			SOAF_LOG_ROLL_IN=
 		fi
+		[ -n "$NAME" ] && MSG="{$NAME} $MSG"
 		cat << _EOF_ >> $SOAF_LOG_FILE
 [$(date '+%x_%X')][$LEVEL]  $MSG
 _EOF_
@@ -58,22 +61,26 @@ _EOF_
 
 soaf_log_err() {
 	local MSG=$1
-	soaf_log $SOAF_LOG_ERR "$MSG"
+	local NAME=$2
+	soaf_log $SOAF_LOG_ERR "$MSG" $NAME
 }
 
 soaf_log_warn() {
 	local MSG=$1
-	soaf_log $SOAF_LOG_WARN "$MSG"
+	local NAME=$2
+	soaf_log $SOAF_LOG_WARN "$MSG" $NAME
 }
 
 soaf_log_info() {
 	local MSG=$1
-	soaf_log $SOAF_LOG_INFO "$MSG"
+	local NAME=$2
+	soaf_log $SOAF_LOG_INFO "$MSG" $NAME
 }
 
 soaf_log_debug() {
 	local MSG=$1
-	soaf_log $SOAF_LOG_DEBUG "$MSG"
+	local NAME=$2
+	soaf_log $SOAF_LOG_DEBUG "$MSG" $NAME
 }
 
 ################################################################################

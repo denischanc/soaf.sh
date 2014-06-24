@@ -3,6 +3,8 @@
 
 SOAF_JOB_ROLL_NATURE="soaf_job"
 
+SOAF_JOB_LOG_NAME="job"
+
 ################################################################################
 ################################################################################
 
@@ -66,17 +68,17 @@ soaf_do_job_process() {
 	local CMD=$(soaf_map_get $JOB "JOB_CMD")
 	if [ -z "$CMD" ]
 	then
-		soaf_log_err "No command for job : [$JOB] ???"
+		soaf_log_err "No command for job : [$JOB] ???" $SOAF_JOB_LOG_NAME
 	else
 		CMD="$CMD > $LOG_JOB_FILE 2> $LOG_JOB_ERR_FILE"
-		soaf_log_info "Start $JOB_UPPER ..."
-		soaf_cmd_info "$CMD"
+		soaf_log_info "Start $JOB_UPPER ..." $SOAF_JOB_LOG_NAME
+		soaf_cmd_info "$CMD" $SOAF_JOB_LOG_NAME
 		if [ "$SOAF_RET" = "0" ]
 		then
 			SOAF_JOB_RET="OK"
-			soaf_log_info "$JOB_UPPER OK."
+			soaf_log_info "$JOB_UPPER OK." $SOAF_JOB_LOG_NAME
 		else
-			soaf_log_err "$JOB_UPPER KO."
+			soaf_log_err "$JOB_UPPER KO." $SOAF_JOB_LOG_NAME
 		fi
 	fi
 }
@@ -88,7 +90,7 @@ soaf_do_job_valid() {
 	local JOB=$1
 	local JOB_UPPER=$(soaf_to_upper $JOB)
 	local JOB_LOG_DIR=$(soaf_map_get $JOB "JOB_LOG_DIR")
-	soaf_mkdir $JOB_LOG_DIR
+	soaf_mkdir $JOB_LOG_DIR "" $SOAF_JOB_LOG_NAME
 	local JOB_INPROG_FILE=$JOB_LOG_DIR/$JOB.inprog
 	if [ ! -f $JOB_INPROG_FILE ]
 	then
@@ -98,7 +100,7 @@ soaf_do_job_valid() {
 	else
 		local MSG="$JOB_UPPER already in progress"
 		MSG="$MSG (file : [$JOB_INPROG_FILE]) ..."
-		soaf_log_warn "$MSG"
+		soaf_log_warn "$MSG" $SOAF_JOB_LOG_NAME
 	fi
 }
 
@@ -113,7 +115,7 @@ soaf_do_job() {
 	then
 		soaf_do_job_valid $JOB
 	else
-		soaf_log_err "Unknown job : [$JOB]."
+		soaf_log_err "Unknown job : [$JOB]." $SOAF_JOB_LOG_NAME
 	fi
 }
 

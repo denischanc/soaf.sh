@@ -1,6 +1,11 @@
 ################################################################################
 ################################################################################
 
+SOAF_PF_LOG_NAME="prop_file"
+
+################################################################################
+################################################################################
+
 soaf_create_prop_file_nature() {
 	local NATURE=$1
 	local PROP_FILE=$2
@@ -37,7 +42,8 @@ _EOF_
 		then
 			SOAF_PROP_FILE_RET="OK"
 		else
-			soaf_log_err "Unable to set prop (file : [$FILE]) : [$PROP]."
+			soaf_log_err "Unable to set prop (file : [$FILE]) : [$PROP]." \
+				$SOAF_PF_LOG_NAME
 			SOAF_PROP_FILE_RET=
 		fi
 	fi
@@ -53,7 +59,8 @@ soaf_prop_file_get() {
 		local VAR_LINE=$(grep "^$PROP=" $FILE 2>> $SOAF_LOG_FILE)
 		if [ $? -ge 2 ]
 		then
-			soaf_log_err "Unable to get prop (file : [$FILE]) : [$PROP]."
+			soaf_log_err "Unable to get prop (file : [$FILE]) : [$PROP]." \
+				$SOAF_PF_LOG_NAME
 			SOAF_PROP_FILE_RET=
 		fi
 		SOAF_PROP_FILE_VAL=${VAR_LINE#$PROP=}

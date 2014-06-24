@@ -27,7 +27,8 @@ soaf_map_get() {
 soaf_cmd() {
 	local CMD=$1
 	local LOG_LEVEL=${2:-$SOAF_LOG_DEBUG}
-	soaf_log $LOG_LEVEL "Execute command : [$CMD]."
+	local LOG_NAME=$3
+	soaf_log $LOG_LEVEL "Execute command : [$CMD]." $LOG_NAME
 	local CMD_PROG=$(echo "$CMD" | awk '{print $1}')
 	local NOEXEC_PROG=$(echo "$SOAF_NOEXEC_PROG_LIST" | grep -w "$CMD_PROG")
 	local RET=
@@ -35,7 +36,7 @@ soaf_cmd() {
 	then
 		eval "$CMD"
 		RET=$?
-		soaf_log $LOG_LEVEL "Command return : [$RET]."
+		soaf_log $LOG_LEVEL "Command return : [$RET]." $LOG_NAME
 	else
 		local CMD_PROG_VAR=$(echo $CMD_PROG | tr '.-' '__')
 		local NOEXEC_FN=$(soaf_map_get $CMD_PROG_VAR "NOEXEC_FN")
@@ -51,7 +52,8 @@ soaf_cmd() {
 
 soaf_cmd_info() {
 	local CMD=$1
-	soaf_cmd "$CMD" $SOAF_LOG_INFO
+	local LOG_NAME=$2
+	soaf_cmd "$CMD" $SOAF_LOG_INFO $LOG_NAME
 }
 
 ################################################################################
@@ -101,18 +103,19 @@ soaf_to_upper() {
 soaf_mkdir() {
 	local DIR_LIST=$1 dir
 	local LOG_LEVEL=${2:-$SOAF_LOG_DEBUG}
+	local LOG_NAME=$3
 	local RET=0
 	for dir in $DIR_LIST
 	do
 		if [ ! -d "$dir" ]
 		then
-			soaf_cmd "mkdir -p $dir >> $SOAF_LOG_FILE 2>&1"
+			soaf_cmd "mkdir -p $dir >> $SOAF_LOG_FILE 2>&1" "" $LOG_NAME
 			[ $RET -eq 0 ] && RET=$SOAF_RET
 			if [ $SOAF_RET -eq 0 ]
 			then
-				soaf_log $LOG_LEVEL "Directory created : [$dir]."
+				soaf_log $LOG_LEVEL "Directory created : [$dir]." $LOG_NAME
 			else
-				soaf_log_err "Directory not created : [$dir]."
+				soaf_log_err "Directory not created : [$dir]." $LOG_NAME
 			fi
 		fi
 	done
@@ -125,16 +128,17 @@ soaf_mkdir() {
 soaf_rm() {
 	local PATH_LIST=$1
 	local LOG_LEVEL=${2:-$SOAF_LOG_DEBUG}
+	local LOG_NAME=$3
 	local RET=0
 	if [ -n "$PATH_LIST" ]
 	then
-		soaf_cmd "rm -rf $PATH_LIST >> $SOAF_LOG_FILE 2>&1"
+		soaf_cmd "rm -rf $PATH_LIST >> $SOAF_LOG_FILE 2>&1" "" $LOG_NAME
 		RET=$SOAF_RET
 		if [ $SOAF_RET -eq 0 ]
 		then
-			soaf_log $LOG_LEVEL "Path(s) removed : [$PATH_LIST]."
+			soaf_log $LOG_LEVEL "Path(s) removed : [$PATH_LIST]." $LOG_NAME
 		else
-			soaf_log_err "Path(s) not removed : [$PATH_LIST]."
+			soaf_log_err "Path(s) not removed : [$PATH_LIST]." $LOG_NAME
 		fi
 	fi
 	SOAF_RET=$RET

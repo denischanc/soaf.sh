@@ -1,6 +1,11 @@
 ################################################################################
 ################################################################################
 
+SOAF_STATE_LOG_NAME="state"
+
+################################################################################
+################################################################################
+
 soaf_create_wait_state() {
 	local STATE=$1
 	local NEXT_STATE=$2
@@ -61,7 +66,7 @@ soaf_state_set() {
 	local STATE=$1
 	local NATURE=$2
 	local WORK_DIR=$3
-	soaf_log_info "State is now : [$STATE]."
+	soaf_log_info "State is now : [$STATE]." $SOAF_STATE_LOG_NAME
 	local FILE=$(soaf_state_file $NATURE $WORK_DIR)
 	echo "$STATE" > $FILE
 }
@@ -70,7 +75,8 @@ soaf_state_set() {
 ################################################################################
 
 soaf_state_stay_cur() {
-	soaf_log_debug "Do nothing, stay in current waiting state."
+	soaf_log_debug "Do nothing, stay in current waiting state." \
+		$SOAF_STATE_LOG_NAME
 }
 
 ################################################################################
@@ -151,12 +157,12 @@ soaf_state_engine_valid() {
 	local WAIT=$(echo $SOAF_WAIT_STATE_LIST | grep -w "$STATE")
 	if [ -n "$ACTIVE" -a -n "$WAIT" ]
 	then
-		soaf_mkdir $WORK_DIR
+		soaf_mkdir $WORK_DIR "" $SOAF_STATE_LOG_NAME
 		soaf_state_process $STATE $NATURE $WORK_DIR
 	else
 		local MSG="State nature [$NATURE] :"
 		MSG="$MSG not active or in work state [$STATE]."
-		soaf_log_debug "$MSG"
+		soaf_log_debug "$MSG" $SOAF_STATE_LOG_NAME
 	fi
 }
 
@@ -167,6 +173,6 @@ soaf_state_engine() {
 	then
 		soaf_state_engine_valid $NATURE
 	else
-		soaf_log_err "Unknown state nature : [$NATURE]."
+		soaf_log_err "Unknown state nature : [$NATURE]." $SOAF_STATE_LOG_NAME
 	fi
 }
