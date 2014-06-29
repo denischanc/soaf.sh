@@ -21,6 +21,18 @@ soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_FILE"
 ################################################################################
 ################################################################################
 
+soaf_all_log_level() {
+	local LOG_LEVEL=$1
+	soaf_roll_log_level $LOG_LEVEL
+	soaf_engine_log_level $LOG_LEVEL
+	soaf_job_log_level $LOG_LEVEL
+	soaf_state_log_level $LOG_LEVEL
+	soaf_pf_log_level $LOG_LEVEL
+}
+
+################################################################################
+################################################################################
+
 soaf_log_num_level() {
 	local LEVEL=$1
 	case $LEVEL in
@@ -38,9 +50,10 @@ soaf_log() {
 	local LEVEL=$1
 	local MSG=$2
 	local NAME=$3
-	[ -n "$NAME" ] && LEVEL=$(soaf_map_get $NAME "LOG_LEVEL" $LEVEL)
 	local LEVEL_LOC_NUM=$(soaf_log_num_level $LEVEL)
-	local LEVEL_GLOB_NUM=$(soaf_log_num_level $SOAF_LOG_LEVEL)
+	local LEVEL_GLOB=$SOAF_LOG_LEVEL
+	[ -n "$NAME" ] && LEVEL_GLOB=$(soaf_map_get $NAME "LOG_LEVEL" $LEVEL_GLOB)
+	local LEVEL_GLOB_NUM=$(soaf_log_num_level $LEVEL_GLOB)
 	if [ $LEVEL_LOC_NUM -ge $LEVEL_GLOB_NUM ]
 	then
 		if [ -z "$SOAF_LOG_ROLL_IN" ]

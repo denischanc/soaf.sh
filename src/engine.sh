@@ -5,6 +5,16 @@
 
 soaf_usage_add_var ACTION
 
+SOAF_ENGINE_LOG_NAME="engine"
+
+################################################################################
+################################################################################
+
+soaf_engine_log_level() {
+	local LOG_LEVEL=$1
+	soaf_map_extend $SOAF_ENGINE_LOG_NAME "LOG_LEVEL" $LOG_LEVEL
+}
+
 ################################################################################
 ################################################################################
 
@@ -35,7 +45,7 @@ soaf_init_mkdir() {
 	for var in $SOAF_VAR_MKDIR_LIST
 	do
 		eval local DIR=\$$var
-		soaf_mkdir "$DIR" $SOAF_LOG_INFO
+		soaf_mkdir "$DIR" $SOAF_LOG_INFO $SOAF_ENGINE_LOG_NAME
 	done
 }
 
@@ -44,6 +54,7 @@ soaf_init() {
 	soaf_init_mkdir
 	local INIT_FN=$(soaf_map_get $SOAF_USER_MAP "INIT_FN")
 	[ -n "$INIT_FN" ] && $INIT_FN
+	[ -n "$SOAF_CFG_INIT_FN" ] && $SOAF_CFG_INIT_FN
 }
 
 ################################################################################
