@@ -131,7 +131,7 @@ soaf_do_job() {
 ################################################################################
 
 soaf_do_job_list() {
-	local JOB_LIST="$1"
+	local JOB_LIST=$1
 	SOAF_JOB_RET="OK"
 	for job in $JOB_LIST
 	do
