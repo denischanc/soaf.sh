@@ -43,15 +43,19 @@ soaf_prop_file_set() {
 $PROP=$VAL
 _EOF_
 	} 2>> $SOAF_LOG_FILE
+	SOAF_PROP_FILE_NO_GET_LOG="OK"
 	soaf_prop_file_get $NATURE $PROP
+	SOAF_PROP_FILE_NO_GET_LOG=
 	if [ -n "$SOAF_PROP_FILE_RET" ]
 	then
 		if [ "$SOAF_PROP_FILE_VAL" = "$VAL" ]
 		then
 			SOAF_PROP_FILE_RET="OK"
+			local MSG="Set prop [$PROP] value (file : [$FILE]) : [$VAL]."
+			soaf_log_debug "$MSG" $SOAF_PF_LOG_NAME
 		else
-			soaf_log_err "Unable to set prop (file : [$FILE]) : [$PROP]." \
-				$SOAF_PF_LOG_NAME
+			local MSG="Unable to set prop (file : [$FILE]) : [$PROP]."
+			soaf_log_err "$MSG" $SOAF_PF_LOG_NAME
 			SOAF_PROP_FILE_RET=
 		fi
 	fi
@@ -67,13 +71,18 @@ soaf_prop_file_get() {
 		local VAR_LINE=$(grep "^$PROP=" $FILE 2>> $SOAF_LOG_FILE)
 		if [ $? -ge 2 ]
 		then
-			soaf_log_err "Unable to get prop (file : [$FILE]) : [$PROP]." \
-				$SOAF_PF_LOG_NAME
+			local MSG="Unable to get prop (file : [$FILE]) : [$PROP]."
+			soaf_log_err "$MSG" $SOAF_PF_LOG_NAME
 			SOAF_PROP_FILE_RET=
 		fi
 		SOAF_PROP_FILE_VAL=${VAR_LINE#$PROP=}
 	else
 		SOAF_PROP_FILE_VAL=
+	fi
+	if [ -n "$SOAF_PROP_FILE_RET" -a -z "$SOAF_PROP_FILE_NO_GET_LOG" ]
+	then
+		local MSG="Get prop [$PROP] value (file : [$FILE]) :"
+		soaf_log_debug "$MSG [$SOAF_PROP_FILE_VAL]." $SOAF_PF_LOG_NAME
 	fi
 }
 

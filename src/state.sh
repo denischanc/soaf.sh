@@ -61,13 +61,13 @@ soaf_create_work_state $SOAF_STATE_STAY_CUR soaf_state_stay_cur
 
 soaf_state_prop_nature() {
 	local NATURE=$1
-	echo "state_${NATURE}_prop"
+	echo "state.$NATURE.prop"
 }
 
 soaf_state_prop_file() {
 	local PROP_NATURE=$1
 	local WORK_DIR=$2
-	echo "$WORK_DIR/$PROP_NATURE.prop"
+	echo "$WORK_DIR/$PROP_NATURE"
 }
 
 soaf_state_create_prop_nature() {
@@ -91,6 +91,7 @@ soaf_state_get() {
 		SOAF_STATE__=$SOAF_PROP_FILE_VAL
 		[ -z "$SOAF_STATE__" ] && \
 			SOAF_STATE__=$(soaf_map_get $NATURE "ENTRY_WAIT_STATE")
+	fi
 }
 
 soaf_state_set() {
@@ -179,10 +180,16 @@ soaf_state_proc() {
 ################################################################################
 ################################################################################
 
+soaf_state_inactive_file() {
+	local NATURE=$1
+	local WORK_DIR=$2
+	echo "$WORK_DIR/$NATURE.inactive"
+}
+
 soaf_state_active() {
 	local NATURE=$1
 	local WORK_DIR=$2
-	local INACTIVE_FILE=$WORK_DIR/$NATURE.inactive
+	local INACTIVE_FILE=$(soaf_state_inactive_file $NATURE $WORK_DIR)
 	SOAF_STATE_ACTIVE="OK"
 	[ -f $INACTIVE_FILE ] && SOAF_STATE_ACTIVE=
 }

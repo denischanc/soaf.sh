@@ -10,14 +10,16 @@ soaf_map_extend() {
 	local NAME=$1
 	local FIELD=$2
 	local VAL=$3
-	eval ${NAME}__$FIELD=\$VAL
+	local VAR_NAME=__$(echo $NAME | tr '.-' '__')__$FIELD
+	eval $VAR_NAME=\$VAL
 }
 
 soaf_map_get() {
 	local NAME=$1
 	local FIELD=$2
 	local DFT=$3
-	eval local VAL=\${${NAME}__$FIELD:-\$DFT}
+	local VAR_NAME=__$(echo $NAME | tr '.-' '__')__$FIELD
+	eval local VAL=\${$VAR_NAME:-\$DFT}
 	echo "$VAL"
 }
 
@@ -67,8 +69,6 @@ soaf_day_curr() {
 soaf_day_upd_file() {
 	local DAY_CURR=$1
 	local FILE=$2
-	local ROLL_NATURE=$3
-	[ -n "$ROLL_NATURE" ] && soaf_roll_nature $ROLL_NATURE
 	echo "$DAY_CURR" > $FILE
 }
 
