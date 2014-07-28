@@ -43,8 +43,9 @@ soaf_mng_glob_var_loop() {
 
 soaf_mng_glob_var() {
 	soaf_mng_glob_var_loop "SOAF" "$SOAF_USAGE_VAR_LIST"
-	local VAR_PRE=$(soaf_map_get $SOAF_USER_MAP "VAR_PRE")
-	local USAGE_VAR_LIST=$(soaf_map_get $SOAF_USER_MAP "USAGE_VAR_LIST")
+	local VAR_PRE=$(soaf_map_get $SOAF_USER_MAP $SOAF_USER_VAR_PRE_ATTR)
+	local USAGE_VAR_LIST=$(soaf_map_get $SOAF_USER_MAP \
+		$SOAF_USER_USAGE_VAR_LIST_ATTR)
 	soaf_mng_glob_var_loop "$VAR_PRE" "$USAGE_VAR_LIST"
 }
 

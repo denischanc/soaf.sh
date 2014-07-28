@@ -5,12 +5,20 @@ SOAF_STATE_LOG_NAME="state"
 
 SOAF_STATE_CUR_PROP="state_cur"
 
+SOAF_STATE_DST_WORK_ATTR="soaf_state_dst_work"
+SOAF_STATE_DST_WORK_FN_ATTR="soaf_state_dst_work_fn"
+SOAF_STATE_FN_ATTR="soaf_state_fn"
+SOAF_STATE_JOB_LIST_ATTR="soaf_state_job_list"
+SOAF_STATE_DST_WAIT_ATTR="soaf_state_dst_wait"
+SOAF_STATE_WORK_DIR_ATTR="soaf_state_work_dir"
+SOAF_STATE_ENTRY_WAIT_ATTR="soaf_state_entry_wait"
+
 ################################################################################
 ################################################################################
 
 soaf_state_log_level() {
 	local LOG_LEVEL=$1
-	soaf_map_extend $SOAF_STATE_LOG_NAME "LOG_LEVEL" $LOG_LEVEL
+	soaf_log_name_log_level $SOAF_STATE_LOG_NAME $LOG_LEVEL
 }
 
 ################################################################################
@@ -21,8 +29,8 @@ soaf_create_wait_state() {
 	local DST_WORK_STATE=$2
 	local DST_WORK_STATE_FN=$3
 	SOAF_WAIT_STATE_LIST="$SOAF_WAIT_STATE_LIST $STATE"
-	soaf_map_extend $STATE "DST_WORK_STATE" $DST_WORK_STATE
-	soaf_map_extend $STATE "DST_WORK_STATE_FN" $DST_WORK_STATE_FN
+	soaf_map_extend $STATE $SOAF_STATE_DST_WORK_ATTR $DST_WORK_STATE
+	soaf_map_extend $STATE $SOAF_STATE_DST_WORK_FN_ATTR $DST_WORK_STATE_FN
 }
 
 soaf_create_work_state() {
@@ -30,9 +38,9 @@ soaf_create_work_state() {
 	local FN=$2
 	local JOB_LIST=$3
 	local DST_WAIT_STATE=$4
-	soaf_map_extend $STATE "STATE_FN" $FN
-	soaf_map_extend $STATE "STATE_JOB_LIST" "$JOB_LIST"
-	soaf_map_extend $STATE "DST_WAIT_STATE" $DST_WAIT_STATE
+	soaf_map_extend $STATE $SOAF_STATE_FN_ATTR $FN
+	soaf_map_extend $STATE $SOAF_STATE_JOB_LIST_ATTR "$JOB_LIST"
+	soaf_map_extend $STATE $SOAF_STATE_DST_WAIT_ATTR $DST_WAIT_STATE
 }
 
 soaf_create_state_nature() {
@@ -40,8 +48,8 @@ soaf_create_state_nature() {
 	local WORK_DIR=$2
 	local ENTRY_WAIT_STATE=$3
 	SOAF_STATE_NATURE_LIST="$SOAF_STATE_NATURE_LIST $NATURE"
-	soaf_map_extend $NATURE "STATE_WORK_DIR" $WORK_DIR
-	soaf_map_extend $NATURE "ENTRY_WAIT_STATE" $ENTRY_WAIT_STATE
+	soaf_map_extend $NATURE $SOAF_STATE_WORK_DIR_ATTR $WORK_DIR
+	soaf_map_extend $NATURE $SOAF_STATE_ENTRY_WAIT_ATTR $ENTRY_WAIT_STATE
 }
 
 ################################################################################
@@ -90,7 +98,7 @@ soaf_state_get() {
 	else
 		SOAF_STATE__=$SOAF_PROP_FILE_VAL
 		[ -z "$SOAF_STATE__" ] && \
-			SOAF_STATE__=$(soaf_map_get $NATURE "ENTRY_WAIT_STATE")
+			SOAF_STATE__=$(soaf_map_get $NATURE $SOAF_STATE_ENTRY_WAIT_ATTR)
 	fi
 }
 
@@ -120,7 +128,7 @@ soaf_state_do_job_list() {
 
 soaf_state_dft_work() {
 	local WORK_STATE=$2
-	local JOB_LIST=$(soaf_map_get $WORK_STATE "STATE_JOB_LIST")
+	local JOB_LIST=$(soaf_map_get $WORK_STATE $SOAF_STATE_JOB_LIST_ATTR)
 	soaf_state_do_job_list "$JOB_LIST"
 }
 
@@ -131,19 +139,20 @@ soaf_state_get_dst_work() {
 	local NATURE=$1
 	local WAIT_STATE=$2
 	local WORK_DIR=$3
-	local FN=$(soaf_map_get $WAIT_STATE "DST_WORK_STATE_FN")
+	local FN=$(soaf_map_get $WAIT_STATE $SOAF_STATE_DST_WORK_FN_ATTR)
 	if [ -n "$FN" ]
 	then
 		SOAF_STATE_DST_WORK=
 		$FN $NATURE $WAIT_STATE $WORK_DIR
 	else
-		SOAF_STATE_DST_WORK=$(soaf_map_get $WAIT_STATE "DST_WORK_STATE")
+		SOAF_STATE_DST_WORK=$(soaf_map_get $WAIT_STATE \
+			$SOAF_STATE_DST_WORK_ATTR)
 	fi
 }
 
 soaf_state_get_dst_wait() {
 	local WORK_STATE=$1
-	SOAF_STATE_DST_WAIT=$(soaf_map_get $WORK_STATE "DST_WAIT_STATE")
+	SOAF_STATE_DST_WAIT=$(soaf_map_get $WORK_STATE $SOAF_STATE_DST_WAIT_ATTR)
 }
 
 soaf_state_proc() {
@@ -162,7 +171,7 @@ soaf_state_proc() {
 		soaf_state_set $PROP_NATURE $WORK_STATE
 		if [ -n "$SOAF_STATE_RET" ]
 		then
-			local FN=$(soaf_map_get $WORK_STATE "STATE_FN")
+			local FN=$(soaf_map_get $WORK_STATE $SOAF_STATE_FN_ATTR)
 			[ -z "$FN" ] && FN=soaf_state_dft_work
 			SOAF_STATE_PROC_RET=
 			$FN $NATURE $WORK_STATE $WORK_DIR
@@ -196,7 +205,7 @@ soaf_state_active() {
 
 soaf_state_proc_nature() {
 	local NATURE=$1
-	local WORK_DIR=$(soaf_map_get $NATURE "STATE_WORK_DIR" .)
+	local WORK_DIR=$(soaf_map_get $NATURE $SOAF_STATE_WORK_DIR_ATTR .)
 	soaf_state_active $NATURE $WORK_DIR
 	if [ -z "$SOAF_STATE_ACTIVE" ]
 	then

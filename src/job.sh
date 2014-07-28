@@ -5,12 +5,16 @@ SOAF_JOB_ROLL_NATURE="soaf_job"
 
 SOAF_JOB_LOG_NAME="job"
 
+SOAF_JOB_CMD_ATTR="soaf_job_cmd"
+SOAF_JOB_LOG_DIR_ATTR="soaf_job_log_dir"
+SOAF_JOB_ROLL_SIZE_ATTR="soaf_job_roll_size"
+
 ################################################################################
 ################################################################################
 
 soaf_job_log_level() {
 	local LOG_LEVEL=$1
-	soaf_map_extend $SOAF_JOB_LOG_NAME "LOG_LEVEL" $LOG_LEVEL
+	soaf_log_name_log_level $SOAF_JOB_LOG_NAME $LOG_LEVEL
 }
 
 ################################################################################
@@ -22,9 +26,9 @@ soaf_create_job() {
 	local LOG_DIR=$3
 	local ROLL_SIZE=$4
 	SOAF_JOB_LIST="$SOAF_JOB_LIST $JOB"
-	soaf_map_extend $JOB "JOB_CMD" "$CMD"
-	soaf_map_extend $JOB "JOB_LOG_DIR" $LOG_DIR
-	soaf_map_extend $JOB "JOB_ROLL_SIZE" $ROLL_SIZE
+	soaf_map_extend $JOB $SOAF_JOB_CMD_ATTR "$CMD"
+	soaf_map_extend $JOB $SOAF_JOB_LOG_DIR_ATTR $LOG_DIR
+	soaf_map_extend $JOB $SOAF_JOB_ROLL_SIZE_ATTR $ROLL_SIZE
 }
 
 ################################################################################
@@ -70,10 +74,10 @@ soaf_do_job_process() {
 	local LOG_JOB_DIR=$3
 	local LOG_JOB_FILE=$LOG_JOB_DIR/$JOB.log
 	local LOG_JOB_ERR_FILE=$LOG_JOB_DIR/$JOB-err.log
-	local ROLL_SIZE=$(soaf_map_get $JOB "JOB_ROLL_SIZE")
+	local ROLL_SIZE=$(soaf_map_get $JOB $SOAF_JOB_ROLL_SIZE_ATTR)
 	soaf_do_job_roll $LOG_JOB_FILE $ROLL_SIZE
 	soaf_do_job_roll $LOG_JOB_ERR_FILE $ROLL_SIZE
-	local CMD=$(soaf_map_get $JOB "JOB_CMD")
+	local CMD=$(soaf_map_get $JOB $SOAF_JOB_CMD_ATTR)
 	if [ -z "$CMD" ]
 	then
 		soaf_log_err "No command for job : [$JOB] ???" $SOAF_JOB_LOG_NAME
@@ -97,7 +101,7 @@ soaf_do_job_process() {
 soaf_do_job_valid() {
 	local JOB=$1
 	local JOB_UPPER=$(soaf_to_upper $JOB)
-	local JOB_LOG_DIR=$(soaf_map_get $JOB "JOB_LOG_DIR")
+	local JOB_LOG_DIR=$(soaf_map_get $JOB $SOAF_JOB_LOG_DIR_ATTR)
 	soaf_mkdir $JOB_LOG_DIR "" $SOAF_JOB_LOG_NAME
 	local JOB_INPROG_FILE=$JOB_LOG_DIR/$JOB.inprog
 	if [ ! -f $JOB_INPROG_FILE ]

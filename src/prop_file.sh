@@ -3,12 +3,15 @@
 
 SOAF_PF_LOG_NAME="prop_file"
 
+SOAF_PF_FILE_ATTR="soaf_pf_file"
+SOAF_PF_SEP_ATTR="soaf_pf_sep"
+
 ################################################################################
 ################################################################################
 
 soaf_pf_log_level() {
 	local LOG_LEVEL=$1
-	soaf_map_extend $SOAF_PF_LOG_NAME "LOG_LEVEL" $LOG_LEVEL
+	soaf_log_name_log_level $SOAF_PF_LOG_NAME $LOG_LEVEL
 }
 
 ################################################################################
@@ -18,8 +21,8 @@ soaf_create_prop_file_nature() {
 	local NATURE=$1
 	local PROP_FILE=$2
 	local PROP_SEP=${3:- }
-	soaf_map_extend $NATURE "PROP_FILE" $PROP_FILE
-	soaf_map_extend $NATURE "PROP_SEP" "$PROP_SEP"
+	soaf_map_extend $NATURE $SOAF_PF_FILE_ATTR $PROP_FILE
+	soaf_map_extend $NATURE $SOAF_PF_SEP_ATTR "$PROP_SEP"
 }
 
 ################################################################################
@@ -29,7 +32,7 @@ soaf_prop_file_set() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE=$(soaf_map_get $NATURE "PROP_FILE")
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
 	if [ -f $FILE ]
 	then
 		{
@@ -64,7 +67,7 @@ _EOF_
 soaf_prop_file_get() {
 	local NATURE=$1
 	local PROP=$2
-	local FILE=$(soaf_map_get $NATURE "PROP_FILE")
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
 	SOAF_PROP_FILE_RET="OK"
 	if [ -f $FILE ]
 	then
@@ -93,8 +96,8 @@ soaf_prop_file_list_add() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE=$(soaf_map_get $NATURE "PROP_FILE")
-	local SEP=$(soaf_map_get $NATURE "PROP_SEP")
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
+	local SEP=$(soaf_map_get $NATURE $SOAF_PF_SEP_ATTR)
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
 	then
@@ -112,8 +115,8 @@ soaf_prop_file_list_rm() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE=$(soaf_map_get $NATURE "PROP_FILE")
-	local SEP=$(soaf_map_get $NATURE "PROP_SEP")
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
+	local SEP=$(soaf_map_get $NATURE $SOAF_PF_SEP_ATTR)
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
 	then
@@ -134,8 +137,8 @@ soaf_prop_file_is_val() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE=$(soaf_map_get $NATURE "PROP_FILE")
-	local SEP=$(soaf_map_get $NATURE "PROP_SEP")
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
+	local SEP=$(soaf_map_get $NATURE $SOAF_PF_SEP_ATTR)
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
 	then

@@ -12,14 +12,15 @@ SOAF_ENGINE_LOG_NAME="engine"
 
 soaf_engine_log_level() {
 	local LOG_LEVEL=$1
-	soaf_map_extend $SOAF_ENGINE_LOG_NAME "LOG_LEVEL" $LOG_LEVEL
+	soaf_log_name_log_level $SOAF_ENGINE_LOG_NAME $LOG_LEVEL
 }
 
 ################################################################################
 ################################################################################
 
 soaf_usage() {
-	local USAGE_VAR_LIST=$(soaf_map_get $SOAF_USER_MAP "USAGE_VAR_LIST")
+	local USAGE_VAR_LIST=$(soaf_map_get $SOAF_USER_MAP \
+		$SOAF_USER_USAGE_VAR_LIST_ATTR)
 	USAGE_VAR_LIST="$SOAF_USAGE_VAR_LIST $USAGE_VAR_LIST"
 	cat << _EOF_
 ${SOAF_TITLE_PRE}USAGE
@@ -29,7 +30,7 @@ ${SOAF_TXT_PRE}ACTION: [$(echo $SOAF_ACTION_LIST | tr ' ' '|')]
 _EOF_
 	for action in $SOAF_ACTION_LIST
 	do
-		local USAGE_FN=$(soaf_map_get $action "ACTION_USAGE_FN")
+		local USAGE_FN=$(soaf_map_get $action $SOAF_ACTION_USAGE_FN_ATTR)
 		if [ -n "$USAGE_FN" ]
 		then
 			soaf_dis_title "ACTION=$action"
@@ -52,7 +53,7 @@ soaf_init_mkdir() {
 soaf_init() {
 	soaf_log_init
 	soaf_init_mkdir
-	local INIT_FN=$(soaf_map_get $SOAF_USER_MAP "INIT_FN")
+	local INIT_FN=$(soaf_map_get $SOAF_USER_MAP $SOAF_USER_INIT_FN_ATTR)
 	[ -n "$INIT_FN" ] && $INIT_FN
 	[ -n "$SOAF_CFG_INIT_FN" ] && $SOAF_CFG_INIT_FN
 }
@@ -74,7 +75,7 @@ soaf_engine() {
 	then
 		soaf_init
 	fi
-	local FN=$(soaf_map_get $SOAF_ACTION "ACTION_FN")
+	local FN=$(soaf_map_get $SOAF_ACTION $SOAF_ACTION_FN_ATTR)
 	if [ -z "$FN" ]
 	then
 		soaf_dis_txt "No function defined for action [$SOAF_ACTION]."

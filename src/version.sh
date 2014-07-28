@@ -10,7 +10,7 @@ soaf_info_add_var() {
 ################################################################################
 
 SOAF_NAME="soaf.sh"
-SOAF_VERSION="0.2.0_b_12"
+SOAF_VERSION="0.2.0_b_13"
 
 soaf_info_add_var SOAF_VERSION
 
@@ -19,7 +19,7 @@ soaf_info_add_var SOAF_VERSION
 
 soaf_version() {
 	local VER=$SOAF_NAME-$SOAF_VERSION
-	local USER_VER_FN=$(soaf_map_get $SOAF_USER_MAP "VERSION_FN")
+	local USER_VER_FN=$(soaf_map_get $SOAF_USER_MAP $SOAF_USER_VERSION_FN_ATTR)
 	if [ -n "$USER_VER_FN" ]
 	then
 		VER="$($USER_VER_FN) ($VER)"

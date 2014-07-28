@@ -10,12 +10,18 @@ soaf_info_add_var "SOAF_ROLL_SIZE SOAF_ROLL_FILE_SIZE SOAF_ROLL_COMPRESS_CMD"
 
 SOAF_ROLL_LOG_NAME="roll"
 
+SOAF_ROLL_FILE_ATTR="soaf_roll_file"
+SOAF_ROLL_SIZE_ATTR="soaf_roll_size"
+SOAF_ROLL_COND_FN_ATTR="soaf_roll_cond_fn"
+SOAF_ROLL_FILE_SIZE_ATTR="soaf_roll_file_size"
+SOAF_ROLL_NO_COMPRESS_ATTR="soaf_roll_no_compress"
+
 ################################################################################
 ################################################################################
 
 soaf_roll_log_level() {
 	local LOG_LEVEL=$1
-	soaf_map_extend $SOAF_ROLL_LOG_NAME "LOG_LEVEL" $LOG_LEVEL
+	soaf_log_name_log_level $SOAF_ROLL_LOG_NAME $LOG_LEVEL
 }
 
 ################################################################################
@@ -26,9 +32,9 @@ soaf_create_roll_nature() {
 	local ROLL_FILE=$2
 	local ROLL_SIZE=$3
 	local ROLL_COND_FN=$4
-	soaf_map_extend $NATURE "ROLL_FILE" $ROLL_FILE
-	soaf_map_extend $NATURE "ROLL_SIZE" $ROLL_SIZE
-	soaf_map_extend $NATURE "ROLL_COND_FN" $ROLL_COND_FN
+	soaf_map_extend $NATURE $SOAF_ROLL_FILE_ATTR $ROLL_FILE
+	soaf_map_extend $NATURE $SOAF_ROLL_SIZE_ATTR $ROLL_SIZE
+	soaf_map_extend $NATURE $SOAF_ROLL_COND_FN_ATTR $ROLL_COND_FN
 }
 
 soaf_create_roll_cond_gt_nature() {
@@ -38,12 +44,12 @@ soaf_create_roll_cond_gt_nature() {
 	local ROLL_FILE_SIZE=$4
 	local COND_FN=soaf_roll_cond_gt_size
 	soaf_create_roll_nature $NATURE $ROLL_FILE "$ROLL_SIZE" $COND_FN
-	soaf_map_extend $NATURE "ROLL_FILE_SIZE" $ROLL_FILE_SIZE
+	soaf_map_extend $NATURE $SOAF_ROLL_FILE_SIZE_ATTR $ROLL_FILE_SIZE
 }
 
 soaf_roll_no_compress() {
 	local NATURE=$1
-	soaf_map_extend $NATURE "ROLL_NO_COMPRESS" "OK"
+	soaf_map_extend $NATURE $SOAF_ROLL_NO_COMPRESS_ATTR "OK"
 }
 
 ################################################################################
@@ -61,7 +67,7 @@ soaf_roll_proc_file() {
 		local FILE_ROLL=$FILE-$(date '+%F-%H%M%S')
 		soaf_cmd "mv -f $FILE $FILE_ROLL 2>> $SOAF_LOG_FILE" \
 			"" $SOAF_ROLL_LOG_NAME
-		local NO_COMPRESS=$(soaf_map_get $NATURE "ROLL_NO_COMPRESS")
+		local NO_COMPRESS=$(soaf_map_get $NATURE $SOAF_ROLL_NO_COMPRESS_ATTR)
 		if [ -z "$NO_COMPRESS" ]
 		then
 			soaf_cmd "$SOAF_ROLL_COMPRESS_CMD $FILE_ROLL 2>> $SOAF_LOG_FILE" \
@@ -88,13 +94,13 @@ soaf_roll_clean() {
 
 soaf_roll_nature() {
 	local NATURE=$1
-	local FILE=$(soaf_map_get $NATURE "ROLL_FILE")
+	local FILE=$(soaf_map_get $NATURE $SOAF_ROLL_FILE_ATTR)
 	if [ -n "$FILE" ]
 	then
-		local SIZE=$(soaf_map_get $NATURE "ROLL_SIZE" $SOAF_ROLL_SIZE)
+		local SIZE=$(soaf_map_get $NATURE $SOAF_ROLL_SIZE_ATTR $SOAF_ROLL_SIZE)
 		if [ -f "$FILE" ]
 		then
-			local COND_FN=$(soaf_map_get $NATURE "ROLL_COND_FN")
+			local COND_FN=$(soaf_map_get $NATURE $SOAF_ROLL_COND_FN_ATTR)
 			if [ -n "$COND_FN" ]
 			then
 				SOAF_ROLL_COND_FN_RET=
@@ -123,7 +129,8 @@ soaf_roll_nature() {
 soaf_roll_cond_gt_size() {
 	local NATURE=$1
 	local FILE=$2
-	local SIZE=$(soaf_map_get $NATURE "ROLL_FILE_SIZE" $SOAF_ROLL_FILE_SIZE)
+	local SIZE=$(soaf_map_get $NATURE $SOAF_ROLL_FILE_SIZE_ATTR \
+		$SOAF_ROLL_FILE_SIZE)
 	local FILE_SIZE=$(stat -c %s $FILE 2> /dev/null)
 	if [ -n "$FILE_SIZE" ]
 	then

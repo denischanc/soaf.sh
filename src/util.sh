@@ -3,6 +3,8 @@
 
 soaf_info_add_var SOAF_NOEXEC_PROG_LIST
 
+SOAF_UTIL_NOEXEC_FN_ATTR="soaf_util_noexec_fn"
+
 ################################################################################
 ################################################################################
 
@@ -41,7 +43,7 @@ soaf_cmd() {
 		soaf_log $LOG_LEVEL "Command return : [$RET]." $LOG_NAME
 	else
 		local CMD_PROG_VAR=$(echo $CMD_PROG | tr '.-' '__')
-		local NOEXEC_FN=$(soaf_map_get $CMD_PROG_VAR "NOEXEC_FN")
+		local NOEXEC_FN=$(soaf_map_get $CMD_PROG_VAR $SOAF_UTIL_NOEXEC_FN_ATTR)
 		SOAF_RET=
 		if [ -n "$NOEXEC_FN" ]
 		then

@@ -8,6 +8,8 @@ SOAF_LOG_DEBUG="DEBUG"
 
 SOAF_LOG_ROLL_NATURE_INT="soaf_log"
 
+SOAF_LOG_LEVEL_ATTR="soaf_log_level"
+
 ################################################################################
 ################################################################################
 
@@ -28,6 +30,12 @@ soaf_all_log_level() {
 	soaf_job_log_level $LOG_LEVEL
 	soaf_state_log_level $LOG_LEVEL
 	soaf_pf_log_level $LOG_LEVEL
+}
+
+soaf_log_name_log_level() {
+	local NAME=$1
+	local LEVEL=$2
+	soaf_map_extend "$NAME" $SOAF_LOG_LEVEL_ATTR $LEVEL
 }
 
 ################################################################################
@@ -52,7 +60,8 @@ soaf_log() {
 	local NAME=$3
 	local LEVEL_LOC_NUM=$(soaf_log_num_level $LEVEL)
 	local LEVEL_GLOB=$SOAF_LOG_LEVEL
-	[ -n "$NAME" ] && LEVEL_GLOB=$(soaf_map_get $NAME "LOG_LEVEL" $LEVEL_GLOB)
+	[ -n "$NAME" ] && \
+		LEVEL_GLOB=$(soaf_map_get $NAME $SOAF_LOG_LEVEL_ATTR $LEVEL_GLOB)
 	local LEVEL_GLOB_NUM=$(soaf_log_num_level $LEVEL_GLOB)
 	if [ $LEVEL_LOC_NUM -ge $LEVEL_GLOB_NUM ]
 	then
