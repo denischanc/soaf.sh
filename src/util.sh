@@ -5,6 +5,8 @@ soaf_info_add_var SOAF_NOEXEC_PROG_LIST
 
 SOAF_UTIL_NOEXEC_FN_ATTR="soaf_util_noexec_fn"
 
+SOAF_UTIL_DAY_PROP="soaf_util_day"
+
 ################################################################################
 ################################################################################
 
@@ -63,31 +65,42 @@ soaf_cmd_info() {
 ################################################################################
 ################################################################################
 
-soaf_day_curr() {
-	local DAY_CURR=$(date '+%j')
-	echo $DAY_CURR
+soaf_day_cur() {
+	SOAF_DAY_CUR=$(date '+%j')
 }
 
 soaf_day_upd_file() {
-	local DAY_CURR=$1
-	local FILE=$2
-	echo "$DAY_CURR" > $FILE
+	local DAY=$1
+	local PROP_FILE_NATURE=$2
+	local PROP=${3:-$SOAF_UTIL_DAY_PROP}
+	soaf_prop_file_set $PROP_FILE_NATURE $PROP $DAY
+	[ -n "$SOAF_PROP_FILE_RET" ] && SOAF_RET="OK" || SOAF_RET=
 }
 
 soaf_day_since_last() {
-	local DAY_CURR=$1
-	local FILE=$2
-	[ -z "$DAY_CURR" ] && DAY_CURR=$(soaf_day_curr)
-	local DAY_LAST=
-	[ -f "$FILE" ] && DAY_LAST=$(cat $FILE | head -1)
-	[ -z "$DAY_LAST" ] && DAY_LAST=1
-	local DAY_DIFF=$(expr $DAY_CURR \- $DAY_LAST 2> /dev/null)
-	[ -z "$DAY_DIFF" ] && DAY_DIFF=0
-	if [ $DAY_DIFF -lt 0 ]
+	local DAY=$1
+	local PROP_FILE_NATURE=$2
+	local PROP=${3:-$SOAF_UTIL_DAY_PROP}
+	if [ -z "$DAY" ]
 	then
-		DAY_DIFF=$(expr $DAY_DIFF + 365)
+		soaf_day_cur
+		DAY=$SOAF_DAY_CUR
 	fi
-	echo $DAY_DIFF
+	soaf_prop_file_get $PROP_FILE_NATURE $PROP
+	if [ -z "$SOAF_PROP_FILE_RET" ]
+	then
+		SOAF_RET=
+	else
+		local DAY_LAST=$SOAF_PROP_FILE_VAL
+		[ -z "$DAY_LAST" ] && DAY_LAST=1
+		SOAF_DAY_DIFF=$(expr $DAY \- $DAY_LAST 2>> $SOAF_LOG_FILE)
+		[ -z "$SOAF_DAY_DIFF" ] && SOAF_DAY_DIFF=0
+		if [ $SOAF_DAY_DIFF -lt 0 ]
+		then
+			SOAF_DAY_DIFF=$(expr $SOAF_DAY_DIFF + 365)
+		fi
+		SOAF_RET="OK"
+	fi
 }
 
 ################################################################################
