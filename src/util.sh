@@ -5,7 +5,25 @@ soaf_info_add_var SOAF_NOEXEC_PROG_LIST
 
 SOAF_UTIL_NOEXEC_FN_ATTR="soaf_util_noexec_fn"
 
-SOAF_UTIL_DAY_PROP="soaf_util_day"
+SOAF_UTIL_DAY_PROP="soaf.util.day"
+
+################################################################################
+################################################################################
+
+soaf_to_var() {
+	local NAME=$1
+	echo "$NAME" | tr '.-' '__'
+}
+
+soaf_upper() {
+	local NAME=$1
+	echo "$NAME" | tr '[a-z]' '[A-Z]'
+}
+
+soaf_lower() {
+	local NAME=$1
+	echo "$NAME" | tr '[A-Z]' '[a-z]'
+}
 
 ################################################################################
 ################################################################################
@@ -14,7 +32,7 @@ soaf_map_extend() {
 	local NAME=$1
 	local FIELD=$2
 	local VAL=$3
-	local VAR_NAME=__$(echo $NAME | tr '.-' '__')__$FIELD
+	local VAR_NAME=$(soaf_to_var "__${NAME}__$FIELD")
 	eval $VAR_NAME=\$VAL
 }
 
@@ -22,7 +40,7 @@ soaf_map_get() {
 	local NAME=$1
 	local FIELD=$2
 	local DFT=$3
-	local VAR_NAME=__$(echo $NAME | tr '.-' '__')__$FIELD
+	local VAR_NAME=$(soaf_to_var "__${NAME}__$FIELD")
 	eval local VAL=\${$VAR_NAME:-\$DFT}
 	echo "$VAL"
 }

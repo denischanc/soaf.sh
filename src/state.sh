@@ -3,7 +3,7 @@
 
 SOAF_STATE_LOG_NAME="state"
 
-SOAF_STATE_CUR_PROP="state_cur"
+SOAF_STATE_CUR_PROP="soaf.state.cur"
 
 SOAF_STATE_DST_WORK_ATTR="soaf_state_dst_work"
 SOAF_STATE_DST_WORK_FN_ATTR="soaf_state_dst_work_fn"
@@ -63,27 +63,6 @@ soaf_state_stay_cur() {
 }
 
 soaf_create_work_state $SOAF_STATE_STAY_CUR soaf_state_stay_cur
-
-################################################################################
-################################################################################
-
-soaf_state_prop_nature() {
-	local NATURE=$1
-	echo "state.$NATURE.prop"
-}
-
-soaf_state_prop_file() {
-	local PROP_NATURE=$1
-	local WORK_DIR=$2
-	echo "$WORK_DIR/$PROP_NATURE"
-}
-
-soaf_state_create_prop_nature() {
-	local PROP_NATURE=$1
-	local WORK_DIR=$2
-	local PROP_FILE=$(soaf_state_prop_file $PROP_NATURE $WORK_DIR)
-	soaf_create_prop_file_nature $PROP_NATURE $PROP_FILE
-}
 
 ################################################################################
 ################################################################################
@@ -212,8 +191,8 @@ soaf_state_proc_nature() {
 		local MSG="State nature not active : [$NATURE]."
 		soaf_log_debug "$MSG" $SOAF_STATE_LOG_NAME
 	else
-		local PROP_NATURE=$(soaf_state_prop_nature $NATURE)
-		soaf_state_create_prop_nature $PROP_NATURE $WORK_DIR
+		local PROP_NATURE="soaf.state.$NATURE"
+		soaf_create_prop_file_nature $PROP_NATURE
 		soaf_state_get $NATURE $PROP_NATURE
 		if [ -n "$SOAF_STATE_RET" ]
 		then

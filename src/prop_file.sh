@@ -9,6 +9,11 @@ SOAF_PF_SEP_ATTR="soaf_pf_sep"
 ################################################################################
 ################################################################################
 
+SOAF_PF_FILE=$SOAF_NAME.prop
+
+################################################################################
+################################################################################
+
 soaf_pf_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_PF_LOG_NAME $LOG_LEVEL
@@ -32,18 +37,19 @@ soaf_prop_file_set() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE)
+	local PROP_UNIQ=$NATURE.$PROP
 	if [ -f $FILE ]
 	then
 		{
 			local FILE_TMP=$FILE.$$
-			grep -v "^$PROP=" $FILE > $FILE_TMP
+			grep -v "^$PROP_UNIQ=" $FILE > $FILE_TMP
 			mv -f $FILE_TMP $FILE
 		} 2>> $SOAF_LOG_FILE
 	fi
 	{
 		cat << _EOF_ >> $FILE
-$PROP=$VAL
+$PROP_UNIQ=$VAL
 _EOF_
 	} 2>> $SOAF_LOG_FILE
 	SOAF_PROP_FILE_NO_GET_LOG="OK"
@@ -54,10 +60,10 @@ _EOF_
 		if [ "$SOAF_PROP_FILE_VAL" = "$VAL" ]
 		then
 			SOAF_PROP_FILE_RET="OK"
-			local MSG="Set prop [$PROP] value (file : [$FILE]) : [$VAL]."
+			local MSG="Set prop [$PROP_UNIQ] value (file : [$FILE]) : [$VAL]."
 			soaf_log_debug "$MSG" $SOAF_PF_LOG_NAME
 		else
-			local MSG="Unable to set prop (file : [$FILE]) : [$PROP]."
+			local MSG="Unable to set prop (file : [$FILE]) : [$PROP_UNIQ]."
 			soaf_log_err "$MSG" $SOAF_PF_LOG_NAME
 			SOAF_PROP_FILE_RET=
 		fi
@@ -67,24 +73,25 @@ _EOF_
 soaf_prop_file_get() {
 	local NATURE=$1
 	local PROP=$2
-	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE)
+	local PROP_UNIQ=$NATURE.$PROP
 	SOAF_PROP_FILE_RET="OK"
 	if [ -f $FILE ]
 	then
-		local VAR_LINE=$(grep "^$PROP=" $FILE 2>> $SOAF_LOG_FILE)
+		local VAR_LINE=$(grep "^$PROP_UNIQ=" $FILE 2>> $SOAF_LOG_FILE)
 		if [ $? -ge 2 ]
 		then
-			local MSG="Unable to get prop (file : [$FILE]) : [$PROP]."
+			local MSG="Unable to get prop (file : [$FILE]) : [$PROP_UNIQ]."
 			soaf_log_err "$MSG" $SOAF_PF_LOG_NAME
 			SOAF_PROP_FILE_RET=
 		fi
-		SOAF_PROP_FILE_VAL=${VAR_LINE#$PROP=}
+		SOAF_PROP_FILE_VAL=${VAR_LINE#$PROP_UNIQ=}
 	else
 		SOAF_PROP_FILE_VAL=
 	fi
 	if [ -n "$SOAF_PROP_FILE_RET" -a -z "$SOAF_PROP_FILE_NO_GET_LOG" ]
 	then
-		local MSG="Get prop [$PROP] value (file : [$FILE]) :"
+		local MSG="Get prop [$PROP_UNIQ] value (file : [$FILE]) :"
 		soaf_log_debug "$MSG [$SOAF_PROP_FILE_VAL]." $SOAF_PF_LOG_NAME
 	fi
 }
@@ -96,7 +103,7 @@ soaf_prop_file_list_add() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE)
 	local SEP=$(soaf_map_get $NATURE $SOAF_PF_SEP_ATTR)
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
@@ -115,7 +122,7 @@ soaf_prop_file_list_rm() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE)
 	local SEP=$(soaf_map_get $NATURE $SOAF_PF_SEP_ATTR)
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
@@ -137,7 +144,7 @@ soaf_prop_file_is_val() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR)
+	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE)
 	local SEP=$(soaf_map_get $NATURE $SOAF_PF_SEP_ATTR)
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
