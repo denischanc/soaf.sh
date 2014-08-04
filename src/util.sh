@@ -62,8 +62,7 @@ soaf_cmd() {
 		RET=$?
 		soaf_log $LOG_LEVEL "Command return : [$RET]." $LOG_NAME
 	else
-		local CMD_PROG_VAR=$(echo $CMD_PROG | tr '.-' '__')
-		local NOEXEC_FN=$(soaf_map_get $CMD_PROG_VAR $SOAF_UTIL_NOEXEC_FN_ATTR)
+		local NOEXEC_FN=$(soaf_map_get $CMD_PROG $SOAF_UTIL_NOEXEC_FN_ATTR)
 		SOAF_RET=
 		if [ -n "$NOEXEC_FN" ]
 		then

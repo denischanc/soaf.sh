@@ -3,15 +3,18 @@
 
 SOAF_STATE_LOG_NAME="soaf.state"
 
-SOAF_STATE_CUR_PROP="soaf.state.cur"
+SOAF_STATE_CUR_PROP="cur_state"
 
 SOAF_STATE_DST_WORK_ATTR="soaf_state_dst_work"
 SOAF_STATE_DST_WORK_FN_ATTR="soaf_state_dst_work_fn"
+
 SOAF_STATE_FN_ATTR="soaf_state_fn"
 SOAF_STATE_JOB_LIST_ATTR="soaf_state_job_list"
 SOAF_STATE_DST_WAIT_ATTR="soaf_state_dst_wait"
+
 SOAF_STATE_WORK_DIR_ATTR="soaf_state_work_dir"
 SOAF_STATE_ENTRY_WAIT_ATTR="soaf_state_entry_wait"
+SOAF_STATE_PROP_FILE_ATTR="soaf_state_prop_file"
 
 ################################################################################
 ################################################################################
@@ -47,9 +50,11 @@ soaf_create_state_nature() {
 	local NATURE=$1
 	local WORK_DIR=$2
 	local ENTRY_WAIT_STATE=$3
+	local PROP_FILE=$4
 	SOAF_STATE_NATURE_LIST="$SOAF_STATE_NATURE_LIST $NATURE"
 	soaf_map_extend $NATURE $SOAF_STATE_WORK_DIR_ATTR $WORK_DIR
 	soaf_map_extend $NATURE $SOAF_STATE_ENTRY_WAIT_ATTR $ENTRY_WAIT_STATE
+	soaf_map_extend $NATURE $SOAF_STATE_PROP_FILE_ATTR $PROP_FILE
 }
 
 ################################################################################
@@ -200,7 +205,8 @@ soaf_state_proc_nature() {
 		soaf_log_debug "$MSG" $SOAF_STATE_LOG_NAME
 	else
 		local PROP_NATURE=$(soaf_state_prop_nature $NATURE)
-		soaf_create_prop_file_nature $PROP_NATURE
+		local PROP_FILE=$(soaf_map_get $NATURE $SOAF_STATE_PROP_FILE_ATTR)
+		soaf_create_prop_file_nature $PROP_NATURE $PROP_FILE
 		soaf_state_get $NATURE $PROP_NATURE
 		if [ -n "$SOAF_STATE_RET" ]
 		then
