@@ -3,7 +3,7 @@
 
 SOAF_JOB_ROLL_NATURE="soaf.job.roll"
 
-SOAF_JOB_LOG_NAME="job"
+SOAF_JOB_LOG_NAME="soaf.job"
 
 SOAF_JOB_CMD_ATTR="soaf_job_cmd"
 SOAF_JOB_LOG_DIR_ATTR="soaf_job_log_dir"

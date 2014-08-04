@@ -1,7 +1,7 @@
 ################################################################################
 ################################################################################
 
-SOAF_PF_LOG_NAME="prop_file"
+SOAF_PF_LOG_NAME="soaf.prop_file"
 
 SOAF_PF_FILE_ATTR="soaf_pf_file"
 SOAF_PF_SEP_ATTR="soaf_pf_sep"
