@@ -191,7 +191,7 @@ soaf_state_proc_nature() {
 		local MSG="State nature not active : [$NATURE]."
 		soaf_log_debug "$MSG" $SOAF_STATE_LOG_NAME
 	else
-		local PROP_NATURE="soaf.state.$NATURE"
+		local PROP_NATURE="soaf.state.$NATURE.prop"
 		soaf_create_prop_file_nature $PROP_NATURE
 		soaf_state_get $NATURE $PROP_NATURE
 		if [ -n "$SOAF_STATE_RET" ]
