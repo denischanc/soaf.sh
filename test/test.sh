@@ -8,21 +8,29 @@ TEST_HOME="$(dirname $0)"
 make -C $TEST_HOME/.. > /dev/null 2>&1
 . $TEST_HOME/../src/soaf.sh
 
-soaf_cfg_set TEST_LOG_FILE $TEST_HOME/test.log
-SOAF_LOG_FILE=$TEST_LOG_FILE
-
-################################################################################
-################################################################################
-
-test_version() {
-	echo "test-1.0.0"
+test_cfg() {
+	soaf_cfg_set SOAF_LOG_FILE $TEST_HOME/test.log
 }
 
 test_init() {
-	soaf_log_info "Test init called."
+	test_init_1
+	test_init_2
+	test_init_3
+	test_init_4
 }
 
-soaf_def_user test_version TEST "NAME VAL" test_init
+################################################################################
+################################################################################
+
+test_prepenv() {
+	soaf_log_info "Test prepenv called."
+}
+
+TEST_NATURE="test"
+
+soaf_create_user_nature $TEST_NATURE "test" "1.0.0" \
+	"TEST" "NAME VAL" \
+	test_cfg test_init test_prepenv
 
 ################################################################################
 ################################################################################
@@ -36,29 +44,32 @@ test_display_usage() {
 	soaf_dis_txt "Display NAME = VAL."
 }
 
-soaf_create_action "display" test_display test_display_usage
+test_init_1() {
+	soaf_create_action "display" test_display test_display_usage
+}
 
 ################################################################################
 ################################################################################
 
-soaf_cfg_set TEST_SPACE "    "
-soaf_info_add_var TEST_SPACE
+test_init_2() {
+	soaf_cfg_set TEST_SPACE "    "
+	soaf_info_add_var TEST_SPACE
+}
 
 ################################################################################
 ################################################################################
 
-### soaf_create_job "ps" "ps -ef" $TEST_HOME 3
-### soaf_create_job "ps" "ps -ef" $TEST_HOME 1
-soaf_create_job "ps" "ps -ef" $TEST_HOME 0
+test_init_3() {
+	### soaf_create_job "ps" "ps -ef" $TEST_HOME 3
+	### soaf_create_job "ps" "ps -ef" $TEST_HOME 1
+	soaf_create_job "ps" "ps -ef" $TEST_HOME 0
+}
 
 ################################################################################
 ################################################################################
 
-TEST_PROP_NATURE="test_prop"
+TEST_PROP_NATURE="test.prop"
 TEST_TEST_PROP="test"
-
-soaf_create_prop_file_nature $TEST_PROP_NATURE $TEST_HOME/test.prop
-### soaf_create_prop_file_nature $TEST_PROP_NATURE $TEST_HOME/test.prop ":"
 
 test_prop_file() {
 	rm -f $(soaf_map_get $TEST_PROP_NATURE "PROP_FILE")
@@ -89,9 +100,13 @@ test_prop_file() {
 	###-------------------------------------------------------------------------
 }
 
-soaf_create_action "prop_file" test_prop_file
+test_init_4() {
+	soaf_create_prop_file_nature $TEST_PROP_NATURE $TEST_HOME/test.prop
+	### soaf_create_prop_file_nature $TEST_PROP_NATURE $TEST_HOME/test.prop ":"
+	soaf_create_action "prop_file" test_prop_file
+}
 
 ################################################################################
 ################################################################################
 
-soaf_engine
+soaf_engine $TEST_NATURE

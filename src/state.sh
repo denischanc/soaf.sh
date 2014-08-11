@@ -16,6 +16,17 @@ SOAF_STATE_WORK_DIR_ATTR="soaf_state_work_dir"
 SOAF_STATE_ENTRY_WAIT_ATTR="soaf_state_entry_wait"
 SOAF_STATE_PROP_FILE_ATTR="soaf_state_prop_file"
 
+SOAF_STATE_STAY_CUR="stay_cur"
+
+################################################################################
+################################################################################
+
+soaf_state_init() {
+	soaf_create_work_state $SOAF_STATE_STAY_CUR soaf_state_stay_cur
+}
+
+soaf_engine_add_init_fn soaf_state_init
+
 ################################################################################
 ################################################################################
 
@@ -23,6 +34,8 @@ soaf_state_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_STATE_LOG_NAME $LOG_LEVEL
 }
+
+soaf_add_name_log_level_fn soaf_state_log_level
 
 ################################################################################
 ################################################################################
@@ -60,14 +73,10 @@ soaf_create_state_nature() {
 ################################################################################
 ################################################################################
 
-SOAF_STATE_STAY_CUR="stay_cur"
-
 soaf_state_stay_cur() {
 	soaf_log_debug "Do nothing, stay in current waiting state." \
 		$SOAF_STATE_LOG_NAME
 }
-
-soaf_create_work_state $SOAF_STATE_STAY_CUR soaf_state_stay_cur
 
 ################################################################################
 ################################################################################

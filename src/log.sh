@@ -13,23 +13,43 @@ SOAF_LOG_LEVEL_ATTR="soaf_log_level"
 ################################################################################
 ################################################################################
 
-SOAF_LOG_LEVEL=$SOAF_LOG_INFO
+soaf_log_cfg() {
+	local USER_NATURE=$1
+	###---------------
+	soaf_cfg_set SOAF_LOG_LEVEL $SOAF_LOG_INFO
+	###---------------
+	soaf_cfg_set SOAF_LOG_ROLL_NATURE $SOAF_LOG_ROLL_NATURE_INT
+	###---------------
+	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
+	soaf_cfg_set SOAF_LOG_FILE $SOAF_LOG_DIR/$USER_NAME.log
+}
 
-SOAF_LOG_ROLL_NATURE=$SOAF_LOG_ROLL_NATURE_INT
-SOAF_LOG_FILE=$SOAF_NAME.log
+soaf_log_init() {
+	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_FILE"
+	###---------------
+	if [ $SOAF_LOG_ROLL_NATURE = $SOAF_LOG_ROLL_NATURE_INT ]
+	then
+		soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE $SOAF_LOG_FILE
+	fi
+}
 
-soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_FILE"
+soaf_log_prepenv() {
+	mkdir -p $(dirname $SOAF_LOG_FILE)
+}
+
+soaf_engine_add_cfg_fn soaf_log_cfg
+soaf_engine_add_init_fn soaf_log_init
+soaf_engine_add_prepenv_fn soaf_log_prepenv
 
 ################################################################################
 ################################################################################
 
 soaf_all_log_level() {
-	local LOG_LEVEL=$1
-	soaf_roll_log_level $LOG_LEVEL
-	soaf_engine_log_level $LOG_LEVEL
-	soaf_job_log_level $LOG_LEVEL
-	soaf_state_log_level $LOG_LEVEL
-	soaf_pf_log_level $LOG_LEVEL
+	local LOG_LEVEL=$1 fn
+	for fn in $SOAF_NAME_LOGLVL_FN_LIST
+	do
+		$fn $LOG_LEVEL
+	done
 }
 
 soaf_log_name_log_level() {
@@ -103,15 +123,4 @@ soaf_log_debug() {
 	local MSG=$1
 	local NAME=$2
 	soaf_log $SOAF_LOG_DEBUG "$MSG" $NAME
-}
-
-################################################################################
-################################################################################
-
-soaf_log_init() {
-	if [ $SOAF_LOG_ROLL_NATURE = $SOAF_LOG_ROLL_NATURE_INT ]
-	then
-		soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE $SOAF_LOG_FILE
-		mkdir -p $(dirname $SOAF_LOG_FILE)
-	fi
 }

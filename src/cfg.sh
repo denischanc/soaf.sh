@@ -1,10 +1,25 @@
 ################################################################################
 ################################################################################
 
-soaf_usage_add_var() {
-	local VAR_LIST=$1
-	SOAF_USAGE_VAR_LIST="$SOAF_USAGE_VAR_LIST $VAR_LIST"
+soaf_cfg__() {
+	local USER_NATURE=$1
+	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
+	###---------------
+	soaf_cfg_set SOAF_WORK_DIR $HOME/work/$USER_NAME
+	soaf_cfg_set SOAF_LOG_DIR $SOAF_WORK_DIR/log
+	###---------------
+	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
+	soaf_cfg_set SOAF_EXT_GLOB_DIR /etc/$USER_NAME
+	soaf_cfg_set SOAF_EXT_LOC_DIR $HOME/.$USER_NAME
 }
+
+soaf_cfg_init() {
+	soaf_info_add_var "SOAF_WORK_DIR SOAF_LOG_DIR"
+	soaf_info_add_var "SOAF_EXT_GLOB_DIR SOAF_EXT_LOC_DIR"
+}
+
+soaf_engine_add_cfg_fn soaf_cfg__
+soaf_engine_add_init_fn soaf_cfg_init
 
 ################################################################################
 ################################################################################
@@ -42,9 +57,10 @@ soaf_mng_glob_var_loop() {
 }
 
 soaf_mng_glob_var() {
+	local USER_NATURE=$1
 	soaf_mng_glob_var_loop "SOAF" "$SOAF_USAGE_VAR_LIST"
-	local VAR_PRE=$(soaf_map_get $SOAF_USER_MAP $SOAF_USER_VAR_PRE_ATTR)
-	local USAGE_VAR_LIST=$(soaf_map_get $SOAF_USER_MAP \
+	local VAR_PRE=$(soaf_map_get $USER_NATURE $SOAF_USER_VAR_PRE_ATTR)
+	local USAGE_VAR_LIST=$(soaf_map_get $USER_NATURE \
 		$SOAF_USER_USAGE_VAR_LIST_ATTR)
 	soaf_mng_glob_var_loop "$VAR_PRE" "$USAGE_VAR_LIST"
 }
@@ -66,3 +82,12 @@ soaf_check_var_list() {
 	done
 	SOAF_CHECK_RET=$RET
 }
+
+################################################################################
+################################################################################
+
+while [ $# -ge 1 ]
+do
+	soaf_parse_arg "$1"
+	shift
+done

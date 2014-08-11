@@ -9,6 +9,22 @@ SOAF_JOB_CMD_ATTR="soaf_job_cmd"
 SOAF_JOB_LOG_DIR_ATTR="soaf_job_log_dir"
 SOAF_JOB_ROLL_SIZE_ATTR="soaf_job_roll_size"
 
+SOAF_JOB_ACTION="job"
+
+soaf_usage_add_var JOB
+
+################################################################################
+################################################################################
+
+soaf_job_init() {
+	if [ -n "$SOAF_JOB_LIST" ]
+	then
+		soaf_create_action $SOAF_JOB_ACTION soaf_job soaf_job_usage
+	fi
+}
+
+soaf_engine_add_init_fn soaf_job_init
+
 ################################################################################
 ################################################################################
 
@@ -16,6 +32,8 @@ soaf_job_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_JOB_LOG_NAME $LOG_LEVEL
 }
+
+soaf_add_name_log_level_fn soaf_job_log_level
 
 ################################################################################
 ################################################################################
@@ -45,14 +63,6 @@ soaf_job() {
 
 soaf_job_usage() {
 	soaf_dis_txt "JOB: [$(echo $SOAF_JOB_LIST | tr ' ' '|')]"
-}
-
-soaf_job_init() {
-	if [ -n "$SOAF_JOB_LIST" ]
-	then
-		soaf_create_action "job" soaf_job soaf_job_usage
-		soaf_usage_add_var JOB
-	fi
 }
 
 ################################################################################

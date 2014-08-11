@@ -1,20 +1,31 @@
 ################################################################################
 ################################################################################
 
-SOAF_ROLL_SIZE=4
-SOAF_ROLL_FILE_SIZE=100000
-
-SOAF_ROLL_COMPRESS_CMD="xz"
-
-soaf_info_add_var "SOAF_ROLL_SIZE SOAF_ROLL_FILE_SIZE SOAF_ROLL_COMPRESS_CMD"
-
-SOAF_ROLL_LOG_NAME="soaf.roll"
-
 SOAF_ROLL_FILE_ATTR="soaf_roll_file"
 SOAF_ROLL_SIZE_ATTR="soaf_roll_size"
 SOAF_ROLL_COND_FN_ATTR="soaf_roll_cond_fn"
 SOAF_ROLL_FILE_SIZE_ATTR="soaf_roll_file_size"
 SOAF_ROLL_NO_COMPRESS_ATTR="soaf_roll_no_compress"
+
+SOAF_ROLL_LOG_NAME="soaf.roll"
+
+################################################################################
+################################################################################
+
+soaf_roll_cfg() {
+	soaf_cfg_set SOAF_ROLL_SIZE 4
+	soaf_cfg_set SOAF_ROLL_FILE_SIZE 100000
+	###---------------
+	soaf_cfg_set SOAF_ROLL_COMPRESS_CMD xz
+}
+
+soaf_roll_init() {
+	soaf_info_add_var "SOAF_ROLL_SIZE SOAF_ROLL_FILE_SIZE"
+	soaf_info_add_var "SOAF_ROLL_COMPRESS_CMD"
+}
+
+soaf_engine_add_cfg_fn soaf_roll_cfg
+soaf_engine_add_init_fn soaf_roll_init
 
 ################################################################################
 ################################################################################
@@ -23,6 +34,8 @@ soaf_roll_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_ROLL_LOG_NAME $LOG_LEVEL
 }
+
+soaf_add_name_log_level_fn soaf_roll_log_level
 
 ################################################################################
 ################################################################################

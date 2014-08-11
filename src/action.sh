@@ -1,12 +1,24 @@
 ################################################################################
 ################################################################################
 
-SOAF_ACTION="usage"
-
-soaf_info_add_var SOAF_ACTION
-
 SOAF_ACTION_FN_ATTR="soaf_action_fn"
 SOAF_ACTION_USAGE_FN_ATTR="soaf_action_usage_fn"
+
+soaf_usage_add_var ACTION
+
+################################################################################
+################################################################################
+
+soaf_action_cfg() {
+	soaf_cfg_set SOAF_ACTION $SOAF_USAGE_ACTION
+}
+
+soaf_action_init() {
+	soaf_info_add_var SOAF_ACTION
+}
+
+soaf_engine_add_cfg_fn soaf_action_cfg
+soaf_engine_add_init_fn soaf_action_init
 
 ################################################################################
 ################################################################################
@@ -20,17 +32,7 @@ soaf_create_action() {
 	soaf_map_extend $ACTION $SOAF_ACTION_USAGE_FN_ATTR $USAGE_FN
 }
 
-soaf_no_init_action() {
+soaf_no_prepenv_action() {
 	local ACTION=$1
-	SOAF_ACTION_NOINIT_LIST="$SOAF_ACTION_NOINIT_LIST $ACTION"
-}
-
-################################################################################
-################################################################################
-
-soaf_action_init_proc() {
-	local ACTION=$1
-	local FN=$2
-	soaf_create_action $ACTION $FN
-	soaf_no_init_action $ACTION
+	SOAF_ACTION_NOPREPENV_LIST="$SOAF_ACTION_NOPREPENV_LIST $ACTION"
 }

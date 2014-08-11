@@ -1,35 +1,32 @@
 ################################################################################
 ################################################################################
 
-soaf_info_add_var() {
-	local VAR_LIST=$1
-	SOAF_INFO_VAR_LIST="$SOAF_INFO_VAR_LIST $VAR_LIST"
-}
-
-################################################################################
-################################################################################
-
 SOAF_NAME="soaf.sh"
 SOAF_VERSION="0.2.0"
 
-soaf_info_add_var SOAF_VERSION
+SOAF_VERSION_ACTION="version"
+
+################################################################################
+################################################################################
+
+soaf_version_init() {
+	soaf_info_add_var SOAF_VERSION
+}
+
+soaf_engine_add_init_fn soaf_version_init
 
 ################################################################################
 ################################################################################
 
 soaf_version() {
-	local VER=$SOAF_NAME-$SOAF_VERSION
-	local USER_VER_FN=$(soaf_map_get $SOAF_USER_MAP $SOAF_USER_VERSION_FN_ATTR)
-	if [ -n "$USER_VER_FN" ]
+	local USER_NATURE=$1
+	local NAMEVER=$SOAF_NAME-$SOAF_VERSION
+	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
+	local USER_VER=$(soaf_map_get $USER_NATURE $SOAF_USER_VERSION_ATTR)
+	local USER_NAMEVER=$USER_NAME-$USER_VER
+	if [ -n "$USER_NAMEVER" ]
 	then
-		VER="$($USER_VER_FN) ($VER)"
+		NAMEVER="$USER_NAMEVER ($NAMEVER)"
 	fi
-	soaf_dis_txt "$VER"
-}
-
-################################################################################
-################################################################################
-
-soaf_info() {
-	soaf_dis_var_list "$SOAF_INFO_VAR_LIST"
+	soaf_dis_txt "$NAMEVER"
 }

@@ -9,9 +9,18 @@ SOAF_PF_SEP_ATTR="soaf_pf_sep"
 ################################################################################
 ################################################################################
 
-SOAF_PF_FILE=$SOAF_NAME.prop
+soaf_pf_cfg() {
+	local USER_NATURE=$1
+	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
+	soaf_cfg_set SOAF_PF_FILE $SOAF_WORK_DIR/$USER_NAME.prop
+}
 
-soaf_info_add_var SOAF_PF_FILE
+soaf_pf_init() {
+	soaf_info_add_var SOAF_PF_FILE
+}
+
+soaf_engine_add_cfg_fn soaf_pf_cfg
+soaf_engine_add_init_fn soaf_pf_init
 
 ################################################################################
 ################################################################################
@@ -20,6 +29,8 @@ soaf_pf_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_PF_LOG_NAME $LOG_LEVEL
 }
+
+soaf_add_name_log_level_fn soaf_pf_log_level
 
 ################################################################################
 ################################################################################
