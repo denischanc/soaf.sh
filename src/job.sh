@@ -111,7 +111,8 @@ soaf_do_job_process() {
 soaf_do_job_valid() {
 	local JOB=$1
 	local JOB_UPPER=$(soaf_to_upper $JOB)
-	local JOB_LOG_DIR=$(soaf_map_get $JOB $SOAF_JOB_LOG_DIR_ATTR)
+	local JOB_LOG_DIR=$(soaf_map_get $JOB $SOAF_JOB_LOG_DIR_ATTR \
+		$SOAF_LOG_DIR/job.$JOB)
 	soaf_mkdir $JOB_LOG_DIR "" $SOAF_JOB_LOG_NAME
 	local JOB_INPROG_FILE=$JOB_LOG_DIR/$JOB.inprog
 	if [ ! -f $JOB_INPROG_FILE ]

@@ -49,11 +49,17 @@ soaf_engine_call_fn_list() {
 ################################################################################
 
 soaf_engine_source_ext() {
-	local FILE=$1 d
-	for d in $SOAF_EXT_GLOB_DIR $SOAF_EXT_LOC_DIR
+	local FILE=$1
+	local DIR_LIST=${SOAF_EXT_OTHER_DIR:-$SOAF_EXT_GLOB_DIR $SOAF_EXT_LOC_DIR}
+	local d
+	for d in $DIR_LIST
 	do
-		local PATH=$d/$FILE
-		[ -f $PATH ] && . $PATH
+		local PATH_=$d/$FILE
+		if [ -f $PATH_ ]
+		then
+			soaf_log_debug "Source : [$PATH_]." $SOAF_ENGINE_LOG_NAME
+			. $PATH_
+		fi
 	done
 }
 
