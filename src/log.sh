@@ -27,14 +27,13 @@ soaf_log_cfg() {
 soaf_log_init() {
 	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_FILE"
 	###---------------
-	if [ $SOAF_LOG_ROLL_NATURE = $SOAF_LOG_ROLL_NATURE_INT ]
-	then
+	[ $SOAF_LOG_ROLL_NATURE = $SOAF_LOG_ROLL_NATURE_INT ] && \
 		soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE $SOAF_LOG_FILE
-	fi
 }
 
 soaf_log_prepenv() {
-	mkdir -p $(dirname $SOAF_LOG_FILE)
+	[ $SOAF_LOG_ROLL_NATURE = $SOAF_LOG_ROLL_NATURE_INT ] && \
+		mkdir -p $(dirname $SOAF_LOG_FILE)
 }
 
 soaf_engine_add_cfg_fn soaf_log_cfg

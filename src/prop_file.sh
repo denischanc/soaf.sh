@@ -61,6 +61,7 @@ soaf_prop_file_set() {
 		} 2>> $SOAF_LOG_FILE
 	fi
 	{
+		soaf_mkdir $(dirname $FILE) "" $SOAF_PF_LOG_NAME
 		cat << _EOF_ >> $FILE
 $PROP_UNIQ=$VAL
 _EOF_

@@ -12,8 +12,8 @@ SOAF_STATE_FN_ATTR="soaf_state_fn"
 SOAF_STATE_JOB_LIST_ATTR="soaf_state_job_list"
 SOAF_STATE_DST_WAIT_ATTR="soaf_state_dst_wait"
 
-SOAF_STATE_WORK_DIR_ATTR="soaf_state_work_dir"
 SOAF_STATE_ENTRY_WAIT_ATTR="soaf_state_entry_wait"
+SOAF_STATE_WORK_DIR_ATTR="soaf_state_work_dir"
 SOAF_STATE_PROP_FILE_ATTR="soaf_state_prop_file"
 
 SOAF_STATE_STAY_CUR="stay_cur"
@@ -61,12 +61,12 @@ soaf_create_work_state() {
 
 soaf_create_state_nature() {
 	local NATURE=$1
-	local WORK_DIR=$2
-	local ENTRY_WAIT_STATE=$3
+	local ENTRY_WAIT_STATE=$2
+	local WORK_DIR=$3
 	local PROP_FILE=$4
 	SOAF_STATE_NATURE_LIST="$SOAF_STATE_NATURE_LIST $NATURE"
-	soaf_map_extend $NATURE $SOAF_STATE_WORK_DIR_ATTR $WORK_DIR
 	soaf_map_extend $NATURE $SOAF_STATE_ENTRY_WAIT_ATTR $ENTRY_WAIT_STATE
+	soaf_map_extend $NATURE $SOAF_STATE_WORK_DIR_ATTR $WORK_DIR
 	soaf_map_extend $NATURE $SOAF_STATE_PROP_FILE_ATTR $PROP_FILE
 }
 
@@ -206,7 +206,8 @@ soaf_state_active() {
 
 soaf_state_proc_nature() {
 	local NATURE=$1
-	local WORK_DIR=$(soaf_map_get $NATURE $SOAF_STATE_WORK_DIR_ATTR .)
+	local WORK_DIR=$(soaf_map_get $NATURE $SOAF_STATE_WORK_DIR_ATTR \
+		$SOAF_WORK_DIR)
 	soaf_state_active $NATURE $WORK_DIR
 	if [ -z "$SOAF_STATE_ACTIVE" ]
 	then
@@ -222,7 +223,6 @@ soaf_state_proc_nature() {
 			local WAIT=$(echo $SOAF_WAIT_STATE_LIST | grep -w "$SOAF_STATE__")
 			if [ -n "$WAIT" ]
 			then
-				soaf_mkdir $WORK_DIR "" $SOAF_STATE_LOG_NAME
 				soaf_state_proc $NATURE $PROP_NATURE $SOAF_STATE__ $WORK_DIR
 			else
 				local MSG="State nature [$NATURE] in work state :"
