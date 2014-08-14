@@ -28,7 +28,7 @@ soaf_engine_add_init_fn soaf_user_init
 
 soaf_create_user_nature() {
 	local NATURE=$1
-	local NAME=$2
+	local NAME=${2:-$SOAF_NAME}
 	local VERSION=$3
 	local VAR_PRE=$4
 	local USAGE_VAR_LIST=$5
