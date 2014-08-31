@@ -76,35 +76,6 @@ soaf_state_prop_nature() {
 ################################################################################
 ################################################################################
 
-soaf_state_get() {
-	#local NATURE=$1
-	#local PROP_NATURE=$2
-	#soaf_prop_file_get $PROP_NATURE $SOAF_STATE_CUR_PROP
-	#if [ -z "$SOAF_PROP_FILE_RET" ]
-	#then
-	#	SOAF_STATE_RET=
-	#else
-	#	SOAF_STATE__=$SOAF_PROP_FILE_VAL
-	#	[ -z "$SOAF_STATE__" ] && \
-	#		SOAF_STATE__=$(soaf_map_get $NATURE $SOAF_STATE_ENTRY_WAIT_ATTR)
-	#fi
-}
-
-soaf_state_set() {
-	#local PROP_NATURE=$1
-	#local STATE=$2
-	#soaf_prop_file_set $PROP_NATURE $SOAF_STATE_CUR_PROP $STATE
-	#if [ -z "$SOAF_PROP_FILE_RET" ]
-	#then
-	#	SOAF_STATE_RET=
-	#else
-	#	soaf_log_info "State is now : [$STATE]." $SOAF_STATE_LOG_NAME
-	#fi
-}
-
-################################################################################
-################################################################################
-
 soaf_state_do_job_list() {
 	local JOB_LIST=$1
 	soaf_do_job_list "$JOB_LIST"
@@ -130,16 +101,61 @@ soaf_state_init_step() {
 	local ENTRY_STATE=$(soaf_map_get $NATURE $SOAF_STATE_ENTRY_ATTR)
 	if [ -z "$ENTRY_STATE" ]
 	then
+		local MSG="No entry state for nature : [$NATURE]."
+		soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
 		soaf_state_err
 	else
-		# TODO
+		soaf_prop_file_set $PROP_NATURE $SOAF_STATE_CUR_PROP $ENTRY_STATE
+		if [ -z "$SOAF_PROP_FILE_RET" ]
+		then
+			soaf_state_err
+		else
+			local MSG="State of nature [$NATURE] is now : [$ENTRY_STATE]."
+			soaf_log_info "$MSG" $SOAF_STATE_LOG_NAME
+			soaf_prop_file_set $PROP_NATURE $SOAF_STATE_STEP_PROP \
+				$SOAF_STATE_STEP_WAITING
+			if [ -z "$SOAF_PROP_FILE_RET" ]
+			then
+				soaf_state_err
+			else
+				soaf_state_waiting_step_main $NATURE $WORK_DIR $PROP_NATURE \
+					$ENTRY_STATE
+			fi
+		fi
 	fi
 }
 
 ################################################################################
 ################################################################################
 
-soaf_state_waiting_step_main() {
+soaf_state_get_prop_n_call_fn() {
+	local NATURE=$1
+	local WORK_DIR=$2
+	local PROP_NATURE=$3
+	local PROP=$4
+	local FN=$5
+	soaf_prop_file_get $PROP_NATURE $PROP
+	if [ -z "$SOAF_PROP_FILE_RET" ]
+	then
+		soaf_state_err
+	else
+		local STATE=$SOAF_PROP_FILE_VAL
+		if [ -z "$STATE" ]
+		then
+			local MSG="Empty state of nature [$NATURE] for property :"
+			MSG="$MSG [$PROP]."
+			soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
+			soaf_state_err
+		else
+			$FN $NATURE $WORK_DIR $PROP_NATURE $STATE
+		fi
+	fi
+}
+
+################################################################################
+################################################################################
+
+soaf_state_waiting_step_working() {
 	local NATURE=$1
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
@@ -169,26 +185,28 @@ soaf_state_waiting_step_main() {
 	fi
 }
 
-soaf_state_waiting_step() {
+soaf_state_waiting_step_main() {
 	local NATURE=$1
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
-	soaf_prop_file_get $PROP_NATURE $SOAF_STATE_CUR_PROP
+	local CUR_STATE=$4
+	soaf_prop_file_set $PROP_NATURE $SOAF_STATE_STEP_PROP \
+		$SOAF_STATE_STEP_WORKING
 	if [ -z "$SOAF_PROP_FILE_RET" ]
 	then
 		soaf_state_err
 	else
-		local CUR_STATE=$SOAF_PROP_FILE_VAL
-		soaf_prop_file_set $PROP_NATURE $SOAF_STATE_STEP_PROP \
-			$SOAF_STATE_STEP_WORKING
-		if [ -z "$SOAF_PROP_FILE_RET" ]
-		then
-			soaf_state_err
-		else
-			soaf_state_waiting_step_main $NATURE $WORK_DIR $PROP_NATURE \
-				$CUR_STATE
-		fi
+		soaf_state_waiting_step_working $NATURE $WORK_DIR $PROP_NATURE \
+			$CUR_STATE
 	fi
+}
+
+soaf_state_waiting_step() {
+	local NATURE=$1
+	local WORK_DIR=$2
+	local PROP_NATURE=$3
+	soaf_state_get_prop_n_call_fn $NATURE $WORK_DIR $PROP_NATURE \
+		$SOAF_STATE_CUR_PROP soaf_state_waiting_step_main
 }
 
 ################################################################################
@@ -198,7 +216,17 @@ soaf_state_working_step() {
 	local NATURE=$1
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
-	# TODO
+	local THIS_SH=$(basename $0)
+	local NB_PROC=$(ps -e -o comm | tail -n +2 | grep -w $THIS_SH | wc -l)
+	local MSG="Current state of nature [$NATURE] in"
+	MSG="$MSG $SOAF_STATE_STEP_WORKING step"
+	if [ "$NB_PROC" != "2" ]
+	then
+		MSG="$MSG without running process : [$THIS_SH]."
+		soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
+	else
+		soaf_log_debug "$MSG." $SOAF_STATE_LOG_NAME
+	fi
 }
 
 ################################################################################
@@ -230,14 +258,8 @@ soaf_state_saving_step() {
 	local NATURE=$1
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
-	soaf_prop_file_get $PROP_NATURE $SOAF_STATE_CUR_PROP
-	if [ -z "$SOAF_PROP_FILE_RET" ]
-	then
-		soaf_state_err
-	else
-		local CUR_STATE=$SOAF_PROP_FILE_VAL
-		soaf_state_saving_step_main $NATURE $WORK_DIR $PROP_NATURE $CUR_STATE
-	fi
+	soaf_state_get_prop_n_call_fn $NATURE $WORK_DIR $PROP_NATURE \
+		$SOAF_STATE_CUR_PROP soaf_state_saving_step_main
 }
 
 ################################################################################
@@ -261,6 +283,8 @@ soaf_state_jumping_step_main() {
 	then
 		soaf_state_err
 	else
+		local MSG="State of nature [$NATURE] is now : [$SOAF_STATE_NEXT_]."
+		soaf_log_info "$MSG" $SOAF_STATE_LOG_NAME
 		soaf_prop_file_set $PROP_NATURE $SOAF_STATE_STEP_PROP \
 			$SOAF_STATE_STEP_WAITING
 		[ -z "$SOAF_PROP_FILE_RET" ] && soaf_state_err
@@ -271,14 +295,8 @@ soaf_state_jumping_step() {
 	local NATURE=$1
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
-	soaf_prop_file_get $PROP_NATURE $SOAF_STATE_PREV_PROP
-	if [ -z "$SOAF_PROP_FILE_RET" ]
-	then
-		soaf_state_err
-	else
-		local PREV_STATE=$SOAF_PROP_FILE_VAL
-		soaf_state_jumping_step_main $NATURE $WORK_DIR $PROP_NATURE $PREV_STATE
-	fi
+	soaf_state_get_prop_n_call_fn $NATURE $WORK_DIR $PROP_NATURE \
+		$SOAF_STATE_PREV_PROP soaf_state_jumping_step_main
 }
 
 ################################################################################
@@ -320,7 +338,7 @@ soaf_state_step_case() {
 
 soaf_state_inactive_file() {
 	local NATURE=$1
-	local WORK_DIR=$2
+	local WORK_DIR=${2:-$SOAF_WORK_DIR}
 	echo "$WORK_DIR/soaf.state.$NATURE.inactive"
 }
 
@@ -346,18 +364,6 @@ soaf_state_proc_nature() {
 		local PROP_FILE=$(soaf_map_get $NATURE $SOAF_STATE_PROP_FILE_ATTR)
 		soaf_create_prop_file_nature $PROP_NATURE $PROP_FILE
 		soaf_state_step_case $NATURE $WORK_DIR $PROP_NATURE
-		#soaf_state_get $NATURE $PROP_NATURE
-		#if [ -n "$SOAF_STATE_RET" ]
-		#then
-		#	local WAIT=$(echo $SOAF_WAIT_STATE_LIST | grep -w "$SOAF_STATE__")
-		#	if [ -n "$WAIT" ]
-		#	then
-		#		soaf_state_proc $NATURE $PROP_NATURE $SOAF_STATE__ $WORK_DIR
-		#	else
-		#		local MSG="State nature [$NATURE] in work state :"
-		#		soaf_log_debug "$MSG [$SOAF_STATE__]." $SOAF_STATE_LOG_NAME
-		#	fi
-		#fi
 	fi
 }
 
