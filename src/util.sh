@@ -97,6 +97,11 @@ soaf_day_upd_file() {
 	local DAY=$1
 	local PROP_FILE_NATURE=$2
 	local PROP=${3:-$SOAF_UTIL_DAY_PROP}
+	if [ -z "$DAY" ]
+	then
+		soaf_day_cur
+		DAY=$SOAF_DAY_CUR
+	fi
 	soaf_prop_file_set $PROP_FILE_NATURE $PROP $DAY
 	[ -n "$SOAF_PROP_FILE_RET" ] && SOAF_RET="OK" || SOAF_RET=
 }

@@ -40,6 +40,7 @@ soaf_create_state() {
 	local WORKING_JOB_LIST=$3
 	local NEXT_STATE_FN=$4
 	local NEXT_STATE=$5
+	SOAF_STATE_LIST="$SOAF_STATE_LIST $STATE"
 	soaf_map_extend $STATE $SOAF_STATE_WORKING_FN_ATTR $WORKING_FN
 	soaf_map_extend $STATE $SOAF_STATE_WORKING_JOB_LIST_ATTR \
 		"$WORKING_JOB_LIST"
@@ -62,6 +63,8 @@ soaf_create_state_nature() {
 ################################################################################
 
 soaf_state_err() {
+	local MSG=$1
+	[ -n "$MSG" ] && soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
 	SOAF_STATE_RET=
 }
 
@@ -101,9 +104,7 @@ soaf_state_init_step() {
 	local ENTRY_STATE=$(soaf_map_get $NATURE $SOAF_STATE_ENTRY_ATTR)
 	if [ -z "$ENTRY_STATE" ]
 	then
-		local MSG="No entry state for nature : [$NATURE]."
-		soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
-		soaf_state_err
+		soaf_state_err "No entry state for nature : [$NATURE]."
 	else
 		soaf_prop_file_set $PROP_NATURE $SOAF_STATE_CUR_PROP $ENTRY_STATE
 		if [ -z "$SOAF_PROP_FILE_RET" ]
@@ -143,11 +144,15 @@ soaf_state_get_prop_n_call_fn() {
 		if [ -z "$STATE" ]
 		then
 			local MSG="Empty state of nature [$NATURE] for property :"
-			MSG="$MSG [$PROP]."
-			soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
-			soaf_state_err
+			soaf_state_err "$MSG [$PROP]."
 		else
-			$FN $NATURE $WORK_DIR $PROP_NATURE $STATE
+			local STATE_KNOWN=$(echo $SOAF_STATE_LIST | grep -w "$STATE")
+			if [ -n "$STATE_KNOWN" ]
+			then
+				$FN $NATURE $WORK_DIR $PROP_NATURE $STATE
+			else
+				soaf_state_err "Unknown state : [$STATE]."
+			fi
 		fi
 	fi
 }
@@ -217,7 +222,7 @@ soaf_state_working_step() {
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
 	local THIS_SH=$(basename $0)
-	local NB_PROC=$(ps -e -o comm | tail -n +2 | grep -w $THIS_SH | wc -l)
+	local NB_PROC=$(ps -e | grep -w $THIS_SH | grep -v grep | wc -l)
 	local MSG="Current state of nature [$NATURE] in"
 	MSG="$MSG $SOAF_STATE_STEP_WORKING step"
 	if [ "$NB_PROC" != "2" ]
@@ -277,17 +282,25 @@ soaf_state_jumping_step_main() {
 		$FN $NATURE $WORK_DIR $PREV_STATE
 	else
 		SOAF_STATE_NEXT_=$(soaf_map_get $PREV_STATE $SOAF_STATE_NEXT_ATTR)
+		if [ -z "$SOAF_STATE_NEXT_" ]
+		then
+			local MSG="Empty next state from : [$PREV_STATE]"
+			soaf_state_err "$MSG (nature : [$NATURE])."
+		fi
 	fi
-	soaf_prop_file_set $PROP_NATURE $SOAF_STATE_CUR_PROP $SOAF_STATE_NEXT_
-	if [ -z "$SOAF_PROP_FILE_RET" ]
+	if [ -n "$SOAF_STATE_NEXT_" ]
 	then
-		soaf_state_err
-	else
-		local MSG="State of nature [$NATURE] is now : [$SOAF_STATE_NEXT_]."
-		soaf_log_info "$MSG" $SOAF_STATE_LOG_NAME
-		soaf_prop_file_set $PROP_NATURE $SOAF_STATE_STEP_PROP \
-			$SOAF_STATE_STEP_WAITING
-		[ -z "$SOAF_PROP_FILE_RET" ] && soaf_state_err
+		soaf_prop_file_set $PROP_NATURE $SOAF_STATE_CUR_PROP $SOAF_STATE_NEXT_
+		if [ -z "$SOAF_PROP_FILE_RET" ]
+		then
+			soaf_state_err
+		else
+			local MSG="State of nature [$NATURE] is now : [$SOAF_STATE_NEXT_]."
+			soaf_log_info "$MSG" $SOAF_STATE_LOG_NAME
+			soaf_prop_file_set $PROP_NATURE $SOAF_STATE_STEP_PROP \
+				$SOAF_STATE_STEP_WAITING
+			[ -z "$SOAF_PROP_FILE_RET" ] && soaf_state_err
+		fi
 	fi
 }
 
@@ -372,13 +385,12 @@ soaf_state_proc_nature() {
 
 soaf_state_engine() {
 	local NATURE=$1
+	SOAF_STATE_RET="OK"
 	local NATURE_KNOWN=$(echo $SOAF_STATE_NATURE_LIST | grep -w "$NATURE")
 	if [ -n "$NATURE_KNOWN" ]
 	then
-		SOAF_STATE_RET="OK"
 		soaf_state_proc_nature $NATURE
 	else
-		soaf_log_err "Unknown state nature : [$NATURE]." $SOAF_STATE_LOG_NAME
-		soaf_state_err
+		soaf_state_err "Unknown state nature : [$NATURE]."
 	fi
 }
