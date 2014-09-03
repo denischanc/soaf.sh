@@ -57,7 +57,6 @@ soaf_job() {
 	if [ -z "$SOAF_JOB_RET" ]
 	then
 		soaf_dis_txt "Unable to process job : [$SOAF_JOB]."
-		soaf_dis_txt "  See log file : [$SOAF_LOG_FILE]."
 	fi
 }
 
@@ -94,7 +93,7 @@ soaf_do_job_process() {
 	else
 		CMD="$CMD > $LOG_JOB_FILE 2> $LOG_JOB_ERR_FILE"
 		soaf_log_info "Start $JOB_UPPER ..." $SOAF_JOB_LOG_NAME
-		soaf_cmd_info "$CMD" $SOAF_JOB_LOG_NAME
+		soaf_cmd_info "$CMD" $SOAF_JOB_LOG_NAME "OK"
 		if [ "$SOAF_RET" = "0" ]
 		then
 			SOAF_JOB_RET="OK"

@@ -26,10 +26,14 @@ soaf_log_cfg() {
 	###---------------
 	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
 	soaf_cfg_set SOAF_LOG_FILE $SOAF_LOG_DIR/$USER_NAME.log
+	soaf_cfg_set SOAF_LOG_CMD_OUT_ERR_DIR $SOAF_LOG_DIR
+	SOAF_LOG_CMD_OUT_FILE=$SOAF_LOG_CMD_OUT_ERR_DIR/cmd.out
+	SOAF_LOG_CMD_ERR_FILE=$SOAF_LOG_CMD_OUT_ERR_DIR/cmd.err
 }
 
 soaf_log_init() {
-	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_FILE"
+	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_FILE SOAF_LOG_NATURE_LIST"
+	soaf_info_add_var SOAF_LOG_CMD_OUT_ERR_DIR
 	###---------------
 	soaf_create_log_nature $SOAF_LOG_NATURE_INT soaf_log_int
 	soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE_INT $SOAF_LOG_FILE
@@ -156,4 +160,49 @@ soaf_log_debug() {
 	local MSG=$1
 	local NAME=$2
 	soaf_log $SOAF_LOG_DEBUG "$MSG" $NAME
+}
+
+################################################################################
+################################################################################
+
+soaf_log_stdin() {
+	local LEVEL=${1:-$SOAF_LOG_ERR}
+	local NAME=$2
+	local line
+	while read line
+	do
+		soaf_log $LEVEL "$line" $NAME
+	done
+}
+
+soaf_log_from_file() {
+	local FILE=$1
+	local LEVEL=$2
+	local NAME=$3
+	if [ -s "$FILE" ]
+	then
+		cat $FILE | soaf_log_stdin $LEVEL $NAME
+	fi
+	rm -f $FILE 2> /dev/null
+}
+
+################################################################################
+################################################################################
+
+soaf_log_prep_cmd_out_err() {
+	local NAME=$1
+	[ ! -d "$SOAF_LOG_CMD_OUT_ERR_DIR" ] && \
+		mkdir -p $SOAF_LOG_CMD_OUT_ERR_DIR |& soaf_log_stdin "" $NAME
+}
+
+soaf_log_cmd_out() {
+	local NAME=$1
+	local LEVEL=${2:-$SOAF_LOG_DEBUG}
+	soaf_log_from_file $SOAF_LOG_CMD_OUT_FILE $LEVEL $NAME
+}
+
+soaf_log_cmd_err() {
+	local NAME=$1
+	local LEVEL=${2:-$SOAF_LOG_ERR}
+	soaf_log_from_file $SOAF_LOG_CMD_ERR_FILE $LEVEL $NAME
 }

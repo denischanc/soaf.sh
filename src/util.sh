@@ -59,14 +59,24 @@ soaf_cmd() {
 	local CMD=$1
 	local LOG_LEVEL=${2:-$SOAF_LOG_DEBUG}
 	local LOG_NAME=$3
+	local NO_CMD_OUT_ERR_LOG=$4
 	soaf_log $LOG_LEVEL "Execute command : [$CMD]." $LOG_NAME
 	local CMD_PROG=$(echo "$CMD" | awk '{print $1}')
 	local NOEXEC_PROG=$(echo "$SOAF_NOEXEC_PROG_LIST" | grep -w "$CMD_PROG")
 	local RET=
 	if [ -z "$NOEXEC_PROG" ]
 	then
-		eval "$CMD"
-		RET=$?
+		if [ -n "$NO_CMD_OUT_ERR_LOG" ]
+		then
+			eval "$CMD"
+			RET=$?
+		else
+			soaf_log_prep_cmd_out_err $LOG_NAME
+			eval "$CMD > $SOAF_LOG_CMD_OUT_FILE 2> $SOAF_LOG_CMD_ERR_FILE"
+			RET=$?
+			soaf_log_cmd_out $LOG_NAME
+			soaf_log_cmd_err $LOG_NAME
+		fi
 		soaf_log $LOG_LEVEL "Command return : [$RET]." $LOG_NAME
 	else
 		local NOEXEC_FN=$(soaf_map_get $CMD_PROG $SOAF_UTIL_NOEXEC_FN_ATTR)
@@ -83,7 +93,8 @@ soaf_cmd() {
 soaf_cmd_info() {
 	local CMD=$1
 	local LOG_NAME=$2
-	soaf_cmd "$CMD" $SOAF_LOG_INFO $LOG_NAME
+	local NO_CMD_OUT_ERR_LOG=$3
+	soaf_cmd "$CMD" $SOAF_LOG_INFO $LOG_NAME $NO_CMD_OUT_ERR_LOG
 }
 
 ################################################################################
@@ -122,7 +133,9 @@ soaf_day_since_last() {
 	else
 		local DAY_LAST=$SOAF_PROP_FILE_VAL
 		[ -z "$DAY_LAST" ] && DAY_LAST=1
-		SOAF_DAY_DIFF=$(expr $DAY \- $DAY_LAST 2>> $SOAF_LOG_FILE)
+		soaf_log_prep_cmd_out_err
+		SOAF_DAY_DIFF=$(expr $DAY \- $DAY_LAST 2> $SOAF_LOG_CMD_ERR_FILE)
+		soaf_log_cmd_err
 		[ -z "$SOAF_DAY_DIFF" ] && SOAF_DAY_DIFF=0
 		if [ $SOAF_DAY_DIFF -lt 0 ]
 		then
@@ -153,7 +166,7 @@ soaf_mkdir() {
 	do
 		if [ ! -d "$dir" ]
 		then
-			soaf_cmd "mkdir -p $dir >> $SOAF_LOG_FILE 2>&1" "" $LOG_NAME
+			soaf_cmd "mkdir -p $dir" "" $LOG_NAME
 			[ $RET -eq 0 ] && RET=$SOAF_RET
 			if [ $SOAF_RET -eq 0 ]
 			then
@@ -176,7 +189,7 @@ soaf_rm() {
 	local RET=0
 	if [ -n "$PATH_LIST" ]
 	then
-		soaf_cmd "rm -rf $PATH_LIST >> $SOAF_LOG_FILE 2>&1" "" $LOG_NAME
+		soaf_cmd "rm -rf $PATH_LIST" "" $LOG_NAME
 		RET=$SOAF_RET
 		if [ $SOAF_RET -eq 0 ]
 		then

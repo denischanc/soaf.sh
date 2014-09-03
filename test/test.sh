@@ -4,12 +4,14 @@
 ################################################################################
 
 TEST_HOME="$(dirname $0)"
+TEST_LOG_NAME="test"
 
 make -C $TEST_HOME/.. > /dev/null 2>&1
 . $TEST_HOME/../src/soaf.sh
 
 test_cfg() {
-	soaf_cfg_set SOAF_LOG_FILE $TEST_HOME/test.log
+	soaf_cfg_set SOAF_WORK_DIR $TEST_HOME
+	soaf_cfg_set SOAF_LOG_DIR $TEST_HOME
 }
 
 test_init() {
@@ -17,6 +19,7 @@ test_init() {
 	test_init_2
 	test_init_3
 	test_init_4
+	test_init_5
 }
 
 ################################################################################
@@ -104,6 +107,18 @@ test_init_4() {
 	soaf_create_prop_file_nature $TEST_PROP_NATURE $TEST_HOME/test.prop
 	### soaf_create_prop_file_nature $TEST_PROP_NATURE $TEST_HOME/test.prop ":"
 	soaf_create_action "prop_file" test_prop_file
+}
+
+################################################################################
+################################################################################
+
+test_others() {
+	soaf_mkdir "$SOAF_USER_SH_DIR/../TODO $SOAF_USER_SH_DIR/../ChangeLog" \
+		$SOAF_LOG_INFO $TEST_LOG_NAME
+}
+
+test_init_5() {
+	soaf_create_action "others" test_others
 }
 
 ################################################################################

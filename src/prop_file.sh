@@ -58,14 +58,14 @@ soaf_prop_file_set() {
 			local FILE_TMP=$FILE.$$
 			grep -v "^$PROP_UNIQ=" $FILE > $FILE_TMP
 			mv -f $FILE_TMP $FILE
-		} 2>> $SOAF_LOG_FILE
+		} |& soaf_log_stdin "" $SOAF_PF_LOG_NAME
 	fi
+	soaf_mkdir $(dirname $FILE) "" $SOAF_PF_LOG_NAME
 	{
-		soaf_mkdir $(dirname $FILE) "" $SOAF_PF_LOG_NAME
 		cat << _EOF_ >> $FILE
 $PROP_UNIQ=$VAL
 _EOF_
-	} 2>> $SOAF_LOG_FILE
+	} |& soaf_log_stdin "" $SOAF_PF_LOG_NAME
 	SOAF_PROP_FILE_NO_GET_LOG="OK"
 	soaf_prop_file_get $NATURE $PROP
 	SOAF_PROP_FILE_NO_GET_LOG=
@@ -92,14 +92,25 @@ soaf_prop_file_get() {
 	SOAF_PROP_FILE_RET="OK"
 	if [ -f $FILE ]
 	then
-		local VAR_LINE=$(grep "^$PROP_UNIQ=" $FILE 2>> $SOAF_LOG_FILE)
-		if [ $? -ge 2 ]
+		local NB_LINE=$(grep "^$PROP_UNIQ=" $FILE 2> /dev/null | wc -l)
+		if [ $NB_LINE -le 1 ]
 		then
-			local MSG="Unable to get prop (file : [$FILE]) : [$PROP_UNIQ]."
-			soaf_log_err "$MSG" $SOAF_PF_LOG_NAME
+			soaf_log_prep_cmd_out_err $SOAF_PF_LOG_NAME
+			local VAR_LINE=$(grep "^$PROP_UNIQ=" $FILE \
+				2> $SOAF_LOG_CMD_ERR_FILE)
+			local RET=$?
+			soaf_log_cmd_err $SOAF_PF_LOG_NAME
+			if [ $RET -ge 2 ]
+			then
+				local MSG="Unable to get prop (file : [$FILE]) : [$PROP_UNIQ]."
+				soaf_log_err "$MSG" $SOAF_PF_LOG_NAME
+				SOAF_PROP_FILE_RET=
+			else
+				SOAF_PROP_FILE_VAL=${VAR_LINE#$PROP_UNIQ=}
+			fi
+		else
 			SOAF_PROP_FILE_RET=
 		fi
-		SOAF_PROP_FILE_VAL=${VAR_LINE#$PROP_UNIQ=}
 	else
 		SOAF_PROP_FILE_VAL=
 	fi
