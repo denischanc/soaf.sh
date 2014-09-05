@@ -40,7 +40,7 @@ soaf_log_init() {
 }
 
 soaf_log_prepenv() {
-	if [ "$SOAF_LOG_USED_NATURE" = "$SOAF_LOG_NATURE_INT" ] && \
+	[ "$SOAF_LOG_USED_NATURE" = "$SOAF_LOG_NATURE_INT" ] && \
 		mkdir -p $(dirname $SOAF_LOG_FILE)
 }
 

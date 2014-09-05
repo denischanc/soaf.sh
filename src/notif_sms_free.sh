@@ -65,7 +65,7 @@ soaf_notif_sms_free() {
 		else
 			CURL_ARGS="$CURL_ARGS --insecure"
 		fi
-		CURL_ARGS="$CURL_ARGS --fail --get"
+		CURL_ARGS="$CURL_ARGS --fail --get --silent --show-error"
 		soaf_log_prep_cmd_out_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
 		curl $CURL_ARGS --data user=$USER --data pass=$PASS \
 			--data-urlencode msg="$MSG" $SOAF_NOTIF_SMS_FREE_URL \

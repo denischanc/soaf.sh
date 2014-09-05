@@ -4,7 +4,14 @@
 ################################################################################
 
 TEST_HOME="$(dirname $0)"
+
 TEST_LOG_NAME="test"
+TEST_NATURE="test"
+TEST_PROP_NATURE="test.prop"
+
+TEST_TEST_PROP="test"
+
+SOAF_EXT_OTHER_DIR=$TEST_HOME
 
 make -C $TEST_HOME/.. > /dev/null 2>&1
 . $TEST_HOME/../src/soaf.sh
@@ -20,6 +27,7 @@ test_init() {
 	test_init_3
 	test_init_4
 	test_init_5
+	test_init_6
 }
 
 ################################################################################
@@ -29,10 +37,8 @@ test_prepenv() {
 	soaf_log_info "Test prepenv called."
 }
 
-TEST_NATURE="test"
-
 soaf_create_user_nature $TEST_NATURE "test" "1.0.0" \
-	"TEST" "NAME VAL" \
+	"TEST" "NAME VAL MSG" \
 	test_cfg test_init test_prepenv
 
 ################################################################################
@@ -70,9 +76,6 @@ test_init_3() {
 
 ################################################################################
 ################################################################################
-
-TEST_PROP_NATURE="test.prop"
-TEST_TEST_PROP="test"
 
 test_prop_file() {
 	rm -f $(soaf_map_get $TEST_PROP_NATURE "PROP_FILE")
@@ -112,13 +115,28 @@ test_init_4() {
 ################################################################################
 ################################################################################
 
-test_others() {
+test_log_stderr() {
 	soaf_mkdir "$SOAF_USER_SH_DIR/../TODO $SOAF_USER_SH_DIR/../ChangeLog" \
 		$SOAF_LOG_INFO $TEST_LOG_NAME
 }
 
 test_init_5() {
-	soaf_create_action "others" test_others
+	soaf_create_action "log_stderr" test_log_stderr
+}
+
+################################################################################
+################################################################################
+
+test_notif_usage() {
+	soaf_dis_txt "Notif MSG."
+}
+
+test_notif() {
+	soaf_notif "$TEST_MSG"
+}
+
+test_init_6() {
+	soaf_create_action "notif" test_notif test_notif_usage
 }
 
 ################################################################################
