@@ -74,8 +74,7 @@ soaf_cmd() {
 			soaf_log_prep_cmd_out_err $LOG_NAME
 			eval "$CMD > $SOAF_LOG_CMD_OUT_FILE 2> $SOAF_LOG_CMD_ERR_FILE"
 			RET=$?
-			soaf_log_cmd_out $LOG_NAME
-			soaf_log_cmd_err $LOG_NAME
+			soaf_log_cmd_out_err $LOG_NAME $LOG_LEVEL
 		fi
 		soaf_log $LOG_LEVEL "Command return : [$RET]." $LOG_NAME
 	else

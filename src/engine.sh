@@ -116,7 +116,8 @@ soaf_engine_mkdir() {
 soaf_engine_prepenv() {
 	local USER_NATURE=$1
 	### SOAF
-	soaf_engine_call_fn_list $USER_NATURE "$SOAF_ENGINE_PREPENV_FN_LIST"
+	soaf_engine_call_fn_list $USER_NATURE \
+		"soaf_log_prepenv $SOAF_ENGINE_PREPENV_FN_LIST"
 	### ENGINE
 	soaf_engine_mkdir
 	### USER

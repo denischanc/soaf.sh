@@ -8,10 +8,10 @@ SOAF_NOTIF_FN_ATTR="soaf_notif_fn"
 ################################################################################
 ################################################################################
 
-### cfg : SOAF_NOTIF_NATURE_LIST
+### cfg : SOAF_NOTIF_USED_NATURE_LIST
 
 soaf_notif_init() {
-	soaf_info_add_var SOAF_NOTIF_NATURE_LIST
+	soaf_info_add_var SOAF_NOTIF_USED_NATURE_LIST
 }
 
 soaf_engine_add_init_fn soaf_notif_init
@@ -43,7 +43,7 @@ soaf_notif() {
 	local PROG=$(basename $0)
 	local HOST=$(hostname -f)
 	local nature
-	for nature in $SOAF_NOTIF_NATURE_LIST
+	for nature in $SOAF_NOTIF_USED_NATURE_LIST
 	do
 		local FN=$(soaf_map_get $nature $SOAF_NOTIF_FN_ATTR)
 		SOAF_NOTIF_RET=
