@@ -10,9 +10,7 @@ SOAF_PF_SEP_ATTR="soaf_pf_sep"
 ################################################################################
 
 soaf_pf_cfg() {
-	local USER_NATURE=$1
-	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
-	soaf_cfg_set SOAF_PF_FILE $SOAF_WORK_DIR/$USER_NAME.prop
+	soaf_cfg_set SOAF_PF_FILE $SOAF_WORK_DIR/$SOAF_USER_NAME.prop
 }
 
 soaf_pf_init() {

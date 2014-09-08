@@ -2,9 +2,7 @@
 ################################################################################
 
 soaf_cfg__() {
-	local USER_NATURE=$1
-	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
-	soaf_cfg_set SOAF_WORK_DIR $HOME/work/$USER_NAME
+	soaf_cfg_set SOAF_WORK_DIR $HOME/work/$SOAF_USER_NAME
 	soaf_cfg_set SOAF_LOG_DIR $SOAF_WORK_DIR/log
 }
 

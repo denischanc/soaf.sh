@@ -17,15 +17,12 @@ SOAF_LOG_FN_ATTR="soaf_log_fn"
 ################################################################################
 
 soaf_log_cfg() {
-	local USER_NATURE=$1
-	###---------------
 	soaf_cfg_set SOAF_LOG_LEVEL $SOAF_LOG_INFO
 	###---------------
 	soaf_cfg_set SOAF_LOG_USED_NATURE $SOAF_LOG_NATURE_INT
 	soaf_cfg_set SOAF_LOG_ROLL_NATURE $SOAF_LOG_ROLL_NATURE_INT
 	###---------------
-	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
-	soaf_cfg_set SOAF_LOG_FILE $SOAF_LOG_DIR/$USER_NAME.log
+	soaf_cfg_set SOAF_LOG_FILE $SOAF_LOG_DIR/$SOAF_USER_NAME.log
 	soaf_cfg_set SOAF_LOG_CMD_OUT_ERR_DIR $SOAF_LOG_DIR
 	SOAF_LOG_CMD_OUT_FILE=$SOAF_LOG_CMD_OUT_ERR_DIR/cmd.out
 	SOAF_LOG_CMD_ERR_FILE=$SOAF_LOG_CMD_OUT_ERR_DIR/cmd.err

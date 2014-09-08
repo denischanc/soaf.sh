@@ -67,6 +67,7 @@ soaf_notif_sms_free() {
 		fi
 		CURL_ARGS="$CURL_ARGS --fail --get --silent --show-error"
 		soaf_log_prep_cmd_out_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
+		MSG="[$HOST:$PROG] $MSG"
 		curl $CURL_ARGS --data user=$USER --data pass=$PASS \
 			--data-urlencode msg="$MSG" $SOAF_NOTIF_SMS_FREE_URL \
 			> /dev/null 2> $SOAF_LOG_CMD_ERR_FILE

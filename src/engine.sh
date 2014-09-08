@@ -67,9 +67,8 @@ soaf_engine_cfg() {
 	### CLI
 	soaf_mng_glob_var $USER_NATURE
 	### FILEs
-	local USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
-	soaf_cfg_set SOAF_EXT_GLOB_DIR /etc/$USER_NAME
-	soaf_cfg_set SOAF_EXT_LOC_DIR $HOME/.$USER_NAME
+	soaf_cfg_set SOAF_EXT_GLOB_DIR /etc/$SOAF_USER_NAME
+	soaf_cfg_set SOAF_EXT_LOC_DIR $HOME/.$SOAF_USER_NAME
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_CFG_FILE
 	### USER
 	soaf_engine_call_user_fn $USER_NATURE $SOAF_USER_CFG_FN_ATTR
@@ -157,6 +156,7 @@ soaf_engine_action() {
 
 soaf_engine() {
 	local USER_NATURE=$1
+	SOAF_USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
 	soaf_engine_cfg $USER_NATURE
 	soaf_engine_init $USER_NATURE
 	soaf_engine_action $USER_NATURE
