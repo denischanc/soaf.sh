@@ -62,6 +62,14 @@ soaf_create_state_nature() {
 ################################################################################
 ################################################################################
 
+soaf_state_no_work() {
+	soaf_log_debug "No work." $SOAF_STATE_LOG_NAME
+	SOAF_STATE_WORKING_RET="OK"
+}
+
+################################################################################
+################################################################################
+
 soaf_state_err() {
 	local MSG=$1
 	[ -n "$MSG" ] && soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
@@ -229,6 +237,7 @@ soaf_state_working_step() {
 	then
 		MSG="$MSG without running process : [$THIS_SH]."
 		soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
+		soaf_notif "$MSG"
 	else
 		soaf_log_debug "$MSG." $SOAF_STATE_LOG_NAME
 	fi
