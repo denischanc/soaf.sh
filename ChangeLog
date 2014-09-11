@@ -3,6 +3,7 @@
 -- add job feature
 -- add state feature
 -- add prop_file feature
+-- add notif feature
 -- add engine cfg, init, prepenv parts
 
 [0.1.1]

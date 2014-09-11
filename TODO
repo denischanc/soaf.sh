@@ -1,4 +1,6 @@
 
+-- mng ssl certs (root to server) for free sms notif
+
 [_DONE_]
 
 -- notif module => c060218d
