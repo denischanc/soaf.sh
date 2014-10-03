@@ -8,6 +8,7 @@ SOAF_JOB_LOG_NAME="soaf.job"
 SOAF_JOB_CMD_ATTR="soaf_job_cmd"
 SOAF_JOB_LOG_DIR_ATTR="soaf_job_log_dir"
 SOAF_JOB_ROLL_SIZE_ATTR="soaf_job_roll_size"
+SOAF_JOB_NOTIF_ON_ERR_ATTR="soaf_job_notif_on_err"
 
 SOAF_JOB_ACTION="job"
 
@@ -47,6 +48,12 @@ soaf_create_job() {
 	soaf_map_extend $JOB $SOAF_JOB_CMD_ATTR "$CMD"
 	soaf_map_extend $JOB $SOAF_JOB_LOG_DIR_ATTR $LOG_DIR
 	soaf_map_extend $JOB $SOAF_JOB_ROLL_SIZE_ATTR $ROLL_SIZE
+}
+
+soaf_job_notif_on_err() {
+	local JOB=$1
+	local NOTIF_ON_ERR=$2
+	soaf_map_extend $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR $NOTIF_ON_ERR
 }
 
 ################################################################################
@@ -99,7 +106,10 @@ soaf_do_job_process() {
 			SOAF_JOB_RET="OK"
 			soaf_log_info "$JOB_UPPER OK." $SOAF_JOB_LOG_NAME
 		else
-			soaf_log_err "$JOB_UPPER KO." $SOAF_JOB_LOG_NAME
+			local MSG="$JOB_UPPER KO."
+			soaf_log_err "$MSG" $SOAF_JOB_LOG_NAME
+			local IS_NOTIF=$(soaf_map_get $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR)
+			[ -n "$IS_NOTIF" ] && soaf_notif "$MSG"
 		fi
 	fi
 }

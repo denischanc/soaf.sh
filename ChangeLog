@@ -1,3 +1,8 @@
+[0.2.1]
+
+-- roll feature : only 1 call to prepare cmd out/err
+-- job feature : option to notif on error
+
 [0.2.0]
 
 -- add job feature
