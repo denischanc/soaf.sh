@@ -2,6 +2,7 @@
 
 -- notif feature : created natures are all used
 -- notif_sms_free feature : create a nature to be used
+-- job feature : modify notif msg
 
 [0.2.1]
 

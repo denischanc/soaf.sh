@@ -106,10 +106,9 @@ soaf_do_job_process() {
 			SOAF_JOB_RET="OK"
 			soaf_log_info "$JOB_UPPER OK." $SOAF_JOB_LOG_NAME
 		else
-			local MSG="$JOB_UPPER KO."
-			soaf_log_err "$MSG" $SOAF_JOB_LOG_NAME
+			soaf_log_err "$JOB_UPPER KO." $SOAF_JOB_LOG_NAME
 			local IS_NOTIF=$(soaf_map_get $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR)
-			[ -n "$IS_NOTIF" ] && soaf_notif "$MSG"
+			[ -n "$IS_NOTIF" ] && soaf_notif "$JOB_UPPER job KO."
 		fi
 	fi
 }
