@@ -8,10 +8,8 @@ SOAF_NOTIF_FN_ATTR="soaf_notif_fn"
 ################################################################################
 ################################################################################
 
-### cfg : SOAF_NOTIF_USED_NATURE_LIST
-
 soaf_notif_init() {
-	soaf_info_add_var SOAF_NOTIF_USED_NATURE_LIST
+	soaf_info_add_var SOAF_NOTIF_NATURE_LIST
 }
 
 soaf_engine_add_init_fn soaf_notif_init
@@ -32,6 +30,7 @@ soaf_add_name_log_level_fn soaf_notif_log_level
 soaf_create_notif_nature() {
 	local NATURE=$1
 	local FN=$2
+	SOAF_NOTIF_NATURE_LIST="$SOAF_NOTIF_NATURE_LIST $NATURE"
 	soaf_map_extend $NATURE $SOAF_NOTIF_FN_ATTR $FN
 }
 
@@ -43,11 +42,11 @@ soaf_notif() {
 	local PROG=$(basename $0)
 	local HOST=$(hostname -f)
 	local nature
-	for nature in $SOAF_NOTIF_USED_NATURE_LIST
+	for nature in $SOAF_NOTIF_NATURE_LIST
 	do
 		local FN=$(soaf_map_get $nature $SOAF_NOTIF_FN_ATTR)
 		SOAF_NOTIF_RET=
-		$FN "$MSG" $PROG $HOST
+		$FN $nature "$MSG" $PROG $HOST
 		if [ -n "$SOAF_NOTIF_RET" ]
 		then
 			local LOG_MSG="Notif of nature [$nature] OK."

@@ -1,3 +1,8 @@
+[0.3.0]
+
+-- notif feature : created natures are all used
+-- notif_sms_free feature : create a nature to be used
+
 [0.2.1]
 
 -- roll feature : only 1 call to prepare cmd out/err
