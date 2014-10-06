@@ -1,6 +1,6 @@
 
 SOAF_LOG_LEVEL=$SOAF_LOG_DEBUG
 
-SOAF_NOTIF_USED_NATURE_LIST=$SOAF_NOTIF_SMS_FREE_NATURE
-SOAF_NOTIF_SMS_FREE_USER=""
-SOAF_NOTIF_SMS_FREE_PASS=""
+soaf_create_net_account "test.sms.free.account" "" ""
+soaf_create_notif_sms_free_nature "test.notif.sms.free" \
+	"test.sms.free.account"

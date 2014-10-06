@@ -3,7 +3,7 @@
 
 SOAF_NOTIF_SMS_FREE_LOG_NAME="soaf.notif.sms.free"
 
-SOAF_NOTIF_SMS_FREE_ACCOUNT_NATURE_ATTR="soaf_notif_sms_free_account_nature"
+SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR="soaf_notif_sms_free_account"
 SOAF_NOTIF_SMS_FREE_PROXY_NATURE_ATTR="soaf_notif_sms_free_proxy_nature"
 SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR="soaf_notif_sms_free_cacert_file"
 
@@ -32,12 +32,11 @@ soaf_add_name_log_level_fn soaf_notif_sms_free_log_level
 
 soaf_create_notif_sms_free_nature() {
 	local NATURE=$1
-	local ACCOUNT_NATURE=$2
+	local ACCOUNT=$2
 	local PROXY_NATURE=$3
 	local CACERT_FILE=$4
 	soaf_create_notif_nature $NATURE soaf_notif_sms_free
-	soaf_map_extend $NATURE $SOAF_NOTIF_SMS_FREE_ACCOUNT_NATURE_ATTR \
-		$ACCOUNT_NATURE
+	soaf_map_extend $NATURE $SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR $ACCOUNT
 	soaf_map_extend $NATURE $SOAF_NOTIF_SMS_FREE_PROXY_NATURE_ATTR \
 		$PROXY_NATURE
 	soaf_map_extend $NATURE $SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR \
@@ -52,10 +51,9 @@ soaf_notif_sms_free() {
 	local MSG=$2
 	local PROG=$3
 	local HOST=$4
-	local ACCOUNT_NATURE=$(soaf_map_get $NATURE \
-		$SOAF_NOTIF_SMS_FREE_ACCOUNT_NATURE_ATTR)
-	local USER=$(soaf_net_account_login ${ACCOUNT_NATURE:-unknown})
-	local PASS=$(soaf_net_account_passwd ${ACCOUNT_NATURE:-unknown})
+	local ACCOUNT=$(soaf_map_get $NATURE $SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR)
+	local USER=$(soaf_net_account_login ${ACCOUNT:-unknown})
+	local PASS=$(soaf_net_account_passwd ${ACCOUNT:-unknown})
 	if [ -n "$USER" -a -n "$PASS" ]
 	then
 		local CURL_ARGS=

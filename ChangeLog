@@ -1,3 +1,8 @@
+[0.3.1]
+
+-- clean code : modify variable names (delete _NATURE ...)
+-- clean notif_sms_free feature used in test
+
 [0.3.0]
 
 -- notif feature : created natures are all used
