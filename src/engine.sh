@@ -23,7 +23,7 @@ soaf_engine_log_level() {
 	soaf_log_name_log_level $SOAF_ENGINE_LOG_NAME $LOG_LEVEL
 }
 
-soaf_add_name_log_level_fn soaf_engine_log_level
+soaf_define_add_name_log_level_fn soaf_engine_log_level
 
 ################################################################################
 ################################################################################
@@ -64,8 +64,6 @@ soaf_engine_source_ext() {
 
 soaf_engine_cfg() {
 	local USER_NATURE=$1
-	### CLI
-	soaf_mng_glob_var $USER_NATURE
 	### FILEs
 	soaf_cfg_set SOAF_EXT_GLOB_DIR /etc/$SOAF_USER_NAME
 	soaf_cfg_set SOAF_EXT_LOC_DIR $HOME/.$SOAF_USER_NAME

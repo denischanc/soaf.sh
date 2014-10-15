@@ -1,3 +1,9 @@
+[0.4.0]
+
+-- New way to add usage variables and define them with prefix :
+   always use soaf_usage_add_var()
+-- Rename define.sh fns
+
 [0.3.1]
 
 -- clean code : modify variable names (delete _NATURE ...)

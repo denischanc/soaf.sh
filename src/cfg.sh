@@ -11,8 +11,8 @@ soaf_cfg_init() {
 	soaf_info_add_var "SOAF_EXT_GLOB_DIR SOAF_EXT_LOC_DIR"
 }
 
-soaf_engine_add_cfg_fn soaf_cfg__
-soaf_engine_add_init_fn soaf_cfg_init
+soaf_define_add_engine_cfg_fn soaf_cfg__
+soaf_define_add_engine_init_fn soaf_cfg_init
 
 ################################################################################
 ################################################################################
@@ -34,28 +34,6 @@ soaf_parse_arg() {
 		local __VAL_TMP=${__ARG_TMP#$__VAR_TMP=}
 		eval $__VAR_TMP=\$__VAL_TMP
 	fi
-}
-
-################################################################################
-################################################################################
-
-soaf_mng_glob_var_loop() {
-	local VAR_PRE=$1
-	local LIST=$2
-	for var in $LIST
-	do
-		eval local VAL_TMP=\$$var
-		[ -n "$VAL_TMP" ] && eval ${VAR_PRE}_$var=\$VAL_TMP
-	done
-}
-
-soaf_mng_glob_var() {
-	local USER_NATURE=$1
-	soaf_mng_glob_var_loop "SOAF" "$SOAF_USAGE_VAR_LIST"
-	local VAR_PRE=$(soaf_map_get $USER_NATURE $SOAF_USER_VAR_PRE_ATTR)
-	local USAGE_VAR_LIST=$(soaf_map_get $USER_NATURE \
-		$SOAF_USER_USAGE_VAR_LIST_ATTR)
-	soaf_mng_glob_var_loop "$VAR_PRE" "$USAGE_VAR_LIST"
 }
 
 ################################################################################

@@ -4,7 +4,6 @@
 SOAF_ACTION_FN_ATTR="soaf_action_fn"
 SOAF_ACTION_USAGE_FN_ATTR="soaf_action_usage_fn"
 
-soaf_usage_add_var ACTION
 
 ################################################################################
 ################################################################################
@@ -14,11 +13,12 @@ soaf_action_cfg() {
 }
 
 soaf_action_init() {
+	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX
 	soaf_info_add_var SOAF_ACTION
 }
 
-soaf_engine_add_cfg_fn soaf_action_cfg
-soaf_engine_add_init_fn soaf_action_init
+soaf_define_add_engine_cfg_fn soaf_action_cfg
+soaf_define_add_engine_init_fn soaf_action_init
 
 ################################################################################
 ################################################################################

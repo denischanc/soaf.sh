@@ -12,7 +12,7 @@ soaf_notif_init() {
 	soaf_info_add_var SOAF_NOTIF_NATURE_LIST
 }
 
-soaf_engine_add_init_fn soaf_notif_init
+soaf_define_add_engine_init_fn soaf_notif_init
 
 ################################################################################
 ################################################################################
@@ -22,7 +22,7 @@ soaf_notif_log_level() {
 	soaf_log_name_log_level $SOAF_NOTIF_LOG_NAME $LOG_LEVEL
 }
 
-soaf_add_name_log_level_fn soaf_notif_log_level
+soaf_define_add_name_log_level_fn soaf_notif_log_level
 
 ################################################################################
 ################################################################################

@@ -41,8 +41,8 @@ soaf_log_prepenv() {
 		mkdir -p $(dirname $SOAF_LOG_FILE)
 }
 
-soaf_engine_add_cfg_fn soaf_log_cfg
-soaf_engine_add_init_fn soaf_log_init
+soaf_define_add_engine_cfg_fn soaf_log_cfg
+soaf_define_add_engine_init_fn soaf_log_init
 
 ################################################################################
 ################################################################################

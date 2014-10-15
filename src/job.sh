@@ -12,19 +12,18 @@ SOAF_JOB_NOTIF_ON_ERR_ATTR="soaf_job_notif_on_err"
 
 SOAF_JOB_ACTION="job"
 
-soaf_usage_add_var JOB
-
 ################################################################################
 ################################################################################
 
 soaf_job_init() {
-	if [ -n "$SOAF_JOB_LIST" ]
+	if [ -n "$SOAF_JOB_LIST" -a -z "$SOAF_JOB_NO_ACTION" ]
 	then
+		soaf_usage_add_var JOB $SOAF_DEFINE_VAR_PREFIX
 		soaf_create_action $SOAF_JOB_ACTION soaf_job soaf_job_usage
 	fi
 }
 
-soaf_engine_add_init_fn soaf_job_init
+soaf_define_add_engine_init_fn soaf_job_init
 
 ################################################################################
 ################################################################################
@@ -34,7 +33,7 @@ soaf_job_log_level() {
 	soaf_log_name_log_level $SOAF_JOB_LOG_NAME $LOG_LEVEL
 }
 
-soaf_add_name_log_level_fn soaf_job_log_level
+soaf_define_add_name_log_level_fn soaf_job_log_level
 
 ################################################################################
 ################################################################################

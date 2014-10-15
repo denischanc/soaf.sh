@@ -2,7 +2,7 @@
 ################################################################################
 
 SOAF_NAME="soaf.sh"
-SOAF_VERSION="0.3.1"
+SOAF_VERSION="0.4.0"
 
 SOAF_VERSION_ACTION="version"
 
@@ -13,7 +13,7 @@ soaf_version_init() {
 	soaf_info_add_var SOAF_VERSION
 }
 
-soaf_engine_add_init_fn soaf_version_init
+soaf_define_add_engine_init_fn soaf_version_init
 
 ################################################################################
 ################################################################################

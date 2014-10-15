@@ -29,7 +29,7 @@ soaf_state_log_level() {
 	soaf_log_name_log_level $SOAF_STATE_LOG_NAME $LOG_LEVEL
 }
 
-soaf_add_name_log_level_fn soaf_state_log_level
+soaf_define_add_name_log_level_fn soaf_state_log_level
 
 ################################################################################
 ################################################################################

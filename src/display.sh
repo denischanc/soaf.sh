@@ -6,7 +6,7 @@ soaf_dis_cfg() {
 	soaf_cfg_set SOAF_TXT_PRE "  "
 }
 
-soaf_engine_add_cfg_fn soaf_dis_cfg
+soaf_define_add_engine_cfg_fn soaf_dis_cfg
 
 ################################################################################
 ################################################################################

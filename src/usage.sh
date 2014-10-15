@@ -6,15 +6,29 @@ SOAF_USAGE_ACTION="usage"
 ################################################################################
 ################################################################################
 
+soaf_usage_add_var() {
+	local VAR_LIST=$1
+	local PREFIX=$2
+	SOAF_USAGE_VAR_LIST="$SOAF_USAGE_VAR_LIST $VAR_LIST"
+	if [ -n "$PREFIX" ]
+	then
+		local var
+		for var in $VAR_LIST
+		do
+			eval local __VAL_TMP=\$$var
+			[ -n "$__VAL_TMP" ] && eval ${PREFIX}_$var=\$__VAL_TMP
+		done
+	fi
+}
+
+################################################################################
+################################################################################
+
 soaf_usage() {
-	local USER_NATURE=$1
-	local USAGE_VAR_LIST=$(soaf_map_get $USER_NATURE \
-		$SOAF_USER_USAGE_VAR_LIST_ATTR)
-	USAGE_VAR_LIST="$SOAF_USAGE_VAR_LIST $USAGE_VAR_LIST"
 	cat << _EOF_
 ${SOAF_TITLE_PRE}USAGE
 ${SOAF_TXT_PRE}usage: $0 ([variable]=[value])*
-${SOAF_TXT_PRE}variable: [$(echo $USAGE_VAR_LIST | tr ' ' '|')]
+${SOAF_TXT_PRE}variable: [$(echo $SOAF_USAGE_VAR_LIST | tr ' ' '|')]
 ${SOAF_TXT_PRE}ACTION: [$(echo $SOAF_ACTION_LIST | tr ' ' '|')]
 _EOF_
 	for action in $SOAF_ACTION_LIST

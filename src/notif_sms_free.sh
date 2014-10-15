@@ -15,7 +15,7 @@ soaf_notif_sms_free_cfg() {
 		"https://smsapi.free-mobile.fr/sendmsg"
 }
 
-soaf_engine_add_cfg_fn soaf_notif_sms_free_cfg
+soaf_define_add_engine_cfg_fn soaf_notif_sms_free_cfg
 
 ################################################################################
 ################################################################################
@@ -25,7 +25,7 @@ soaf_notif_sms_free_log_level() {
 	soaf_log_name_log_level $SOAF_NOTIF_SMS_FREE_LOG_NAME $LOG_LEVEL
 }
 
-soaf_add_name_log_level_fn soaf_notif_sms_free_log_level
+soaf_define_add_name_log_level_fn soaf_notif_sms_free_log_level
 
 ################################################################################
 ################################################################################

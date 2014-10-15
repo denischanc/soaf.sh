@@ -17,8 +17,8 @@ soaf_pf_init() {
 	soaf_info_add_var SOAF_PF_FILE
 }
 
-soaf_engine_add_cfg_fn soaf_pf_cfg
-soaf_engine_add_init_fn soaf_pf_init
+soaf_define_add_engine_cfg_fn soaf_pf_cfg
+soaf_define_add_engine_init_fn soaf_pf_init
 
 ################################################################################
 ################################################################################
@@ -28,7 +28,7 @@ soaf_pf_log_level() {
 	soaf_log_name_log_level $SOAF_PF_LOG_NAME $LOG_LEVEL
 }
 
-soaf_add_name_log_level_fn soaf_pf_log_level
+soaf_define_add_name_log_level_fn soaf_pf_log_level
 
 ################################################################################
 ################################################################################

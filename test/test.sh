@@ -22,6 +22,7 @@ test_cfg() {
 }
 
 test_init() {
+	soaf_usage_add_var "NAME VAL MSG" "TEST"
 	test_init_1
 	test_init_2
 	test_init_3
@@ -37,8 +38,7 @@ test_prepenv() {
 	soaf_log_info "Test prepenv called."
 }
 
-soaf_create_user_nature $TEST_NATURE "test" "1.0.0" \
-	"TEST" "NAME VAL MSG" \
+soaf_create_user_nature $TEST_NATURE "test" "1.0.1" \
 	test_cfg test_init test_prepenv
 
 ################################################################################
