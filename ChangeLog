@@ -1,3 +1,7 @@
+[0.4.1]
+
+-- Modify display usage : add ACTION var at the beginning
+
 [0.4.0]
 
 -- New way to add usage variables and define them with prefix :

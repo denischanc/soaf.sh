@@ -13,7 +13,6 @@ soaf_action_cfg() {
 }
 
 soaf_action_init() {
-	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX
 	soaf_info_add_var SOAF_ACTION
 }
 

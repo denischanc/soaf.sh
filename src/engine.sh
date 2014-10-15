@@ -90,6 +90,7 @@ soaf_engine_init() {
 	soaf_engine_create_action $SOAF_USAGE_ACTION soaf_usage
 	soaf_engine_create_action $SOAF_VERSION_ACTION soaf_version
 	soaf_engine_create_action $SOAF_INFO_ACTION soaf_info
+	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX
 	### USER
 	soaf_engine_call_user_fn $USER_NATURE $SOAF_USER_INIT_FN_ATTR
 	### FILEs
