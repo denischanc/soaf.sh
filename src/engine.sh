@@ -97,6 +97,7 @@ soaf_engine_init() {
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_INIT_FILE
 	### SOAF
 	soaf_engine_call_fn_list $USER_NATURE "$SOAF_ENGINE_INIT_FN_LIST"
+	soaf_usage_def_var ACTION "$SOAF_ACTION_LIST"
 	soaf_info_add_var "$SOAF_ENGINE_EXT_VF_L"
 }
 
