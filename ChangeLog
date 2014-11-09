@@ -1,3 +1,7 @@
+[0.6.0]
+
+-- Add feature to call user pre/post action fns
+
 [0.5.0]
 
 -- Add fn to define usage var

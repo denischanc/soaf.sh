@@ -8,8 +8,11 @@ SOAF_USER_VERSION_ATTR="soaf_user_version"
 SOAF_USER_CFG_FN_ATTR="soaf_user_cfg_fn"
 SOAF_USER_INIT_FN_ATTR="soaf_user_init_fn"
 SOAF_USER_PREPENV_FN_ATTR="soaf_user_prepenv_fn"
+SOAF_USER_PRE_ACTION_FN_ATTR="soaf_user_pre_action_fn"
+SOAF_USER_POST_ACTION_FN_ATTR="soaf_user_post_action_fn"
 
 SOAF_USER_ATTR_LIST="NAME VERSION CFG_FN INIT_FN PREPENV_FN"
+SOAF_USER_ATTR_LIST="$SOAF_USER_ATTR_LIST PRE_ACTION_FN POST_ACTION_FN"
 
 ################################################################################
 ################################################################################
@@ -30,6 +33,8 @@ soaf_create_user_nature() {
 	local CFG_FN=$4
 	local INIT_FN=$5
 	local PREPENV_FN=$6
+	local PRE_ACTION_FN=$7
+	local POST_ACTION_FN=$8
 	local attr
 	for attr in $SOAF_USER_ATTR_LIST
 	do

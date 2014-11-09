@@ -147,7 +147,9 @@ soaf_engine_action() {
 	then
 		soaf_dis_txt "No function defined for action [$SOAF_ACTION]."
 	else
+		soaf_engine_call_user_fn $USER_NATURE $SOAF_USER_PRE_ACTION_FN_ATTR
 		$FN $USER_NATURE
+		soaf_engine_call_user_fn $USER_NATURE $SOAF_USER_POST_ACTION_FN_ATTR
 	fi
 }
 
