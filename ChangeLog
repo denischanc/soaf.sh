@@ -1,3 +1,9 @@
+[0.7.0]
+
+-- Add display fns from stdin
+-- Add checking of usage define variables
+-- Add engine exit fn
+
 [0.6.0]
 
 -- Add feature to call user pre/post action fns

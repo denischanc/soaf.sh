@@ -97,7 +97,7 @@ soaf_engine_init() {
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_INIT_FILE
 	### SOAF
 	soaf_engine_call_fn_list $USER_NATURE "$SOAF_ENGINE_INIT_FN_LIST"
-	soaf_usage_def_var ACTION "$SOAF_ACTION_LIST"
+	soaf_usage_def_var ACTION "" "$SOAF_ACTION_LIST"
 	soaf_info_add_var "$SOAF_ENGINE_EXT_VF_L"
 }
 
@@ -134,7 +134,7 @@ soaf_engine_action() {
 	if [ -z "$IS_ACTION" ]
 	then
 		soaf_usage $USER_NATURE
-		exit
+		soaf_engine_exit
 	fi
 	local NOPREPENV=$(echo $SOAF_ACTION_NOPREPENV_LIST | \
 		grep -w "$SOAF_ACTION")
@@ -155,6 +155,11 @@ soaf_engine_action() {
 
 ################################################################################
 ################################################################################
+
+soaf_engine_exit() {
+	local ERR=${1:-1}
+	exit $ERR
+}
 
 soaf_engine() {
 	local USER_NATURE=$1

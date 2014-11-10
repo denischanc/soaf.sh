@@ -11,12 +11,7 @@ soaf_action_cfg() {
 	soaf_cfg_set SOAF_ACTION $SOAF_USAGE_ACTION
 }
 
-soaf_action_init() {
-	soaf_info_add_var SOAF_ACTION
-}
-
 soaf_define_add_engine_cfg_fn soaf_action_cfg
-soaf_define_add_engine_init_fn soaf_action_init
 
 ################################################################################
 ################################################################################

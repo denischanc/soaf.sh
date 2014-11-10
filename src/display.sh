@@ -37,6 +37,26 @@ soaf_dis_txt_off() {
 ################################################################################
 ################################################################################
 
+soaf_dis_txt_stdin() {
+	local line
+	while read line
+	do
+		soaf_dis_txt "$line"
+	done
+}
+
+soaf_dis_txt_off_stdin() {
+	local OFF=$1
+	local line
+	while read line
+	do
+		soaf_dis_txt_off "$line" $OFF
+	done
+}
+
+################################################################################
+################################################################################
+
 soaf_dis_var_list() {
 	local VAR_LIST=$1
 	local var

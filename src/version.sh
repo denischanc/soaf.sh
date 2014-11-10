@@ -2,7 +2,7 @@
 ################################################################################
 
 SOAF_NAME="soaf.sh"
-SOAF_VERSION="0.6.0"
+SOAF_VERSION="0.7.0"
 
 SOAF_VERSION_ACTION="version"
 
