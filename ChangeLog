@@ -1,3 +1,7 @@
+[0.8.0]
+
+-- Add cache for prop_file feature
+
 [0.7.0]
 
 -- Add display fns from stdin
