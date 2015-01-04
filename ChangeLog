@@ -1,3 +1,8 @@
+[0.8.1]
+
+-- Add mng of --help and -h options into cfg
+-- Fix bug on CLI options as --dummy ...
+
 [0.8.0]
 
 -- Add cache for prop_file feature

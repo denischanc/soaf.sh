@@ -1,7 +1,7 @@
 ################################################################################
 ################################################################################
 
-SOAF_USAGE_ACTION="usage"
+SOAF_USAGE_ACTION=$SOAF_DEFINE_USAGE_ACTION
 
 SOAF_USAGE_VAR_PRE_ATTR="soaf_usage_var_pre"
 

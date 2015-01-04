@@ -28,11 +28,12 @@ soaf_cfg_set() {
 
 soaf_parse_arg() {
 	local __ARG_TMP=$1
-	local __VAR_TMP=$(echo "$__ARG_TMP" | awk -F= '{print $1}')
+	local __VAR_TMP=${__ARG_TMP%%=*}
 	if [ -n "$__VAR_TMP" ]
 	then
-		local __VAL_TMP=${__ARG_TMP#$__VAR_TMP=}
-		eval $__VAR_TMP=\$__VAL_TMP
+		local __VAL_TMP=${__ARG_TMP#$__VAR_TMP}
+		__VAL_TMP=${__VAL_TMP#=}
+		eval $(soaf_to_var $__VAR_TMP)=\$__VAL_TMP
 	fi
 }
 
@@ -59,6 +60,9 @@ soaf_check_var_list() {
 
 while [ $# -ge 1 ]
 do
-	soaf_parse_arg "$1"
+	case $1 in
+		--help | -h) ACTION=$SOAF_DEFINE_USAGE_ACTION ;;
+		*) soaf_parse_arg "$1" ;;
+	esac
 	shift
 done
