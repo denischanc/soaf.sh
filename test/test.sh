@@ -24,6 +24,7 @@ test_cfg() {
 
 test_init() {
 	soaf_usage_add_var "NAME VAL MSG" "TEST"
+	soaf_usage_def_var VAL "" "" '  __££ $$  {}  =__  '
 	test_init_1
 	test_init_2
 	test_init_3

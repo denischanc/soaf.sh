@@ -28,26 +28,6 @@ soaf_define_add_name_log_level_fn soaf_engine_log_level
 ################################################################################
 ################################################################################
 
-soaf_engine_call_user_fn() {
-	local USER_NATURE=$1
-	local FN_ATTR=$2
-	local FN=$(soaf_map_get $USER_NATURE $FN_ATTR)
-	[ -n "$FN" ] && $FN $USER_NATURE
-}
-
-soaf_engine_call_fn_list() {
-	local USER_NATURE=$1
-	local FN_LIST=$2
-	local fn
-	for fn in $FN_LIST
-	do
-		$fn $USER_NATURE
-	done
-}
-
-################################################################################
-################################################################################
-
 soaf_engine_source_ext() {
 	local FILE=$1
 	local DIR_LIST=${SOAF_EXT_OTHER_DIR:-$SOAF_EXT_GLOB_DIR $SOAF_EXT_LOC_DIR}
@@ -68,37 +48,30 @@ soaf_engine_cfg() {
 	soaf_cfg_set SOAF_EXT_GLOB_DIR /etc/$SOAF_USER_NAME
 	soaf_cfg_set SOAF_EXT_LOC_DIR $HOME/.$SOAF_USER_NAME
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_CFG_FILE
-	### USER
-	soaf_engine_call_user_fn $USER_NATURE $SOAF_USER_CFG_FN_ATTR
-	### SOAF
-	soaf_engine_call_fn_list $USER_NATURE "$SOAF_ENGINE_CFG_FN_LIST"
+	### MODULEs
+	soaf_module_apply_all_reverse_fn soaf_module_call_cfg_fn
 }
 
 ################################################################################
 ################################################################################
-
-soaf_engine_create_action() {
-	local ACTION=$1
-	local FN=$2
-	soaf_create_action $ACTION $FN
-	soaf_no_prepenv_action $ACTION
-}
 
 soaf_engine_init() {
 	local USER_NATURE=$1
-	### ENGINE
-	soaf_engine_create_action $SOAF_USAGE_ACTION soaf_usage
-	soaf_engine_create_action $SOAF_VERSION_ACTION soaf_version
-	soaf_engine_create_action $SOAF_INFO_ACTION soaf_info
-	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX
-	### USER
-	soaf_engine_call_user_fn $USER_NATURE $SOAF_USER_INIT_FN_ATTR
 	### FILEs
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_INIT_FILE
-	### SOAF
-	soaf_engine_call_fn_list $USER_NATURE "$SOAF_ENGINE_INIT_FN_LIST"
-	soaf_usage_def_var ACTION "" "$SOAF_ACTION_LIST"
+	### MODULEs
+	soaf_module_apply_all_reverse_fn soaf_module_call_init_fn
+	### ENGINE
+	soaf_pmp_list_cat SOAF_ACTION
+	soaf_usage_def_var ACTION "" "$SOAF_RET_LIST" "" $SOAF_POS_PRE
 	soaf_info_add_var "$SOAF_ENGINE_EXT_VF_L"
+}
+
+################################################################################
+################################################################################
+
+soaf_engine_preplog() {
+	soaf_module_log_apply_all_fn soaf_module_call_preplog_fn
 }
 
 ################################################################################
@@ -114,13 +87,10 @@ soaf_engine_mkdir() {
 
 soaf_engine_prepenv() {
 	local USER_NATURE=$1
-	### SOAF
-	soaf_engine_call_fn_list $USER_NATURE \
-		"soaf_log_prepenv $SOAF_ENGINE_PREPENV_FN_LIST"
 	### ENGINE
 	soaf_engine_mkdir
-	### USER
-	soaf_engine_call_user_fn $USER_NATURE $SOAF_USER_PREPENV_FN_ATTR
+	### MODULEs
+	soaf_module_apply_all_fn soaf_module_call_prepenv_fn
 	### FILEs
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_PREPENV_FILE
 }
@@ -140,6 +110,7 @@ soaf_engine_action() {
 		grep -w "$SOAF_ACTION")
 	if [ -z "$NOPREPENV" ]
 	then
+		soaf_engine_preplog
 		soaf_engine_prepenv $USER_NATURE
 	fi
 	local FN=$(soaf_map_get $SOAF_ACTION $SOAF_ACTION_FN_ATTR)
@@ -147,9 +118,9 @@ soaf_engine_action() {
 	then
 		soaf_dis_txt "No function defined for action [$SOAF_ACTION]."
 	else
-		soaf_engine_call_user_fn $USER_NATURE $SOAF_USER_PRE_ACTION_FN_ATTR
+		soaf_module_apply_all_fn soaf_module_call_pre_action_fn
 		$FN $USER_NATURE
-		soaf_engine_call_user_fn $USER_NATURE $SOAF_USER_POST_ACTION_FN_ATTR
+		soaf_module_apply_all_fn soaf_module_call_post_action_fn
 	fi
 }
 
@@ -164,6 +135,7 @@ soaf_engine_exit() {
 soaf_engine() {
 	local USER_NATURE=$1
 	SOAF_USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
+	soaf_module_this_user_nature $SOAF_NAME $USER_NATURE
 	soaf_engine_cfg $USER_NATURE
 	soaf_engine_init $USER_NATURE
 	soaf_engine_action $USER_NATURE

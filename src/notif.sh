@@ -12,7 +12,7 @@ soaf_notif_init() {
 	soaf_info_add_var SOAF_NOTIF_NATURE_LIST
 }
 
-soaf_define_add_engine_init_fn soaf_notif_init
+soaf_define_add_this_init_fn soaf_notif_init
 
 ################################################################################
 ################################################################################

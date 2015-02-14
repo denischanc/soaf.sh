@@ -18,12 +18,13 @@ SOAF_JOB_ACTION="job"
 soaf_job_init() {
 	if [ -n "$SOAF_JOB_LIST" -a -z "$SOAF_JOB_NO_ACTION" ]
 	then
-		soaf_usage_add_var JOB $SOAF_DEFINE_VAR_PREFIX
-		soaf_create_action $SOAF_JOB_ACTION soaf_job soaf_job_usage
+		soaf_usage_add_var JOB $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_POST
+		soaf_create_action $SOAF_JOB_ACTION soaf_job soaf_job_usage \
+			$SOAF_POS_POST
 	fi
 }
 
-soaf_define_add_engine_init_fn soaf_job_init
+soaf_define_add_this_init_fn soaf_job_init
 
 ################################################################################
 ################################################################################

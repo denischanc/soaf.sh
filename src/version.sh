@@ -2,7 +2,7 @@
 ################################################################################
 
 SOAF_NAME="soaf.sh"
-SOAF_VERSION="0.8.1"
+SOAF_VERSION="0.9.0"
 
 SOAF_VERSION_ACTION="version"
 
@@ -11,21 +11,16 @@ SOAF_VERSION_ACTION="version"
 
 soaf_version_init() {
 	soaf_info_add_var SOAF_VERSION
+	soaf_create_action $SOAF_VERSION_ACTION soaf_version "" $SOAF_POS_PRE
+	soaf_no_prepenv_action $SOAF_VERSION_ACTION
 }
 
-soaf_define_add_engine_init_fn soaf_version_init
+soaf_define_add_this_init_fn soaf_version_init
 
 ################################################################################
 ################################################################################
 
 soaf_version() {
-	local USER_NATURE=$1
-	local NAMEVER=$SOAF_NAME-$SOAF_VERSION
-	local USER_VER=$(soaf_map_get $USER_NATURE $SOAF_USER_VERSION_ATTR)
-	local USER_NAMEVER=$SOAF_USER_NAME-$USER_VER
-	if [ -n "$USER_NAMEVER" ]
-	then
-		NAMEVER="$USER_NAMEVER ($NAMEVER)"
-	fi
-	soaf_dis_txt "$NAMEVER"
+	soaf_dis_title "$SOAF_USER_NAME"
+	soaf_module_apply_all_reverse_fn soaf_module_version
 }

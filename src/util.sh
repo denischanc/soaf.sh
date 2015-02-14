@@ -12,7 +12,7 @@ soaf_util_init() {
 	soaf_info_add_var SOAF_NOEXEC_PROG_LIST
 }
 
-soaf_define_add_engine_init_fn soaf_util_init
+soaf_define_add_this_init_fn soaf_util_init
 
 ################################################################################
 ################################################################################

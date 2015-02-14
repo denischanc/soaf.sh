@@ -36,13 +36,14 @@ soaf_log_init() {
 	soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE_INT $SOAF_LOG_FILE
 }
 
-soaf_log_prepenv() {
+soaf_log_preplog() {
 	[ "$SOAF_LOG_USED_NATURE" = "$SOAF_LOG_NATURE_INT" ] && \
 		mkdir -p $(dirname $SOAF_LOG_FILE)
 }
 
-soaf_define_add_engine_cfg_fn soaf_log_cfg
-soaf_define_add_engine_init_fn soaf_log_init
+soaf_define_add_this_cfg_fn soaf_log_cfg
+soaf_define_add_this_init_fn soaf_log_init
+soaf_define_add_this_preplog_fn soaf_log_preplog
 
 ################################################################################
 ################################################################################

@@ -1,7 +1,7 @@
 ################################################################################
 ################################################################################
 
-soaf_cfg__() {
+soaf_cfg_cfg() {
 	soaf_cfg_set SOAF_WORK_DIR $HOME/work/$SOAF_USER_NAME
 	soaf_cfg_set SOAF_LOG_DIR $SOAF_WORK_DIR/log
 }
@@ -11,8 +11,8 @@ soaf_cfg_init() {
 	soaf_info_add_var "SOAF_EXT_GLOB_DIR SOAF_EXT_LOC_DIR"
 }
 
-soaf_define_add_engine_cfg_fn soaf_cfg__
-soaf_define_add_engine_init_fn soaf_cfg_init
+soaf_define_add_this_cfg_fn soaf_cfg_cfg
+soaf_define_add_this_init_fn soaf_cfg_init
 
 ################################################################################
 ################################################################################

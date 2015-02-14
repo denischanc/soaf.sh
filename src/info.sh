@@ -6,6 +6,16 @@ SOAF_INFO_ACTION="info"
 ################################################################################
 ################################################################################
 
+soaf_info_init() {
+	soaf_create_action $SOAF_INFO_ACTION soaf_info "" $SOAF_POS_PRE
+	soaf_no_prepenv_action $SOAF_INFO_ACTION
+}
+
+soaf_define_add_this_init_fn soaf_info_init
+
+################################################################################
+################################################################################
+
 soaf_info_add_var() {
 	local VAR_LIST=$1
 	SOAF_INFO_VAR_LIST="$SOAF_INFO_VAR_LIST $VAR_LIST"

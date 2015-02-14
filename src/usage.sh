@@ -12,6 +12,11 @@ SOAF_USAGE_VAR_DFT_VAL_ATTR="soaf_usage_var_dft_val"
 ################################################################################
 ################################################################################
 
+soaf_usage_init() {
+	soaf_create_action $SOAF_USAGE_ACTION soaf_usage "" $SOAF_POS_PRE
+	soaf_no_prepenv_action $SOAF_USAGE_ACTION
+}
+
 soaf_usage_prepenv() {
 	local var
 	for var in $SOAF_USAGE_DEF_LIST
@@ -20,7 +25,8 @@ soaf_usage_prepenv() {
 	done
 }
 
-soaf_define_add_engine_prepenv_fn soaf_usage_prepenv
+soaf_define_add_this_init_fn soaf_usage_init
+soaf_define_add_this_prepenv_fn soaf_usage_prepenv
 
 ################################################################################
 ################################################################################
@@ -28,7 +34,8 @@ soaf_define_add_engine_prepenv_fn soaf_usage_prepenv
 soaf_usage_add_var() {
 	local VAR_LIST=$1
 	local PREFIX=$2
-	SOAF_USAGE_VAR_LIST="$SOAF_USAGE_VAR_LIST $VAR_LIST"
+	local USAGE_POS=$3
+	soaf_pmp_list_fill "$USAGE_POS" SOAF_USAGE_VAR "$VAR_LIST"
 	if [ -n "$PREFIX" ]
 	then
 		local var
@@ -49,10 +56,12 @@ soaf_usage_def_var() {
 	local FN=$2
 	local ENUM=$3
 	local DFT_VAL=$4
-	[ "$VAR" != "ACTION" ] && SOAF_USAGE_DEF_LIST="$SOAF_USAGE_DEF_LIST $VAR"
+	local USAGE_POS=$5
+	SOAF_USAGE_DEF_LIST="$SOAF_USAGE_DEF_LIST $VAR"
+	soaf_pmp_list_fill "$USAGE_POS" SOAF_USAGE_DEF $VAR
 	soaf_map_extend $VAR $SOAF_USAGE_VAR_FN_ATTR $FN
 	soaf_map_extend $VAR $SOAF_USAGE_VAR_ENUM_ATTR "$ENUM"
-	soaf_map_extend $VAR $SOAF_USAGE_VAR_DFT_VAL_ATTR $DFT_VAL
+	soaf_map_extend $VAR $SOAF_USAGE_VAR_DFT_VAL_ATTR "$DFT_VAL"
 }
 
 soaf_usage_check_var() {
@@ -96,13 +105,15 @@ soaf_usage_dis_var() {
 
 soaf_usage() {
 	soaf_dis_title "USAGE"
+	soaf_pmp_list_cat SOAF_USAGE_VAR
 	soaf_dis_txt_stdin << _EOF_
 usage: $0 ([variable]=[value])*
-variable: [$(echo $SOAF_USAGE_VAR_LIST | tr ' ' '|')]
+variable: [$(echo $SOAF_RET_LIST | tr ' ' '|')]
 _EOF_
 	### Variables
 	local var
-	for var in ACTION $SOAF_USAGE_DEF_LIST
+	soaf_pmp_list_cat SOAF_USAGE_DEF
+	for var in $SOAF_RET_LIST
 	do
 		soaf_usage_dis_var $var
 	done

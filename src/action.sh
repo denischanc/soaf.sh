@@ -11,7 +11,12 @@ soaf_action_cfg() {
 	soaf_cfg_set SOAF_ACTION $SOAF_USAGE_ACTION
 }
 
-soaf_define_add_engine_cfg_fn soaf_action_cfg
+soaf_action_init() {
+	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_PRE
+}
+
+soaf_define_add_this_cfg_fn soaf_action_cfg
+soaf_define_add_this_init_fn soaf_action_init
 
 ################################################################################
 ################################################################################
@@ -20,7 +25,9 @@ soaf_create_action() {
 	local ACTION=$1
 	local FN=$2
 	local USAGE_FN=$3
+	local USAGE_POS=$4
 	SOAF_ACTION_LIST="$SOAF_ACTION_LIST $ACTION"
+	soaf_pmp_list_fill "$USAGE_POS" SOAF_ACTION $ACTION
 	soaf_map_extend $ACTION $SOAF_ACTION_FN_ATTR $FN
 	soaf_map_extend $ACTION $SOAF_ACTION_USAGE_FN_ATTR $USAGE_FN
 }
