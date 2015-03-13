@@ -3,6 +3,8 @@
 -- Add module exit fn
 -- Add 3 args on module fn call
 -- Add log level of error output argument on soaf_cmd
+-- New way to choose logger
+-- Add debug output on free sms notif
 
 [0.9.0]
 

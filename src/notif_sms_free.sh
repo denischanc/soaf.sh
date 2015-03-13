@@ -76,13 +76,21 @@ soaf_notif_sms_free() {
 		else
 			CURL_ARGS="$CURL_ARGS --insecure"
 		fi
-		CURL_ARGS="$CURL_ARGS --fail --get --silent --show-error"
-		soaf_log_prep_cmd_out_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
+		soaf_log_level $SOAF_NOTIF_SMS_FREE_LOG_NAME
+		if [ "$SOAF_LOG_RET" = "$SOAF_LOG_DEBUG" ]
+		then
+			CURL_ARGS="$CURL_ARGS --verbose"
+		else
+			CURL_ARGS="$CURL_ARGS --silent --show-error"
+		fi
+		CURL_ARGS="$CURL_ARGS --fail --get"
 		MSG="[$HOST:$PROG] $MSG"
+		### USER and PASS must not be logged
+		soaf_log_prep_cmd_out_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
 		curl $CURL_ARGS --data user=$USER --data pass=$PASS \
 			--data-urlencode msg="$MSG" $SOAF_NOTIF_SMS_FREE_URL \
-			> /dev/null 2> $SOAF_LOG_CMD_ERR_FILE
+			> $SOAF_LOG_CMD_OUT_FILE 2> $SOAF_LOG_CMD_ERR_FILE
 		[ $? -eq 0 ] && SOAF_NOTIF_RET="OK"
-		soaf_log_cmd_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
+		soaf_log_cmd_out_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
 	fi
 }
