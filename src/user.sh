@@ -27,9 +27,10 @@ soaf_create_user_nature() {
 	local PREPENV_FN=$6
 	local PRE_ACTION_FN=$7
 	local POST_ACTION_FN=$8
+	local EXIT_FN=$9
 	local MODULE_NAME="soaf.user.module.$NAME"
-	soaf_create_module $MODULE_NAME $VERSION $CFG_FN $INIT_FN $PREPENV_FN \
-		$PRE_ACTION_FN $POST_ACTION_FN
+	soaf_create_module $MODULE_NAME $VERSION "$CFG_FN" "$INIT_FN" \
+		"$PREPENV_FN" "$PRE_ACTION_FN" "$POST_ACTION_FN" "$EXIT_FN"
 	soaf_map_extend $NATURE $SOAF_USER_NAME_ATTR $NAME
 	soaf_map_extend $NATURE $SOAF_USER_MODULE_NAME_ATTR $MODULE_NAME
 }

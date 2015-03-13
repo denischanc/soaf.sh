@@ -129,6 +129,7 @@ soaf_engine_action() {
 
 soaf_engine_exit() {
 	local ERR=${1:-1}
+	soaf_module_apply_all_reverse_fn soaf_module_call_exit_fn $ERR
 	exit $ERR
 }
 
@@ -139,4 +140,5 @@ soaf_engine() {
 	soaf_engine_cfg $USER_NATURE
 	soaf_engine_init $USER_NATURE
 	soaf_engine_action $USER_NATURE
+	soaf_engine_exit 0
 }

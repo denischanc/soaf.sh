@@ -37,11 +37,17 @@ test_init() {
 ################################################################################
 
 test_prepenv() {
-	soaf_log_info "Test prepenv called."
+	soaf_log_info "Test prepenv called." $TEST_LOG_NAME
+}
+
+test_exit() {
+	local MODULE_NAME=$1
+	local ERR=$2
+	soaf_log_info "RET_CODE=[$ERR]" $TEST_LOG_NAME
 }
 
 soaf_create_user_nature $TEST_NATURE "test" "1.0.1" \
-	test_cfg test_init test_prepenv
+	test_cfg test_init test_prepenv "" "" test_exit
 
 ################################################################################
 ################################################################################
