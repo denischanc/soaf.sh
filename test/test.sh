@@ -79,6 +79,7 @@ test_init_2() {
 test_init_3() {
 	### soaf_create_job "ps" "ps -ef" $TEST_HOME 3
 	### soaf_create_job "ps" "ps -ef" $TEST_HOME 1
+	### soaf_create_job "ps" "ps -ef"
 	soaf_create_job "ps" "ps -ef" $TEST_HOME 0
 }
 
