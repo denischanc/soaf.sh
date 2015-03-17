@@ -14,8 +14,6 @@ SOAF_LOG_LEVEL_ATTR="soaf_log_level"
 SOAF_LOG_FN_ATTR="soaf_log_fn"
 SOAF_LOG_PREP_FN_ATTR="soaf_log_prep_fn"
 
-SOAF_LOG_PREPARED=
-
 ################################################################################
 ################################################################################
 
@@ -32,7 +30,8 @@ soaf_log_cfg() {
 }
 
 soaf_log_init() {
-	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_FILE SOAF_LOG_USED_NATURE"
+	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_LEVEL_STDERR"
+	soaf_info_add_var "SOAF_LOG_FILE SOAF_LOG_USED_NATURE"
 	soaf_info_add_var SOAF_LOG_CMD_OUT_ERR_DIR
 	###---------------
 	[ -z "$SOAF_LOG_USED_NATURE" ] && soaf_create_log_nature \
