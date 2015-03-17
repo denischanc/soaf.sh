@@ -4,7 +4,6 @@
 SOAF_MODULE_VERSION_ATTR="soaf_module_version"
 SOAF_MODULE_CFG_FN_ATTR="soaf_module_cfg_fn"
 SOAF_MODULE_INIT_FN_ATTR="soaf_module_init_fn"
-SOAF_MODULE_PREPLOG_FN_ATTR="soaf_module_preplog_fn"
 SOAF_MODULE_PREPENV_FN_ATTR="soaf_module_prepenv_fn"
 SOAF_MODULE_PRE_ACTION_FN_ATTR="soaf_module_pre_action_fn"
 SOAF_MODULE_POST_ACTION_FN_ATTR="soaf_module_post_action_fn"
@@ -31,13 +30,6 @@ soaf_create_module() {
 	soaf_map_extend $NAME $SOAF_MODULE_PRE_ACTION_FN_ATTR $PRE_ACTION_FN
 	soaf_map_extend $NAME $SOAF_MODULE_POST_ACTION_FN_ATTR $POST_ACTION_FN
 	soaf_map_extend $NAME $SOAF_MODULE_EXIT_FN_ATTR $EXIT_FN
-}
-
-soaf_module_do_log() {
-	local MODULE_NAME=$1
-	local PREPLOG_FN=$2
-	SOAF_MODULE_LOG_LIST="$SOAF_MODULE_LOG_LIST $MODULE_NAME"
-	soaf_map_extend $MODULE_NAME $SOAF_MODULE_PREPLOG_FN_ATTR $PREPLOG_FN
 }
 
 ################################################################################
@@ -80,15 +72,6 @@ soaf_module_call_init_fn() {
 	local ARG_2=$3
 	local ARG_3=$4
 	soaf_module_call_fn $MODULE_NAME $SOAF_MODULE_INIT_FN_ATTR \
-		"$ARG_1" "$ARG_2" "$ARG_3"
-}
-
-soaf_module_call_preplog_fn() {
-	local MODULE_NAME=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
-	soaf_module_call_fn $MODULE_NAME $SOAF_MODULE_PREPLOG_FN_ATTR \
 		"$ARG_1" "$ARG_2" "$ARG_3"
 }
 
@@ -150,18 +133,6 @@ soaf_module_apply_all_reverse_fn() {
 	local ARG_3=$4
 	local module
 	for module in $SOAF_MODULE_REVERSE_LIST
-	do
-		$FN $module "$ARG_1" "$ARG_2" "$ARG_3"
-	done
-}
-
-soaf_module_log_apply_all_fn() {
-	local FN=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
-	local module
-	for module in $SOAF_MODULE_LOG_LIST
 	do
 		$FN $module "$ARG_1" "$ARG_2" "$ARG_3"
 	done

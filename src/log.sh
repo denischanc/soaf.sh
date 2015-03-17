@@ -12,12 +12,16 @@ SOAF_LOG_ROLL_NATURE_INT="soaf.log.roll"
 SOAF_LOG_LEVEL_ATTR="soaf_log_level"
 
 SOAF_LOG_FN_ATTR="soaf_log_fn"
+SOAF_LOG_PREP_FN_ATTR="soaf_log_prep_fn"
+
+SOAF_LOG_PREPARED=
 
 ################################################################################
 ################################################################################
 
 soaf_log_cfg() {
 	soaf_cfg_set SOAF_LOG_LEVEL $SOAF_LOG_INFO
+	soaf_cfg_set SOAF_LOG_LEVEL_STDERR $SOAF_LOG_ERR
 	###---------------
 	soaf_cfg_set SOAF_LOG_ROLL_NATURE $SOAF_LOG_ROLL_NATURE_INT
 	###---------------
@@ -31,19 +35,13 @@ soaf_log_init() {
 	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_FILE SOAF_LOG_USED_NATURE"
 	soaf_info_add_var SOAF_LOG_CMD_OUT_ERR_DIR
 	###---------------
-	[ -z "$SOAF_LOG_USED_NATURE" ] && \
-		soaf_create_log_nature $SOAF_LOG_NATURE_INT soaf_log_int
+	[ -z "$SOAF_LOG_USED_NATURE" ] && soaf_create_log_nature \
+		$SOAF_LOG_NATURE_INT soaf_log_int soaf_log_prep_int
 	soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE_INT $SOAF_LOG_FILE
-}
-
-soaf_log_preplog() {
-	[ "$SOAF_LOG_USED_NATURE" = "$SOAF_LOG_NATURE_INT" ] && \
-		mkdir -p $(dirname $SOAF_LOG_FILE)
 }
 
 soaf_define_add_this_cfg_fn soaf_log_cfg
 soaf_define_add_this_init_fn soaf_log_init
-soaf_define_add_this_preplog_fn soaf_log_preplog
 
 ################################################################################
 ################################################################################
@@ -51,8 +49,10 @@ soaf_define_add_this_preplog_fn soaf_log_preplog
 soaf_create_log_nature() {
 	local NATURE=$1
 	local FN=$2
+	local PREP_FN=$3
 	SOAF_LOG_USED_NATURE=$NATURE
 	soaf_map_extend $NATURE $SOAF_LOG_FN_ATTR $FN
+	soaf_map_extend $NATURE $SOAF_LOG_PREP_FN_ATTR $PREP_FN
 }
 
 ################################################################################
@@ -75,11 +75,23 @@ soaf_log_name_log_level() {
 ################################################################################
 ################################################################################
 
+soaf_log_prepared_ok() {
+	SOAF_LOG_PREPARED="OK"
+}
+
+################################################################################
+################################################################################
+
 soaf_log_level() {
 	local NAME=$1
-	SOAF_LOG_RET=$SOAF_LOG_LEVEL
-	[ -n "$NAME" ] && \
-		SOAF_LOG_RET=$(soaf_map_get $NAME $SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET)
+	if [ -n "$SOAF_LOG_PREPARED" ]
+	then
+		SOAF_LOG_RET=$SOAF_LOG_LEVEL
+		[ -n "$NAME" ] && SOAF_LOG_RET=$(soaf_map_get $NAME \
+			$SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET)
+	else
+		SOAF_LOG_RET=$SOAF_LOG_LEVEL_STDERR
+	fi
 }
 
 ################################################################################
@@ -113,6 +125,16 @@ soaf_log_filter() {
 ################################################################################
 ################################################################################
 
+soaf_log_display_int() {
+	local LEVEL=$1
+	local MSG=$2
+	local NAME=$3
+	[ -n "$NAME" ] && MSG="{$NAME} $MSG"
+	cat << _EOF_
+[$(date '+%x_%X')][$LEVEL]  $MSG
+_EOF_
+}
+
 soaf_log_add_msg_int() {
 	local NATURE=$1
 	local LEVEL=$2
@@ -124,10 +146,7 @@ soaf_log_add_msg_int() {
 		soaf_roll_nature $SOAF_LOG_ROLL_NATURE
 		SOAF_LOG_ROLL_IN=
 	fi
-	[ -n "$NAME" ] && MSG="{$NAME} $MSG"
-	cat << _EOF_ >> $SOAF_LOG_FILE
-[$(date '+%x_%X')][$LEVEL]  $MSG
-_EOF_
+	soaf_log_display_int $LEVEL "$MSG" $NAME >> $SOAF_LOG_FILE
 }
 
 soaf_log_int() {
@@ -138,15 +157,32 @@ soaf_log_int() {
 	soaf_log_filter $NATURE soaf_log_add_msg_int $LEVEL "$MSG" $NAME
 }
 
+soaf_log_prep_int() {
+	mkdir -p $(dirname $SOAF_LOG_FILE)
+}
+
 ################################################################################
 ################################################################################
+
+soaf_log_stderr() {
+	local DUMMY=$1
+	local LEVEL=$2
+	local MSG=$3
+	local NAME=$4
+	soaf_log_display_int $LEVEL "$MSG" $NAME 1>&2
+}
 
 soaf_log() {
 	local LEVEL=$1
 	local MSG=$2
 	local NAME=$3
-	local FN=$(soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_FN_ATTR)
-	[ -n "$FN" ] && $FN $SOAF_LOG_USED_NATURE $LEVEL "$MSG" $NAME
+	if [ -n "$SOAF_LOG_PREPARED" ]
+	then
+		local FN=$(soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_FN_ATTR)
+		[ -n "$FN" ] && $FN $SOAF_LOG_USED_NATURE $LEVEL "$MSG" $NAME
+	else
+		soaf_log_filter "dummy" soaf_log_stderr $LEVEL "$MSG" $NAME
+	fi
 }
 
 ################################################################################

@@ -41,11 +41,6 @@ soaf_module_this_init() {
 	soaf_module_this_call_fn_list $MODULE_NAME "$SOAF_THIS_INIT_FN_LIST"
 }
 
-soaf_module_this_preplog() {
-	local MODULE_NAME=$1
-	soaf_module_this_call_fn_list $MODULE_NAME "$SOAF_THIS_PREPLOG_FN_LIST"
-}
-
 soaf_module_this_prepenv() {
 	local MODULE_NAME=$1
 	soaf_module_this_call_fn_list $MODULE_NAME "$SOAF_THIS_PREPENV_FN_LIST"
@@ -56,4 +51,3 @@ soaf_module_this_prepenv() {
 
 soaf_create_module $SOAF_NAME $SOAF_VERSION \
 	soaf_module_this_cfg soaf_module_this_init soaf_module_this_prepenv
-soaf_module_do_log $SOAF_NAME soaf_module_this_preplog

@@ -71,7 +71,9 @@ soaf_engine_init() {
 ################################################################################
 
 soaf_engine_preplog() {
-	soaf_module_log_apply_all_fn soaf_module_call_preplog_fn
+	local PREP_FN=$(soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_PREP_FN_ATTR)
+	[ -n "$PREP_FN" ] && $PREP_FN $SOAF_LOG_USED_NATURE
+	soaf_log_prepared_ok
 }
 
 ################################################################################
