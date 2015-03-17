@@ -43,10 +43,11 @@ soaf_engine_source_ext() {
 ################################################################################
 
 soaf_engine_cfg() {
-	local USER_NATURE=$1
+	local APPLI_NATURE=$1
+	local APPLI_NAME=$(soaf_map_get $APPLI_NATURE $SOAF_APPLI_NAME_ATTR)
 	### FILEs
-	soaf_cfg_set SOAF_EXT_GLOB_DIR /etc/$SOAF_USER_NAME
-	soaf_cfg_set SOAF_EXT_LOC_DIR $HOME/.$SOAF_USER_NAME
+	soaf_cfg_set SOAF_EXT_GLOB_DIR /etc/$APPLI_NAME
+	soaf_cfg_set SOAF_EXT_LOC_DIR $HOME/.$APPLI_NAME
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_CFG_FILE
 	### MODULEs
 	soaf_module_apply_all_reverse_fn soaf_module_call_cfg_fn
@@ -56,7 +57,6 @@ soaf_engine_cfg() {
 ################################################################################
 
 soaf_engine_init() {
-	local USER_NATURE=$1
 	### FILEs
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_INIT_FILE
 	### MODULEs
@@ -88,7 +88,6 @@ soaf_engine_mkdir() {
 }
 
 soaf_engine_prepenv() {
-	local USER_NATURE=$1
 	### ENGINE
 	soaf_engine_mkdir
 	### MODULEs
@@ -101,11 +100,11 @@ soaf_engine_prepenv() {
 ################################################################################
 
 soaf_engine_action() {
-	local USER_NATURE=$1
+	local APPLI_NATURE=$1
 	local IS_ACTION=$(echo $SOAF_ACTION_LIST | grep -w "$SOAF_ACTION")
 	if [ -z "$IS_ACTION" ]
 	then
-		soaf_usage $USER_NATURE
+		soaf_usage
 		soaf_engine_exit
 	fi
 	local NOPREPENV=$(echo $SOAF_ACTION_NOPREPENV_LIST | \
@@ -113,7 +112,7 @@ soaf_engine_action() {
 	if [ -z "$NOPREPENV" ]
 	then
 		soaf_engine_preplog
-		soaf_engine_prepenv $USER_NATURE
+		soaf_engine_prepenv
 	fi
 	local FN=$(soaf_map_get $SOAF_ACTION $SOAF_ACTION_FN_ATTR)
 	if [ -z "$FN" ]
@@ -121,7 +120,7 @@ soaf_engine_action() {
 		soaf_dis_txt "No function defined for action [$SOAF_ACTION]."
 	else
 		soaf_module_apply_all_fn soaf_module_call_pre_action_fn
-		$FN $USER_NATURE
+		$FN $SOAF_ACTION $APPLI_NATURE
 		soaf_module_apply_all_fn soaf_module_call_post_action_fn
 	fi
 }
@@ -136,11 +135,10 @@ soaf_engine_exit() {
 }
 
 soaf_engine() {
-	local USER_NATURE=$1
-	SOAF_USER_NAME=$(soaf_map_get $USER_NATURE $SOAF_USER_NAME_ATTR)
-	soaf_module_this_user_nature $SOAF_NAME $USER_NATURE
-	soaf_engine_cfg $USER_NATURE
-	soaf_engine_init $USER_NATURE
-	soaf_engine_action $USER_NATURE
+	local APPLI_NATURE=$1
+	soaf_module_this_set_appli_nature $APPLI_NATURE
+	soaf_engine_cfg $APPLI_NATURE
+	soaf_engine_init
+	soaf_engine_action $APPLI_NATURE
 	soaf_engine_exit 0
 }

@@ -1,16 +1,21 @@
 ################################################################################
 ################################################################################
 
-SOAF_MODULE_THIS_USER_NATURE_ATTR="soaf_module_this_user_nature"
+SOAF_MODULE_THIS_APPLI_NATURE_ATTR="soaf_module_this_appli_nature"
 
 ################################################################################
 ################################################################################
 
-soaf_module_this_user_nature() {
-	local MODULE_NAME=$1
-	local USER_NATURE=$2
-	soaf_map_extend $MODULE_NAME $SOAF_MODULE_THIS_USER_NATURE_ATTR \
-		$USER_NATURE
+soaf_module_this_set_appli_nature() {
+	local APPLI_NATURE=$1
+	soaf_map_extend $SOAF_NAME $SOAF_MODULE_THIS_APPLI_NATURE_ATTR \
+		$APPLI_NATURE
+}
+
+soaf_module_this_appli_name() {
+	local APPLI_NATURE=$(soaf_map_get $SOAF_NAME \
+		$SOAF_MODULE_THIS_APPLI_NATURE_ATTR)
+	soaf_map_get $APPLI_NATURE $SOAF_APPLI_NAME_ATTR
 }
 
 ################################################################################
@@ -19,12 +24,12 @@ soaf_module_this_user_nature() {
 soaf_module_this_call_fn_list() {
 	local MODULE_NAME=$1
 	local FN_LIST=$2
-	local USER_NATURE=$(soaf_map_get $MODULE_NAME \
-		$SOAF_MODULE_THIS_USER_NATURE_ATTR)
+	local APPLI_NATURE=$(soaf_map_get $MODULE_NAME \
+		$SOAF_MODULE_THIS_APPLI_NATURE_ATTR)
 	local fn
 	for fn in $FN_LIST
 	do
-		$fn $USER_NATURE
+		$fn $APPLI_NATURE
 	done
 }
 

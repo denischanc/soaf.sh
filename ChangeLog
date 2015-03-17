@@ -5,6 +5,7 @@
 -- Add log level of error output argument on soaf_cmd
 -- Add debug output on free sms notif
 -- Log on stderr while it is not prepared
+-- Replace USER of soaf.sh lib by APPLI
 
 [0.8.1]
 

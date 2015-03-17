@@ -18,15 +18,17 @@ SOAF_LOG_PREP_FN_ATTR="soaf_log_prep_fn"
 ################################################################################
 
 soaf_log_cfg() {
+	local APPLI_NATURE=$1
+	local APPLI_NAME=$(soaf_map_get $APPLI_NATURE $SOAF_APPLI_NAME_ATTR)
 	soaf_cfg_set SOAF_LOG_LEVEL $SOAF_LOG_INFO
 	soaf_cfg_set SOAF_LOG_LEVEL_STDERR $SOAF_LOG_ERR
 	###---------------
 	soaf_cfg_set SOAF_LOG_ROLL_NATURE $SOAF_LOG_ROLL_NATURE_INT
 	###---------------
-	soaf_cfg_set SOAF_LOG_FILE $SOAF_LOG_DIR/$SOAF_USER_NAME.log
+	soaf_cfg_set SOAF_LOG_FILE $SOAF_LOG_DIR/$APPLI_NAME.log
 	soaf_cfg_set SOAF_LOG_CMD_OUT_ERR_DIR $SOAF_LOG_DIR
-	SOAF_LOG_CMD_OUT_FILE=$SOAF_LOG_CMD_OUT_ERR_DIR/$SOAF_USER_NAME.cmd.out
-	SOAF_LOG_CMD_ERR_FILE=$SOAF_LOG_CMD_OUT_ERR_DIR/$SOAF_USER_NAME.cmd.err
+	SOAF_LOG_CMD_OUT_FILE=$SOAF_LOG_CMD_OUT_ERR_DIR/$APPLI_NAME.cmd.out
+	SOAF_LOG_CMD_ERR_FILE=$SOAF_LOG_CMD_OUT_ERR_DIR/$APPLI_NAME.cmd.err
 }
 
 soaf_log_init() {
