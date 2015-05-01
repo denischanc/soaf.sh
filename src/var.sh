@@ -16,7 +16,7 @@ soaf_create_var() {
 	local DFT_VAL=$3
 	local ACCEPT_EMPTY=$4
 	soaf_map_extend $VAR $SOAF_VAR_ENUM_ATTR "$ENUM"
-	soaf_map_extend $VAR $SOAF_VAR_DFT_VAL_ATTR $DFT_VAL
+	soaf_map_extend $VAR $SOAF_VAR_DFT_VAL_ATTR "$DFT_VAL"
 	soaf_map_extend $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR $ACCEPT_EMPTY
 }
 
