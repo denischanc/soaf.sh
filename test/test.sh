@@ -47,7 +47,7 @@ test_exit() {
 	soaf_log_info "RET_CODE=[$ERR]" $TEST_LOG_NAME
 }
 
-soaf_create_appli_nature $TEST_NATURE "test" "1.0.1" \
+soaf_create_appli_nature $TEST_NATURE "test" "1.1.0" \
 	test_cfg test_init test_prepenv "" "" test_exit
 
 ################################################################################
