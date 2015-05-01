@@ -63,7 +63,8 @@ soaf_engine_init() {
 	soaf_module_apply_all_reverse_fn soaf_module_call_init_fn
 	### ENGINE
 	soaf_pmp_list_cat SOAF_ACTION
-	soaf_usage_def_var ACTION "" "$SOAF_RET_LIST" "" $SOAF_POS_PRE
+	soaf_usage_def_var ACTION "" "$SOAF_RET_LIST" $SOAF_USAGE_ACTION "" \
+		"" "" $SOAF_POS_PRE
 	soaf_info_add_var "$SOAF_ENGINE_EXT_VF_L"
 }
 
@@ -101,15 +102,14 @@ soaf_engine_prepenv() {
 
 soaf_engine_action() {
 	local APPLI_NATURE=$1
-	local IS_ACTION=$(echo $SOAF_ACTION_LIST | grep -w "$SOAF_ACTION")
-	if [ -z "$IS_ACTION" ]
+	soaf_list_found "$SOAF_ACTION_LIST" $SOAF_ACTION
+	if [ -z "$SOAF_RET_LIST" ]
 	then
 		soaf_usage
 		soaf_engine_exit
 	fi
-	local NOPREPENV=$(echo $SOAF_ACTION_NOPREPENV_LIST | \
-		grep -w "$SOAF_ACTION")
-	if [ -z "$NOPREPENV" ]
+	soaf_list_found "$SOAF_ACTION_NOPREPENV_LIST" $SOAF_ACTION
+	if [ -z "$SOAF_RET_LIST" ]
 	then
 		soaf_engine_preplog
 		soaf_engine_prepenv
@@ -139,6 +139,7 @@ soaf_engine() {
 	soaf_module_this_set_appli_nature $APPLI_NATURE
 	soaf_engine_cfg $APPLI_NATURE
 	soaf_engine_init
+	soaf_usage_check
 	soaf_engine_action $APPLI_NATURE
 	soaf_engine_exit 0
 }

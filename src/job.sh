@@ -19,8 +19,8 @@ soaf_job_init() {
 	if [ -n "$SOAF_JOB_LIST" -a -z "$SOAF_JOB_NO_ACTION" ]
 	then
 		soaf_usage_add_var JOB $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_POST
-		soaf_create_action $SOAF_JOB_ACTION soaf_job soaf_job_usage \
-			$SOAF_POS_POST
+		soaf_usage_def_var JOB "" "$SOAF_JOB_LIST" "" "" "" "" $SOAF_POS_POST
+		soaf_create_action $SOAF_JOB_ACTION soaf_job "" $SOAF_POS_POST
 	fi
 }
 
@@ -65,10 +65,6 @@ soaf_job() {
 	then
 		soaf_dis_txt "Unable to process job : [$SOAF_JOB]."
 	fi
-}
-
-soaf_job_usage() {
-	soaf_dis_txt "JOB: [$(echo $SOAF_JOB_LIST | tr ' ' '|')]"
 }
 
 ################################################################################
@@ -142,8 +138,8 @@ soaf_do_job_valid() {
 soaf_do_job() {
 	local JOB=$1
 	SOAF_JOB_RET=
-	local JOB_VALID=$(echo $SOAF_JOB_LIST | grep -w "$JOB")
-	if [ -n "$JOB_VALID" ]
+	soaf_list_found "$SOAF_JOB_LIST" $JOB
+	if [ -n "$SOAF_RET_LIST" ]
 	then
 		soaf_do_job_valid $JOB
 	else

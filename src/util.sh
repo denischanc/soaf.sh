@@ -35,19 +35,33 @@ soaf_lower() {
 ################################################################################
 ################################################################################
 
+soaf_map_var() {
+	local NAME=$1
+	local FIELD=$2
+	soaf_to_var __${NAME}__$FIELD
+}
+
 soaf_map_extend() {
 	local NAME=$1
 	local FIELD=$2
 	local VAL=$3
-	local VAR_NAME=$(soaf_to_var "__${NAME}__$FIELD")
+	local VAR_NAME=$(soaf_map_var $NAME $FIELD)
 	eval $VAR_NAME=\$VAL
+}
+
+soaf_map_cat() {
+	local NAME=$1
+	local FIELD=$2
+	local VAL=$3
+	local VAR_NAME=$(soaf_map_var $NAME $FIELD)
+	eval $VAR_NAME=\"\$$VAR_NAME \$VAL\"
 }
 
 soaf_map_get() {
 	local NAME=$1
 	local FIELD=$2
 	local DFT=$3
-	local VAR_NAME=$(soaf_to_var "__${NAME}__$FIELD")
+	local VAR_NAME=$(soaf_map_var $NAME $FIELD)
 	eval local VAL=\${$VAR_NAME:-\$DFT}
 	echo "$VAL"
 }
@@ -70,9 +84,9 @@ soaf_cmd() {
 	local LOG_LEVEL_ERR=$5
 	soaf_log $LOG_LEVEL "Execute command : [$CMD]." $LOG_NAME
 	local CMD_PROG=$(echo "$CMD" | awk '{print $1}')
-	local NOEXEC_PROG=$(echo "$SOAF_NOEXEC_PROG_LIST" | grep -w "$CMD_PROG")
 	local RET=
-	if [ -z "$NOEXEC_PROG" ]
+	soaf_list_found "$SOAF_NOEXEC_PROG_LIST" $CMD_PROG
+	if [ -z "$SOAF_RET_LIST" ]
 	then
 		if [ -n "$NO_CMD_OUT_ERR_LOG" ]
 		then

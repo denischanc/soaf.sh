@@ -154,8 +154,8 @@ soaf_state_get_prop_n_call_fn() {
 			local MSG="Empty state of nature [$NATURE] for property :"
 			soaf_state_err "$MSG [$PROP]."
 		else
-			local STATE_KNOWN=$(echo $SOAF_STATE_LIST | grep -w "$STATE")
-			if [ -n "$STATE_KNOWN" ]
+			soaf_list_found "$SOAF_STATE_LIST" $STATE
+			if [ -n "$SOAF_RET_LIST" ]
 			then
 				$FN $NATURE $WORK_DIR $PROP_NATURE $STATE
 			else
@@ -395,8 +395,8 @@ soaf_state_proc_nature() {
 soaf_state_engine() {
 	local NATURE=$1
 	SOAF_STATE_RET="OK"
-	local NATURE_KNOWN=$(echo $SOAF_STATE_NATURE_LIST | grep -w "$NATURE")
-	if [ -n "$NATURE_KNOWN" ]
+	soaf_list_found "$SOAF_STATE_NATURE_LIST" $NATURE
+	if [ -n "$SOAF_RET_LIST" ]
 	then
 		soaf_state_proc_nature $NATURE
 	else

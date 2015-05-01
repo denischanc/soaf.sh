@@ -31,6 +31,7 @@ test_init() {
 	test_init_4
 	test_init_5
 	test_init_6
+	test_init_7
 }
 
 ################################################################################
@@ -153,6 +154,25 @@ test_notif() {
 
 test_init_6() {
 	soaf_create_action "notif" test_notif test_notif_usage
+}
+
+################################################################################
+################################################################################
+
+test_dis_txt_off() {
+	soaf_dis_txt_off "Niveau 1" 1
+	soaf_dis_txt_off "Niveau 2" 2
+	soaf_dis_txt_off "Niveau 3" 3
+	soaf_dis_txt_off "Niveau 4" 4
+	soaf_dis_txt_off "Niveau 5" 5
+	soaf_dis_txt_off "Niveau 4" 4
+	soaf_dis_txt_off "Niveau 3" 3
+	soaf_dis_txt_off "Niveau 2" 2
+	soaf_dis_txt_off "Niveau 1" 1
+}
+
+test_init_7() {
+	soaf_create_action "dis_txt_off" test_dis_txt_off
 }
 
 ################################################################################
