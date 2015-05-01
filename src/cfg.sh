@@ -2,8 +2,7 @@
 ################################################################################
 
 soaf_cfg_cfg() {
-	local APPLI_NATURE=$1
-	local APPLI_NAME=$(soaf_map_get $APPLI_NATURE $SOAF_APPLI_NAME_ATTR)
+	local APPLI_NAME=$(soaf_module_this_appli_name)
 	soaf_cfg_set SOAF_WORK_DIR $HOME/work/$APPLI_NAME
 	soaf_cfg_set SOAF_LOG_DIR $SOAF_WORK_DIR/log
 }

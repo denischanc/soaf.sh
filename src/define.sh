@@ -22,11 +22,6 @@ soaf_define_add_this_init_fn() {
 	SOAF_THIS_INIT_FN_LIST="$SOAF_THIS_INIT_FN_LIST $FN_LIST"
 }
 
-soaf_define_add_this_prepenv_fn() {
-	local FN_LIST=$1
-	SOAF_THIS_PREPENV_FN_LIST="$SOAF_THIS_PREPENV_FN_LIST $FN_LIST"
-}
-
 ################################################################################
 ################################################################################
 

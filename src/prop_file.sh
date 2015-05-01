@@ -13,8 +13,7 @@ SOAF_PF_IN_CACHE_ATTR="soaf_pf_in_cache"
 ################################################################################
 
 soaf_pf_cfg() {
-	local APPLI_NATURE=$1
-	local APPLI_NAME=$(soaf_map_get $APPLI_NATURE $SOAF_APPLI_NAME_ATTR)
+	local APPLI_NAME=$(soaf_module_this_appli_name)
 	soaf_cfg_set SOAF_PF_FILE $SOAF_WORK_DIR/$APPLI_NAME.prop
 }
 

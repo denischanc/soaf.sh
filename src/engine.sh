@@ -43,8 +43,7 @@ soaf_engine_source_ext() {
 ################################################################################
 
 soaf_engine_cfg() {
-	local APPLI_NATURE=$1
-	local APPLI_NAME=$(soaf_map_get $APPLI_NATURE $SOAF_APPLI_NAME_ATTR)
+	local APPLI_NAME=$(soaf_module_this_appli_name)
 	### FILEs
 	soaf_cfg_set SOAF_EXT_GLOB_DIR /etc/$APPLI_NAME
 	soaf_cfg_set SOAF_EXT_LOC_DIR $HOME/.$APPLI_NAME
@@ -101,7 +100,6 @@ soaf_engine_prepenv() {
 ################################################################################
 
 soaf_engine_action() {
-	local APPLI_NATURE=$1
 	soaf_list_found "$SOAF_ACTION_LIST" $SOAF_ACTION
 	if [ -z "$SOAF_RET_LIST" ]
 	then
@@ -119,9 +117,9 @@ soaf_engine_action() {
 	then
 		soaf_dis_txt "No function defined for action [$SOAF_ACTION]."
 	else
-		soaf_module_apply_all_fn soaf_module_call_pre_action_fn
-		$FN $SOAF_ACTION $APPLI_NATURE
-		soaf_module_apply_all_fn soaf_module_call_post_action_fn
+		soaf_module_apply_all_fn soaf_module_call_pre_action_fn $SOAF_ACTION
+		$FN $SOAF_ACTION
+		soaf_module_apply_all_fn soaf_module_call_post_action_fn $SOAF_ACTION
 	fi
 }
 
@@ -137,9 +135,9 @@ soaf_engine_exit() {
 soaf_engine() {
 	local APPLI_NATURE=$1
 	soaf_module_this_set_appli_nature $APPLI_NATURE
-	soaf_engine_cfg $APPLI_NATURE
+	soaf_engine_cfg
 	soaf_engine_init
 	soaf_usage_check
-	soaf_engine_action $APPLI_NATURE
+	soaf_engine_action
 	soaf_engine_exit 0
 }

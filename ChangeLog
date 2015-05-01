@@ -7,6 +7,7 @@
 -- Log on stderr while it is not prepared
 -- Replace USER of soaf.sh lib by APPLI
 -- New way to display usage and check usage variables
+-- New way to manage application nature
 
 [0.8.1]
 
