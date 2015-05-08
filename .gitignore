@@ -3,4 +3,5 @@ src/soaf.sh
 ps.log
 ps-err.log
 test.log
+test.log-*
 test.prop
