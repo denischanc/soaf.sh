@@ -13,6 +13,7 @@ SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR="soaf_notif_sms_free_cacert_file"
 soaf_notif_sms_free_cfg() {
 	soaf_cfg_set SOAF_NOTIF_SMS_FREE_URL \
 		"https://smsapi.free-mobile.fr/sendmsg"
+	soaf_cfg_set SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT "--ipv4"
 }
 
 soaf_define_add_this_cfg_fn soaf_notif_sms_free_cfg
@@ -83,14 +84,19 @@ soaf_notif_sms_free() {
 		else
 			CURL_ARGS="$CURL_ARGS --silent --show-error"
 		fi
-		CURL_ARGS="$CURL_ARGS --fail --get"
+		CURL_ARGS="$CURL_ARGS --fail --get $SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT"
 		MSG="[$HOST:$PROG] $MSG"
 		### USER and PASS must not be logged
 		soaf_log_prep_cmd_out_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
 		curl $CURL_ARGS --data user=$USER --data pass=$PASS \
 			--data-urlencode msg="$MSG" $SOAF_NOTIF_SMS_FREE_URL \
-			> $SOAF_LOG_CMD_OUT_FILE 2> $SOAF_LOG_CMD_ERR_FILE
-		[ $? -eq 0 ] && SOAF_NOTIF_RET="OK"
-		soaf_log_cmd_out_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
+			> /dev/null 2> $SOAF_LOG_CMD_ERR_FILE
+		if [ $? -eq 0 ]
+		then
+			SOAF_NOTIF_RET="OK"
+			soaf_log_cmd_err $SOAF_NOTIF_SMS_FREE_LOG_NAME $SOAF_LOG_DEBUG
+		else
+			soaf_log_cmd_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
+		fi
 	fi
 }

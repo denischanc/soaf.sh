@@ -81,7 +81,6 @@ soaf_cmd() {
 	local LOG_LEVEL=${2:-$SOAF_LOG_DEBUG}
 	local LOG_NAME=$3
 	local NO_CMD_OUT_ERR_LOG=$4
-	local LOG_LEVEL_ERR=$5
 	soaf_log $LOG_LEVEL "Execute command : [$CMD]." $LOG_NAME
 	local CMD_PROG=$(echo "$CMD" | awk '{print $1}')
 	local RET=
@@ -96,6 +95,8 @@ soaf_cmd() {
 			soaf_log_prep_cmd_out_err $LOG_NAME
 			eval "$CMD > $SOAF_LOG_CMD_OUT_FILE 2> $SOAF_LOG_CMD_ERR_FILE"
 			RET=$?
+			local LOG_LEVEL_ERR=
+			[ $RET -eq 0 ] && LOG_LEVEL_ERR=$LOG_LEVEL
 			soaf_log_cmd_out_err $LOG_NAME $LOG_LEVEL $LOG_LEVEL_ERR
 		fi
 		soaf_log $LOG_LEVEL "Command return : [$RET]." $LOG_NAME
@@ -115,9 +116,7 @@ soaf_cmd_info() {
 	local CMD=$1
 	local LOG_NAME=$2
 	local NO_CMD_OUT_ERR_LOG=$3
-	local LOG_LEVEL_ERR=$4
-	soaf_cmd "$CMD" $SOAF_LOG_INFO "$LOG_NAME" "$NO_CMD_OUT_ERR_LOG" \
-		$LOG_LEVEL_ERR
+	soaf_cmd "$CMD" $SOAF_LOG_INFO "$LOG_NAME" $NO_CMD_OUT_ERR_LOG
 }
 
 ################################################################################
