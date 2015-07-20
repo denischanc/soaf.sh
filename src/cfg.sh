@@ -34,7 +34,7 @@ soaf_parse_arg() {
 	then
 		local __VAL_TMP=${__ARG_TMP#$__VAR_TMP}
 		__VAL_TMP=${__VAL_TMP#=}
-		eval $(soaf_to_var $__VAR_TMP)=\$__VAL_TMP
+		eval $(soaf_to_var $__VAR_TMP)=\$__VAL_TMP 2> /dev/null
 	fi
 }
 
