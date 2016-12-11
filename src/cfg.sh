@@ -5,10 +5,11 @@ soaf_cfg_cfg() {
 	local APPLI_NAME=$(soaf_module_this_appli_name)
 	soaf_cfg_set SOAF_WORK_DIR $HOME/work/$APPLI_NAME
 	soaf_cfg_set SOAF_LOG_DIR $SOAF_WORK_DIR/log
+	soaf_cfg_set SOAF_NOTIF_DIR $SOAF_WORK_DIR/notif
 }
 
 soaf_cfg_init() {
-	soaf_info_add_var "SOAF_WORK_DIR SOAF_LOG_DIR"
+	soaf_info_add_var "SOAF_WORK_DIR SOAF_LOG_DIR SOAF_NOTIF_DIR"
 	soaf_info_add_var "SOAF_EXT_GLOB_DIR SOAF_EXT_LOC_DIR"
 }
 

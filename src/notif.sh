@@ -4,6 +4,9 @@
 SOAF_NOTIF_LOG_NAME="soaf.notif"
 
 SOAF_NOTIF_FN_ATTR="soaf_notif_fn"
+SOAF_NOTIF_NB_TRY_ATTR="soaf_notif_nb_try"
+
+SOAF_NOTIF_NB_TRY_DFT=3
 
 ################################################################################
 ################################################################################
@@ -30,12 +33,25 @@ soaf_define_add_name_log_level_fn soaf_notif_log_level
 soaf_create_notif_nature() {
 	local NATURE=$1
 	local FN=$2
+	local NB_TRY=${3:-$SOAF_NOTIF_NB_TRY_DFT}
 	SOAF_NOTIF_NATURE_LIST="$SOAF_NOTIF_NATURE_LIST $NATURE"
 	soaf_map_extend $NATURE $SOAF_NOTIF_FN_ATTR $FN
+	soaf_map_extend $NATURE $SOAF_NOTIF_NB_TRY_ATTR $NB_TRY
 }
 
 ################################################################################
 ################################################################################
+
+soaf_notif_in_file() {
+	local MSG=$1
+	local PROG=$2
+	local HOST=$3
+	local NOTIF_FILE=$SOAF_NOTIF_DIR/msg-$$-$(date '+%F-%H%M%S')
+	local LOG_MSG="Notification message posted in [$NOTIF_FILE]."
+	soaf_log_err "$LOG_MSG" $SOAF_NOTIF_LOG_NAME
+	soaf_mkdir $SOAF_NOTIF_DIR "" $SOAF_NOTIF_LOG_NAME
+	echo "[$HOST:$PROG] $MSG" > $NOTIF_FILE
+}
 
 soaf_notif() {
 	local MSG=$1
@@ -45,15 +61,24 @@ soaf_notif() {
 	for nature in $SOAF_NOTIF_NATURE_LIST
 	do
 		local FN=$(soaf_map_get $nature $SOAF_NOTIF_FN_ATTR)
-		SOAF_NOTIF_RET=
-		$FN $nature "$MSG" $PROG $HOST
-		if [ -n "$SOAF_NOTIF_RET" ]
-		then
-			local LOG_MSG="Notif of nature [$nature] OK."
-			soaf_log_debug "$LOG_MSG" $SOAF_NOTIF_LOG_NAME
-		else
-			local LOG_MSG="Notif of nature [$nature] KO."
-			soaf_log_err "$LOG_MSG" $SOAF_NOTIF_LOG_NAME
-		fi
+		local NB_TRY=$(soaf_map_get $nature $SOAF_NOTIF_NB_TRY_ATTR)
+		local ID_TRY=1
+		while [ -n "$ID_TRY" -a "$ID_TRY" -le "$NB_TRY" ]
+		do
+			SOAF_NOTIF_RET=
+			$FN $nature "$MSG" $PROG $HOST
+			if [ -n "$SOAF_NOTIF_RET" ]
+			then
+				local LOG_MSG="Notif of nature [$nature] OK."
+				soaf_log_debug "$LOG_MSG" $SOAF_NOTIF_LOG_NAME
+				ID_TRY=
+			else
+				local LOG_MSG="Notif of nature [$nature] KO."
+				soaf_log_err "$LOG_MSG" $SOAF_NOTIF_LOG_NAME
+				ID_TRY=$(expr $ID_TRY + 1)
+				[ $ID_TRY -gt $NB_TRY ] && \
+					soaf_notif_in_file "$MSG" $PROG $HOST
+			fi
+		done
 	done
 }

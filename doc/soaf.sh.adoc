@@ -1,0 +1,24 @@
+
+= Soaf.sh
+Denis Chancogne <denis.chancogne@free.fr>
+
+== Quick startup
+
+== Engine parts
+
+=== Configuration part (cfg)
+
+Define value of variables.
+
+=== Initialisation part (init)
+
+Execute some functions to initialise processing environment (natures creation,
+...).
+
+=== Prepare environment part (prepenv)
+
+Execute some functions to prepare working environment.
+
+== Module creation
+
+== Application creation
