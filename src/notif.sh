@@ -63,7 +63,7 @@ soaf_notif() {
 		local FN=$(soaf_map_get $nature $SOAF_NOTIF_FN_ATTR)
 		local NB_TRY=$(soaf_map_get $nature $SOAF_NOTIF_NB_TRY_ATTR)
 		local ID_TRY=1
-		while [ -n "$ID_TRY" -a "$ID_TRY" -le "$NB_TRY" ]
+		while [ -n "$ID_TRY" -a ${ID_TRY:-1} -le $NB_TRY ]
 		do
 			SOAF_NOTIF_RET=
 			$FN $nature "$MSG" $PROG $HOST
