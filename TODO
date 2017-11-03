@@ -1,6 +1,10 @@
 
 -- mng ssl certs (root to server) for free sms notif
 -- generate documentation (public/private)
+-- continue adoc
+-- do mail notif (sms ok)
+-- daemon mode
+-- Save pid for job and state processes (add option to automatically restart)
 
 [_DONE_]
 

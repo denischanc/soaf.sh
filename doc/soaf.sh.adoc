@@ -4,6 +4,8 @@ Denis Chancogne <denis.chancogne@free.fr>
 
 == Quick startup
 
+== Implementation normes
+
 == Engine parts
 
 === Configuration part (cfg)
