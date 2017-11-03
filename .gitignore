@@ -6,3 +6,4 @@ test.log
 test.log-*
 test.prop
 test/notif
+init-sms-free.sh

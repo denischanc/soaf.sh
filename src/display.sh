@@ -36,7 +36,7 @@ soaf_dis_txt_off() {
 		while [ $I -lt $OFF ]
 		do
 			TXT_PRE=$TXT_PRE$SOAF_TXT_PRE
-			I=$(expr $I + 1)
+			I=$(($I + 1))
 		done
 		eval $VAR=\$TXT_PRE
 	fi

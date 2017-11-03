@@ -24,12 +24,12 @@ soaf_to_var() {
 
 soaf_upper() {
 	local NAME=$1
-	echo "$NAME" | tr '[a-z]' '[A-Z]'
+	echo "${NAME^^}"
 }
 
 soaf_lower() {
 	local NAME=$1
-	echo "$NAME" | tr '[A-Z]' '[a-z]'
+	echo "${NAME,,}"
 }
 
 ################################################################################
@@ -155,13 +155,10 @@ soaf_day_since_last() {
 	else
 		local DAY_LAST=$SOAF_PROP_FILE_VAL
 		[ -z "$DAY_LAST" ] && DAY_LAST=1
-		soaf_log_prep_cmd_out_err
-		SOAF_DAY_DIFF=$(expr $DAY \- $DAY_LAST 2> $SOAF_LOG_CMD_ERR_FILE)
-		soaf_log_cmd_err
-		[ -z "$SOAF_DAY_DIFF" ] && SOAF_DAY_DIFF=0
+		SOAF_DAY_DIFF=$(($DAY - $DAY_LAST))
 		if [ $SOAF_DAY_DIFF -lt 0 ]
 		then
-			SOAF_DAY_DIFF=$(expr $SOAF_DAY_DIFF + 365)
+			SOAF_DAY_DIFF=$(($SOAF_DAY_DIFF + 365))
 		fi
 		SOAF_RET="OK"
 	fi

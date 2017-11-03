@@ -75,7 +75,7 @@ soaf_notif() {
 			else
 				local LOG_MSG="Notif of nature [$nature] KO."
 				soaf_log_err "$LOG_MSG" $SOAF_NOTIF_LOG_NAME
-				ID_TRY=$(expr $ID_TRY + 1)
+				ID_TRY=$(($ID_TRY + 1))
 				[ $ID_TRY -gt $NB_TRY ] && \
 					soaf_notif_in_file "$MSG" $PROG $HOST
 			fi
