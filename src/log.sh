@@ -37,7 +37,7 @@ soaf_log_init() {
 	###---------------
 	[ -z "$SOAF_LOG_USED_NATURE" ] && soaf_create_log_nature \
 		$SOAF_LOG_NATURE_INT soaf_log_int soaf_log_prep_int
-	soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE_INT $SOAF_LOG_FILE
+	soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE_INT
 }
 
 soaf_define_add_this_cfg_fn soaf_log_cfg
@@ -143,7 +143,7 @@ soaf_log_add_msg_int() {
 	if [ -z "$SOAF_LOG_ROLL_IN" ]
 	then
 		SOAF_LOG_ROLL_IN="OK"
-		soaf_roll_nature $SOAF_LOG_ROLL_NATURE
+		soaf_roll_nature $SOAF_LOG_ROLL_NATURE $SOAF_LOG_FILE
 		SOAF_LOG_ROLL_IN=
 	fi
 	soaf_log_display_int $LEVEL "$MSG" $NAME >> $SOAF_LOG_FILE
@@ -169,7 +169,7 @@ soaf_log_stderr() {
 	local LEVEL=$2
 	local MSG=$3
 	local NAME=$4
-	soaf_log_display_int $LEVEL "$MSG" $NAME 1>&2
+	soaf_log_display_int $LEVEL "$MSG" $NAME >&2
 }
 
 soaf_log() {

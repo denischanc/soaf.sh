@@ -1,7 +1,7 @@
 ################################################################################
 ################################################################################
 
-SOAF_APPLI_SH_DIR=$(dirname $(realpath $(which $0)))
+SOAF_APPLI_SH_DIR=$(cd $(dirname $(which $0)); pwd)
 
 SOAF_APPLI_NAME_ATTR="soaf_appli_name"
 SOAF_APPLI_MODULE_NAME_ATTR="soaf_appli_module_name"

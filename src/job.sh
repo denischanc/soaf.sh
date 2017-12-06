@@ -74,8 +74,8 @@ soaf_job() {
 soaf_do_job_roll() {
 	local FILE=$1
 	local SIZE=$2
-	soaf_create_roll_nature $SOAF_JOB_ROLL_NATURE $FILE $SIZE
-	soaf_roll_nature $SOAF_JOB_ROLL_NATURE
+	soaf_create_roll_nature $SOAF_JOB_ROLL_NATURE $SIZE
+	soaf_roll_nature $SOAF_JOB_ROLL_NATURE $FILE
 }
 
 ################################################################################

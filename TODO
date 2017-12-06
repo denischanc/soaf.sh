@@ -3,8 +3,10 @@
 -- generate documentation (public/private)
 -- continue adoc
 -- do mail notif (sms ok)
--- daemon mode
+-- daemon mode (interactive) : mng of log, display
 -- Save pid for job and state processes (add option to automatically restart)
+-- roll : define extension format as a pattern var
+-- roll : way to take file modif date as extension (example : roll log file)
 
 [_DONE_]
 
