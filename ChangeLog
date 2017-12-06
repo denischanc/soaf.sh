@@ -1,10 +1,11 @@
-[0.9.1]
+[0.10.0]
 
 -- Rm log level of error output argument on soaf_cmd,
      use cmd return code instead
 -- Use ipv4 only on free sms notif and
      error output log level on success is debug (not error)
 -- Add retry in case of notif error, after nb retries put msg in file
+-- Add ext fn for roll nature
 
 [0.9.0]
 
