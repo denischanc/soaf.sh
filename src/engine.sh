@@ -30,9 +30,8 @@ soaf_define_add_name_log_level_fn soaf_engine_log_level
 
 soaf_engine_source_ext() {
 	local FILE=$1
-	local DIR_LIST=${SOAF_EXT_OTHER_DIR:-$SOAF_EXT_GLOB_DIR $SOAF_EXT_LOC_DIR}
 	local d
-	for d in $DIR_LIST
+	for d in $SOAF_ENGINE_EXT_ALL_DIR
 	do
 		local PATH_=$d/$FILE
 		[ -f $PATH_ ] && . $PATH_
@@ -45,8 +44,10 @@ soaf_engine_source_ext() {
 soaf_engine_cfg() {
 	local APPLI_NAME=$(soaf_module_this_appli_name)
 	### FILEs
-	soaf_cfg_set SOAF_EXT_GLOB_DIR /etc/$APPLI_NAME
-	soaf_cfg_set SOAF_EXT_LOC_DIR $HOME/.$APPLI_NAME
+	soaf_cfg_set SOAF_ENGINE_EXT_GLOB_DIR /etc/$APPLI_NAME
+	soaf_cfg_set SOAF_ENGINE_EXT_LOC_DIR $HOME/.$APPLI_NAME
+	soaf_cfg_set SOAF_ENGINE_EXT_ALL_DIR \
+		"$SOAF_ENGINE_EXT_GLOB_DIR $SOAF_ENGINE_EXT_LOC_DIR"
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_CFG_FILE
 	### MODULEs
 	soaf_module_apply_all_reverse_fn soaf_module_call_cfg_fn
@@ -64,7 +65,7 @@ soaf_engine_init() {
 	soaf_pmp_list_cat SOAF_ACTION
 	soaf_usage_def_var ACTION "" "$SOAF_RET_LIST" $SOAF_USAGE_ACTION "" \
 		"" "" $SOAF_POS_PRE
-	soaf_info_add_var "$SOAF_ENGINE_EXT_VF_L"
+	soaf_info_add_var "SOAF_ENGINE_EXT_ALL_DIR $SOAF_ENGINE_EXT_VF_L"
 }
 
 ################################################################################

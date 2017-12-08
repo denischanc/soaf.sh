@@ -1,26 +1,49 @@
-
-= Soaf.sh
+Guide of "Shell rOot Api Framework"
+===================================
 Denis Chancogne <denis.chancogne@free.fr>
 
 == Quick startup
 
 == Implementation normes
 
-== Engine parts
+- nature name
+- attribut name
 
-=== Configuration part (cfg)
+- suffix
 
-Define value of variables.
+== Engine
+
+=== Startup parts
+
+==== Configuration part (cfg)
+
+This part allow to define value of variables. Variables are affected if they
+are still empty with the function *soaf_cfg_set()*.
+
+Engine start to source *cfg.sh* files into global then local directories.
+Unless *SOAF_EXT_ALL_DIR* has been defined inside the application.
+Then modules are configured in reverse order, starting with extern modules,
+ending with application and soaf modules.
 
 === Initialisation part (init)
 
-Execute some functions to initialise processing environment (natures creation,
-...).
+This part allow to execute functions to initialize action environment : natures
+creation, add info variables, add usage variables, ... Target is software
+environment.
+
+Engine start to source *init.sh* files, same way as *cfg.sh* files.
+Then modules are initialized in reverse order, starting with extern modules,
+ending with application and soaf modules.
 
 === Prepare environment part (prepenv)
 
-Execute some functions to prepare working environment.
+This part allow to prepare working environment : directory creation, ... Target
+is system environment.
 
-== Module creation
+Engine start to initialize modules, starting soaf and application modules,
+ending with extern modules.
+Then it source *prepenv.sh* files, same way as *init.sh* files.
 
-== Application creation
+== Modules
+
+== Application

@@ -3,6 +3,8 @@
 ################################################################################
 ################################################################################
 
+TEST_VERSION="1.1.0"
+
 TEST_HOME="$(dirname $0)"
 
 TEST_LOG_NAME="test"
@@ -47,7 +49,7 @@ test_exit() {
 	soaf_log_info "RET_CODE=[$ERR]" $TEST_LOG_NAME
 }
 
-soaf_create_appli_nature $TEST_NATURE "test" "1.1.0" \
+soaf_create_appli_nature $TEST_NATURE "" "" \
 	test_cfg test_init test_prepenv "" "" test_exit
 
 ################################################################################

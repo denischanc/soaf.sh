@@ -10,7 +10,6 @@ soaf_cfg_cfg() {
 
 soaf_cfg_init() {
 	soaf_info_add_var "SOAF_WORK_DIR SOAF_LOG_DIR SOAF_NOTIF_DIR"
-	soaf_info_add_var "SOAF_EXT_GLOB_DIR SOAF_EXT_LOC_DIR"
 }
 
 soaf_define_add_this_cfg_fn soaf_cfg_cfg

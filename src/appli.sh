@@ -2,6 +2,7 @@
 ################################################################################
 
 SOAF_APPLI_SH_DIR=$(cd $(dirname $(which $0)); pwd)
+SOAF_APPLI_SH_NAME=$(basename $0 | sed -e s/\.sh$//)
 
 SOAF_APPLI_NAME_ATTR="soaf_appli_name"
 SOAF_APPLI_MODULE_NAME_ATTR="soaf_appli_module_name"
@@ -10,7 +11,7 @@ SOAF_APPLI_MODULE_NAME_ATTR="soaf_appli_module_name"
 ################################################################################
 
 soaf_appli_init() {
-	soaf_info_add_var SOAF_APPLI_SH_DIR
+	soaf_info_add_var "SOAF_APPLI_SH_DIR SOAF_APPLI_SH_NAME"
 }
 
 soaf_define_add_this_init_fn soaf_appli_init
@@ -20,7 +21,7 @@ soaf_define_add_this_init_fn soaf_appli_init
 
 soaf_create_appli_nature() {
 	local NATURE=$1
-	local NAME=${2:-$SOAF_NAME}
+	local NAME=${2:-$SOAF_APPLI_SH_NAME}
 	local VERSION=$3
 	local CFG_FN=$4
 	local INIT_FN=$5
@@ -28,6 +29,8 @@ soaf_create_appli_nature() {
 	local PRE_ACTION_FN=$7
 	local POST_ACTION_FN=$8
 	local EXIT_FN=$9
+	[ -z "$VERSION" ] && \
+		eval VERSION=\$\{$(soaf_to_upper_var $NAME)_VERSION:-0.1.0\}
 	local MODULE_NAME="soaf.appli.module.$NAME"
 	soaf_create_module $MODULE_NAME $VERSION "$CFG_FN" "$INIT_FN" \
 		"$PREPENV_FN" "$PRE_ACTION_FN" "$POST_ACTION_FN" "$EXIT_FN"

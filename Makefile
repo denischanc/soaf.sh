@@ -19,28 +19,19 @@ endif
 
 MAKEFILE_LIST = Makefile Makefile.cfg
 
-DIST_FILE_LIST = $(MAKEFILE_LIST) $(EXE_SRC_LIST) $(LIB_SRC_LIST) $(EXTRA_DIST)
+DIST_FILE_LIST = $(MAKEFILE_LIST) $(SRC_LIST) $(EXTRA_DIST)
 
 all: $(EXE_TGT) $(LIB_TGT)
 
-$(EXE_TGT): $(EXE_SRC_LIST) $(MAKEFILE_LIST)
+$(EXE_TGT) $(LIB_TGT): $(SRC_LIST) $(MAKEFILE_LIST)
 	@echo "#!/bin/sh" > $@
-	@for f in $(EXE_SRC_LIST); \
+	@for f in $(SRC_LIST); \
 	do \
 		echo "Cat: [$$f]->[$@]"; \
 		echo "### Dist=[$(DIST_NAME)] File=[$$f]" >> $@; \
 		cat $$f >> $@; \
 	done
 	@chmod a+x $@
-
-$(LIB_TGT): $(LIB_SRC_LIST) $(MAKEFILE_LIST)
-	@rm -f $@
-	@for f in $(LIB_SRC_LIST); \
-	do \
-		echo "Cat: [$$f]->[$@]"; \
-		echo "### Dist=[$(DIST_NAME)] File=[$$f]" >> $@; \
-		cat $$f >> $@; \
-	done
 
 dist-gz:
 	make dist DIST_TAR_Z="z" DIST_TAR_EXT=".tar.gz"
@@ -72,23 +63,20 @@ install: all
 	@rm -rf $(INSTALL_DIR)
 	@if [ -n "$(INSTALL_BIN_FILE_LIST)" ]; \
 	then \
-		mkdir -p $(INSTALL_BIN_DIR); \
-		for f in $(INSTALL_BIN_FILE_LIST); \
-		do \
-			echo "Copy: [$$f]->[$(INSTALL_BIN_DIR)]"; \
-			cp $$f $(INSTALL_BIN_DIR); \
-			chmod a+x $(INSTALL_BIN_DIR)/$$(basename $$f); \
-		done; \
-	fi
-	@if [ -n "$(INSTALL_LIB_FILE_LIST)" ]; \
+		INSTALL_FILE_LIST=$(INSTALL_BIN_FILE_LIST); \
+		INSTALL_DST_DIR=$(INSTALL_BIN_DIR); \
+	elif [ -n "$(INSTALL_LIB_FILE_LIST)" ]; \
 	then \
-		mkdir -p $(INSTALL_LIB_DIR); \
-		for f in $(INSTALL_LIB_FILE_LIST); \
-		do \
-			echo "Copy: [$$f]->[$(INSTALL_LIB_DIR)]"; \
-			cp $$f $(INSTALL_LIB_DIR); \
-		done; \
-	fi
+		INSTALL_FILE_LIST=$(INSTALL_LIB_FILE_LIST); \
+		INSTALL_DST_DIR=$(INSTALL_LIB_DIR); \
+	fi; \
+	mkdir -p $$INSTALL_DST_DIR; \
+	for f in $$INSTALL_FILE_LIST; \
+	do \
+		echo "Copy: [$$f]->[$$INSTALL_DST_DIR]"; \
+		cp $$f $$INSTALL_DST_DIR; \
+		chmod a+x $$INSTALL_DST_DIR/$$(basename $$f); \
+	done
 
 clean:
 	rm -rf $(EXE_TGT) $(LIB_TGT) $(EXTRA_CLEAN)
