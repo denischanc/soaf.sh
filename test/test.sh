@@ -3,7 +3,7 @@
 ################################################################################
 ################################################################################
 
-TEST_VERSION="1.1.0"
+TEST_VERSION="1.2.0"
 
 TEST_HOME="$(dirname $0)"
 
@@ -14,7 +14,7 @@ TEST_PROP_NATURE_2="test.prop.2"
 
 TEST_TEST_PROP="test"
 
-SOAF_EXT_OTHER_DIR=$TEST_HOME
+SOAF_ENGINE_EXT_ALL_DIR=$TEST_HOME
 
 make -C $TEST_HOME/.. > /dev/null 2>&1
 . $TEST_HOME/../src/soaf.sh
@@ -27,13 +27,15 @@ test_cfg() {
 test_init() {
 	soaf_usage_add_var "NAME VAL MSG" "TEST"
 	soaf_usage_def_var VAL "" "" '  __££ $$  {}  =__  '
-	test_init_1
-	test_init_2
-	test_init_3
-	test_init_4
-	test_init_5
-	test_init_6
-	test_init_7
+	test_init_display
+	test_init_space
+	test_init_job
+	test_init_prop_file
+	test_init_log_stderr
+	test_init_notif
+	test_init_dis_txt_off
+	test_init_module
+	test_init_env
 }
 
 ################################################################################
@@ -64,14 +66,14 @@ test_display_usage() {
 	soaf_dis_txt "Display NAME = VAL."
 }
 
-test_init_1() {
+test_init_display() {
 	soaf_create_action "display" test_display test_display_usage
 }
 
 ################################################################################
 ################################################################################
 
-test_init_2() {
+test_init_space() {
 	soaf_cfg_set TEST_SPACE "    "
 	soaf_info_add_var TEST_SPACE
 }
@@ -79,7 +81,7 @@ test_init_2() {
 ################################################################################
 ################################################################################
 
-test_init_3() {
+test_init_job() {
 	### soaf_create_job "ps" "ps -ef" $TEST_HOME 3
 	### soaf_create_job "ps" "ps -ef" $TEST_HOME 1
 	### soaf_create_job "ps" "ps -ef"
@@ -125,7 +127,7 @@ test_prop_file() {
 	test_prop_file_nature $TEST_PROP_NATURE_2
 }
 
-test_init_4() {
+test_init_prop_file() {
 	soaf_create_prop_file_nature $TEST_PROP_NATURE_1
 	soaf_create_prop_file_nature $TEST_PROP_NATURE_2 "" ":"
 	soaf_create_action "prop_file" test_prop_file
@@ -135,11 +137,11 @@ test_init_4() {
 ################################################################################
 
 test_log_stderr() {
-	soaf_mkdir "$SOAF_USER_SH_DIR/../TODO $SOAF_USER_SH_DIR/../ChangeLog" \
+	soaf_mkdir "$SOAF_APPLI_SH_DIR/../TODO $SOAF_APPLI_SH_DIR/../ChangeLog" \
 		$SOAF_LOG_INFO $TEST_LOG_NAME
 }
 
-test_init_5() {
+test_init_log_stderr() {
 	soaf_create_action "log_stderr" test_log_stderr
 }
 
@@ -154,7 +156,7 @@ test_notif() {
 	soaf_notif "$TEST_MSG"
 }
 
-test_init_6() {
+test_init_notif() {
 	soaf_create_action "notif" test_notif test_notif_usage
 }
 
@@ -173,8 +175,33 @@ test_dis_txt_off() {
 	soaf_dis_txt_off "Niveau 1" 1
 }
 
-test_init_7() {
+test_init_dis_txt_off() {
 	soaf_create_action "dis_txt_off" test_dis_txt_off
+}
+
+################################################################################
+################################################################################
+
+test_module() {
+	soaf_dis_txt "Test module ..."
+}
+
+test_init_module() {
+	soaf_create_action "module" test_module
+	soaf_usage_add_var ERR_TYPE "TEST"
+	soaf_usage_def_var ERR_TYPE "" "deadlock notfnd ok" "ok" "" "module" "OK"
+}
+
+################################################################################
+################################################################################
+
+test_env() {
+	set -o posix
+	set | grep -i soaf
+}
+
+test_init_env() {
+	soaf_create_action "env" test_env
 }
 
 ################################################################################

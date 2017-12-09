@@ -22,7 +22,8 @@ soaf_create_action() {
 	local FN=$2
 	local USAGE_FN=$3
 	local USAGE_POS=$4
-	SOAF_ACTION_LIST="$SOAF_ACTION_LIST $ACTION"
+	[ -z "$FN" ] && \
+		soaf_engine_exit_dev "No function defined for action [$ACTION]."
 	soaf_pmp_list_fill "$USAGE_POS" SOAF_ACTION $ACTION
 	soaf_map_extend $ACTION $SOAF_ACTION_FN_ATTR $FN
 	soaf_map_extend $ACTION $SOAF_ACTION_USAGE_FN_ATTR $USAGE_FN
@@ -31,6 +32,14 @@ soaf_create_action() {
 soaf_no_prepenv_action() {
 	local ACTION=$1
 	SOAF_ACTION_NOPREPENV_LIST="$SOAF_ACTION_NOPREPENV_LIST $ACTION"
+}
+
+################################################################################
+################################################################################
+
+soaf_action_list() {
+	soaf_pmp_list_cat SOAF_ACTION
+	SOAF_ACTION_RET_LIST="$SOAF_RET_LIST"
 }
 
 ################################################################################

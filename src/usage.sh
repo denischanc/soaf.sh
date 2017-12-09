@@ -125,8 +125,9 @@ _EOF_
 		soaf_usage_dis_var $var
 	done
 	### Actions
+	soaf_action_list
 	local action
-	for action in $SOAF_ACTION_LIST
+	for action in $SOAF_ACTION_RET_LIST
 	do
 		soaf_action_dis_usage $action
 	done
@@ -149,11 +150,8 @@ soaf_usage_check_var_required() {
 soaf_usage_check_var() {
 	local VAR=$1
 	soaf_var_check $VAR
-	if [ -z "$SOAF_VAR_RET" ]
-	then
-		soaf_log_err "$SOAF_VAR_ERR_MSG" $SOAF_USAGE_LOG_NAME
-		soaf_engine_exit
-	fi
+	[ -z "$SOAF_VAR_RET" ] && \
+		soaf_engine_exit "" "$SOAF_VAR_ERR_MSG" $SOAF_USAGE_LOG_NAME
 }
 
 soaf_usage_check() {
