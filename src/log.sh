@@ -1,10 +1,15 @@
 ################################################################################
 ################################################################################
 
-SOAF_LOG_ERR="ERR__"
+SOAF_LOG_ERR="ERROR"
 SOAF_LOG_WARN="WARN_"
 SOAF_LOG_INFO="INFO_"
 SOAF_LOG_DEBUG="DEBUG"
+
+SOAF_LOG_ERR_NB=4
+SOAF_LOG_WARN_NB=3
+SOAF_LOG_INFO_NB=2
+SOAF_LOG_DEBUG_NB=1
 
 SOAF_LOG_NATURE_INT="soaf.log.native"
 SOAF_LOG_ROLL_NATURE_INT="soaf.log.roll"
@@ -13,6 +18,11 @@ SOAF_LOG_LEVEL_ATTR="soaf_log_level"
 
 SOAF_LOG_FN_ATTR="soaf_log_fn"
 SOAF_LOG_PREP_FN_ATTR="soaf_log_prep_fn"
+
+SOAF_LOG_UNKNOWN_S="UNKNOWN"
+SOAF_LOG_ALIVE_S="ALIVE"
+SOAF_LOG_DEAD_S="DEAD"
+SOAF_LOG_STATE=$SOAF_LOG_UNKNOWN_S
 
 ################################################################################
 ################################################################################
@@ -24,6 +34,7 @@ soaf_log_cfg() {
 	###---------------
 	soaf_cfg_set SOAF_LOG_ROLL_NATURE $SOAF_LOG_ROLL_NATURE_INT
 	###---------------
+	soaf_cfg_set SOAF_LOG_DIR $SOAF_WORK_DIR/log
 	soaf_cfg_set SOAF_LOG_FILE $SOAF_LOG_DIR/$APPLI_NAME.log
 	soaf_cfg_set SOAF_LOG_CMD_OUT_ERR_DIR $SOAF_LOG_DIR
 	SOAF_LOG_CMD_OUT_FILE=$SOAF_LOG_CMD_OUT_ERR_DIR/$APPLI_NAME.cmd.out
@@ -32,7 +43,7 @@ soaf_log_cfg() {
 
 soaf_log_init() {
 	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_LEVEL_STDERR"
-	soaf_info_add_var "SOAF_LOG_FILE SOAF_LOG_USED_NATURE"
+	soaf_info_add_var "SOAF_LOG_DIR SOAF_LOG_FILE SOAF_LOG_USED_NATURE"
 	soaf_info_add_var SOAF_LOG_CMD_OUT_ERR_DIR
 	###---------------
 	[ -z "$SOAF_LOG_USED_NATURE" ] && soaf_create_log_nature \
@@ -40,8 +51,15 @@ soaf_log_init() {
 	soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE_INT
 }
 
+soaf_log_prepenv() {
+	local PREP_FN=$(soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_PREP_FN_ATTR)
+	[ -n "$PREP_FN" ] && $PREP_FN $SOAF_LOG_USED_NATURE
+	SOAF_LOG_STATE=$SOAF_LOG_ALIVE_S
+}
+
 soaf_define_add_this_cfg_fn soaf_log_cfg
 soaf_define_add_this_init_fn soaf_log_init
+soaf_define_add_this_prepenv_fn soaf_log_prepenv $SOAF_POS_PRE
 
 ################################################################################
 ################################################################################
@@ -60,7 +78,8 @@ soaf_create_log_nature() {
 
 soaf_all_log_level() {
 	local LOG_LEVEL=$1 fn
-	for fn in $SOAF_NAME_LOGLVL_FN_LIST
+	soaf_pmp_list_cat SOAF_NAME_LOGLVL_FN
+	for fn in $SOAF_RET_LIST
 	do
 		$fn $LOG_LEVEL
 	done
@@ -75,8 +94,8 @@ soaf_log_name_log_level() {
 ################################################################################
 ################################################################################
 
-soaf_log_prepared_ok() {
-	SOAF_LOG_PREPARED="OK"
+soaf_log_stop() {
+	SOAF_LOG_STATE=$SOAF_LOG_DEAD_S
 }
 
 ################################################################################
@@ -84,13 +103,13 @@ soaf_log_prepared_ok() {
 
 soaf_log_level() {
 	local NAME=$1
-	if [ -n "$SOAF_LOG_PREPARED" ]
+	if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
 	then
 		SOAF_LOG_RET=$SOAF_LOG_LEVEL
 		[ -n "$NAME" ] && SOAF_LOG_RET=$(soaf_map_get $NAME \
 			$SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET)
 	else
-		SOAF_LOG_RET=$SOAF_LOG_LEVEL_STDERR
+		SOAF_LOG_RET=${SOAF_LOG_LEVEL_STDERR:-$SOAF_LOG_ERR}
 	fi
 }
 
@@ -99,11 +118,11 @@ soaf_log_level() {
 
 soaf_log_num_level() {
 	local LEVEL=$1
-	case $LEVEL in
-		$SOAF_LOG_INFO) echo "2";;
-		$SOAF_LOG_WARN) echo "3";;
-		$SOAF_LOG_ERR) echo "4";;
-		*) echo "1";;
+	case "$LEVEL" in
+		$SOAF_LOG_INFO) echo "$SOAF_LOG_INFO_NB";;
+		$SOAF_LOG_WARN) echo "$SOAF_LOG_WARN_NB";;
+		$SOAF_LOG_ERR) echo "$SOAF_LOG_ERR_NB";;
+		*) echo "$SOAF_LOG_DEBUG_NB";;
 	esac
 }
 
@@ -176,11 +195,12 @@ soaf_log() {
 	local LEVEL=$1
 	local MSG=$2
 	local NAME=$3
-	if [ -n "$SOAF_LOG_PREPARED" ]
+	if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
 	then
 		local FN=$(soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_FN_ATTR)
 		[ -n "$FN" ] && $FN $SOAF_LOG_USED_NATURE $LEVEL "$MSG" $NAME
-	else
+	elif [ "$SOAF_LOG_STATE" != "$SOAF_LOG_DEAD_S" ]
+	then
 		soaf_log_filter "dummy" soaf_log_stderr $LEVEL "$MSG" $NAME
 	fi
 }
@@ -210,6 +230,14 @@ soaf_log_debug() {
 	local MSG=$1
 	local NAME=$2
 	soaf_log $SOAF_LOG_DEBUG "$MSG" $NAME
+}
+
+################################################################################
+################################################################################
+
+soaf_log_dev_err() {
+	local MSG=$1
+	soaf_log_stderr "" "DEV.$SOAF_LOG_ERR" "$MSG" "appli.dev.2fix"
 }
 
 ################################################################################

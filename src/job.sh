@@ -64,7 +64,7 @@ soaf_job() {
 	soaf_do_job $SOAF_JOB
 	if [ -z "$SOAF_JOB_RET" ]
 	then
-		soaf_dis_txt "Unable to process job : [$SOAF_JOB]."
+		soaf_log_err "Unable to process job : [$SOAF_JOB]." $SOAF_JOB_LOG_NAME
 	fi
 }
 

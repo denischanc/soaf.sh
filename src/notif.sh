@@ -11,10 +11,15 @@ SOAF_NOTIF_NB_TRY_DFT=3
 ################################################################################
 ################################################################################
 
-soaf_notif_init() {
-	soaf_info_add_var SOAF_NOTIF_NATURE_LIST
+soaf_notif_cfg() {
+	soaf_cfg_set SOAF_NOTIF_DIR $SOAF_WORK_DIR/notif
 }
 
+soaf_notif_init() {
+	soaf_info_add_var "SOAF_NOTIF_DIR SOAF_NOTIF_NATURE_LIST"
+}
+
+soaf_define_add_this_cfg_fn soaf_notif_cfg
 soaf_define_add_this_init_fn soaf_notif_init
 
 ################################################################################

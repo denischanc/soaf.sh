@@ -1,6 +1,8 @@
 ################################################################################
 ################################################################################
 
+SOAF_USAGE_LOG_NAME="soaf.usage"
+
 SOAF_USAGE_ACTION=$SOAF_DEFINE_USAGE_ACTION
 
 SOAF_USAGE_VAR_FN_ATTR="soaf_usage_var_fn"
@@ -16,6 +18,16 @@ soaf_usage_init() {
 }
 
 soaf_define_add_this_init_fn soaf_usage_init
+
+################################################################################
+################################################################################
+
+soaf_usage_log_level() {
+	local LOG_LEVEL=$1
+	soaf_log_name_log_level $SOAF_USAGE_LOG_NAME $LOG_LEVEL
+}
+
+soaf_define_add_name_log_level_fn soaf_usage_log_level
 
 ################################################################################
 ################################################################################
@@ -139,7 +151,7 @@ soaf_usage_check_var() {
 	soaf_var_check $VAR
 	if [ -z "$SOAF_VAR_RET" ]
 	then
-		soaf_dis_txt "$SOAF_VAR_ERR_MSG"
+		soaf_log_err "$SOAF_VAR_ERR_MSG" $SOAF_USAGE_LOG_NAME
 		soaf_engine_exit
 	fi
 }

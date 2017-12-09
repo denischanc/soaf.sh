@@ -36,15 +36,22 @@ soaf_module_this_call_fn_list() {
 ################################################################################
 
 soaf_module_this_cfg() {
-	soaf_module_this_call_fn_list "$SOAF_THIS_CFG_FN_LIST"
+	soaf_pmp_list_cat SOAF_THIS_CFG_FN
+	soaf_module_this_call_fn_list "$SOAF_RET_LIST"
 }
 
 soaf_module_this_init() {
-	soaf_module_this_call_fn_list "$SOAF_THIS_INIT_FN_LIST"
+	soaf_pmp_list_cat SOAF_THIS_INIT_FN
+	soaf_module_this_call_fn_list "$SOAF_RET_LIST"
+}
+
+soaf_module_this_prepenv() {
+	soaf_pmp_list_cat SOAF_THIS_PREPENV_FN
+	soaf_module_this_call_fn_list "$SOAF_RET_LIST"
 }
 
 ################################################################################
 ################################################################################
 
 soaf_create_module $SOAF_NAME $SOAF_VERSION \
-	soaf_module_this_cfg soaf_module_this_init
+	soaf_module_this_cfg soaf_module_this_init soaf_module_this_prepenv

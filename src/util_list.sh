@@ -14,9 +14,9 @@ soaf_pmp_list_var() {
 soaf_pmp_list_fill() {
 	local POS=$1
 	local VAR_PRE=$2
-	local ELMT=$3
+	local ELMT_LIST=$3
 	local VAR=$(soaf_pmp_list_var "$POS" $VAR_PRE)
-	eval $VAR=\"\$$VAR \$ELMT\"
+	eval $VAR=\"\$$VAR \$ELMT_LIST\"
 }
 
 soaf_pmp_list_cat() {
