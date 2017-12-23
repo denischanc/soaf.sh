@@ -122,7 +122,7 @@ soaf_var_subst() {
 		soaf_list_found "$SOAF_VAR_OKSUBST_LIST" $__var
 		[ -z "$SOAF_RET_LIST" ] && soaf_var_subst $__var
 		eval local __VAL=\$$__var
-		local RULE="sµ$SOAF_VAR_PAT_O$__var$SOAF_VAR_PAT_Cµ$__VALµg"
+		local RULE="sµ$SOAF_VAR_PAT_O$__var${SOAF_VAR_PAT_C}µ${__VAL}µg"
 		VAL=$(echo "$VAL" | sed -e "$RULE")
 		SUBST_OK="OK"
 	done
