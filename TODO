@@ -5,10 +5,11 @@
 -- do mail notif (sms ok)
 -- daemon mode (interactive) : mng of log, display
 -- Save pid for job and state processes (add option to automatically restart)
--- roll : define extension format as a pattern var
--- roll : way to take file modif date as extension (example : roll log file)
 
 [_DONE_]
 
+-- roll : way to take file modif date as extension (example : roll log file)
+     => adab0ef9
+-- roll : define extension format as a pattern var => adab0ef9
 -- notif module => c060218d
 -- log as a module (fn as an argument) => b1c0f293
