@@ -3,7 +3,7 @@
 
 soaf_root_cfg() {
 	local APPLI_NAME=$(soaf_module_this_appli_name)
-	soaf_cfg_set SOAF_WORK_DIR $HOME/work/$APPLI_NAME
+	SOAF_WORK_DIR=$HOME/work/$APPLI_NAME
 }
 
 soaf_root_init() {

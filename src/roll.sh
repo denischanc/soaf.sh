@@ -19,11 +19,11 @@ SOAF_ROLL_FILE_EXT_DFT_FN=soaf_roll_file_ext
 ################################################################################
 
 soaf_roll_cfg() {
-	soaf_cfg_set SOAF_ROLL_SIZE 4
-	soaf_cfg_set SOAF_ROLL_FILE_SIZE 100000
-	soaf_cfg_set SOAF_ROLL_FILE_EXT_DATE_PATTERN "%F-%H%M%S"
+	SOAF_ROLL_SIZE=4
+	SOAF_ROLL_FILE_SIZE=100000
+	SOAF_ROLL_FILE_EXT_DATE_PATTERN="%F-%H%M%S"
 	###---------------
-	soaf_cfg_set SOAF_ROLL_COMPRESS_CMD xz
+	SOAF_ROLL_COMPRESS_CMD=xz
 }
 
 soaf_roll_init() {

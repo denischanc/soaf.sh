@@ -7,6 +7,11 @@ SOAF_VAR_ACCEPT_EMPTY_ATTR="soaf_var_accept_empty"
 
 SOAF_VAR_PREFIX_ATTR="soaf_var_prefix"
 
+SOAF_VAR_PAT_O="@\["
+SOAF_VAR_PAT_V="[_a-zA-Z0-9]\+"
+SOAF_VAR_PAT_C="\]"
+SOAF_VAR_PAT_G="$SOAF_VAR_PAT_O$SOAF_VAR_PAT_V$SOAF_VAR_PAT_C"
+
 ################################################################################
 ################################################################################
 
@@ -96,4 +101,39 @@ soaf_var_check() {
 			fi
 		fi
 	fi
+}
+
+################################################################################
+################################################################################
+
+soaf_var_add_unsubst() {
+	local VAR_LIST=$1
+	SOAF_VAR_UNSUBST_LIST="$SOAF_VAR_UNSUBST_LIST $VAR_LIST"
+}
+
+soaf_var_subst() {
+	local VAR=$1
+	eval local VAL=\$$VAR
+	local SUBST_OK=
+	local __var
+	for __var in $(echo "$VAL" | grep -o $SOAF_VAR_PAT_G | \
+		sed -e s:$SOAF_VAR_PAT_O:: -e s:$SOAF_VAR_PAT_C:: | sort | uniq)
+	do
+		soaf_list_found "$SOAF_VAR_OKSUBST_LIST" $__var
+		[ -z "$SOAF_RET_LIST" ] && soaf_var_subst $__var
+		eval local __VAL=\$$__var
+		local RULE="sµ$SOAF_VAR_PAT_O$__var$SOAF_VAR_PAT_Cµ$__VALµg"
+		VAL=$(echo "$VAL" | sed -e "$RULE")
+		SUBST_OK="OK"
+	done
+	[ -n "$SUBST_OK" ] && eval $VAR=\$VAL
+	SOAF_VAR_OKSUBST_LIST="$SOAF_VAR_OKSUBST_LIST $VAR"
+}
+
+soaf_var_subst_all() {
+	local var
+	for var in $SOAF_VAR_UNSUBST_LIST
+	do
+		soaf_var_subst $var
+	done
 }

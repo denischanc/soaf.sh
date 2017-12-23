@@ -11,9 +11,8 @@ SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR="soaf_notif_sms_free_cacert_file"
 ################################################################################
 
 soaf_notif_sms_free_cfg() {
-	soaf_cfg_set SOAF_NOTIF_SMS_FREE_URL \
-		"https://smsapi.free-mobile.fr/sendmsg"
-	soaf_cfg_set SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT "--ipv4"
+	SOAF_NOTIF_SMS_FREE_URL="https://smsapi.free-mobile.fr/sendmsg"
+	SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT="--ipv4"
 }
 
 soaf_define_add_this_cfg_fn soaf_notif_sms_free_cfg

@@ -12,7 +12,8 @@ SOAF_NOTIF_NB_TRY_DFT=3
 ################################################################################
 
 soaf_notif_cfg() {
-	soaf_cfg_set SOAF_NOTIF_DIR $SOAF_WORK_DIR/notif
+	SOAF_NOTIF_DIR=@[SOAF_WORK_DIR]/notif
+	soaf_var_add_unsubst SOAF_NOTIF_DIR
 }
 
 soaf_notif_init() {

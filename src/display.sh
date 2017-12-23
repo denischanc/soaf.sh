@@ -1,12 +1,18 @@
 ################################################################################
 ################################################################################
 
+SOAF_DISPLAY_TXT_PRE_1="@[SOAF_TXT_PRE]"
+SOAF_DISPLAY_TXT_PRE_2="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
+SOAF_DISPLAY_TXT_PRE_3="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
+
+################################################################################
+################################################################################
+
 soaf_dis_cfg() {
-	soaf_cfg_set SOAF_TITLE_PRE "==[[ "
-	soaf_cfg_set SOAF_TXT_PRE "  "
-	SOAF_DISPLAY_TXT_PRE_1=$SOAF_TXT_PRE
-	SOAF_DISPLAY_TXT_PRE_2=$SOAF_TXT_PRE$SOAF_TXT_PRE
-	SOAF_DISPLAY_TXT_PRE_3=$SOAF_TXT_PRE$SOAF_TXT_PRE$SOAF_TXT_PRE
+	SOAF_TITLE_PRE="==[[ "
+	SOAF_TXT_PRE="  "
+	soaf_var_add_unsubst "SOAF_DISPLAY_TXT_PRE_1 SOAF_DISPLAY_TXT_PRE_2 \
+		SOAF_DISPLAY_TXT_PRE_3"
 }
 
 soaf_define_add_this_cfg_fn soaf_dis_cfg

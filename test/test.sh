@@ -20,8 +20,7 @@ make -C $TEST_HOME/.. > /dev/null 2>&1
 . $TEST_HOME/../src/soaf.sh
 
 test_cfg() {
-	soaf_cfg_set SOAF_WORK_DIR $TEST_HOME
-	soaf_cfg_set SOAF_LOG_DIR $TEST_HOME
+	SOAF_WORK_DIR=$TEST_HOME
 }
 
 test_init() {
@@ -85,7 +84,7 @@ test_init_job() {
 	### soaf_create_job "ps" "ps -ef" $TEST_HOME 3
 	### soaf_create_job "ps" "ps -ef" $TEST_HOME 1
 	### soaf_create_job "ps" "ps -ef"
-	soaf_create_job "ps" "ps -ef" $TEST_HOME 0
+	soaf_create_job "ps" "ps -ef" $SOAF_LOG_DIR 0
 }
 
 ################################################################################

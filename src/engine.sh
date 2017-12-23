@@ -68,10 +68,12 @@ soaf_engine_module() {
 
 soaf_engine_cfg() {
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_CFG_S
+	### MODULEs
+	soaf_module_apply_all_fn soaf_module_call_cfg_fn
 	### FILEs
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_CFG_FILE
-	### MODULEs
-	soaf_module_apply_all_reverse_fn soaf_module_call_cfg_fn
+	### VARs
+	soaf_var_subst_all
 }
 
 ################################################################################
