@@ -28,8 +28,17 @@ $(EXE_TGT) $(LIB_TGT): $(SRC_LIST) $(MAKEFILE_LIST)
 	@for f in $(SRC_LIST); \
 	do \
 		echo "Cat: [$$f]->[$@]"; \
-		echo "### Dist=[$(DIST_NAME)] File=[$$f]" >> $@; \
-		cat $$f >> $@; \
+		if [ "$$f" = "Makefile" ]; \
+		then \
+			cat $$f | sed -e "s|\\\\|\\\\\\\\|g" \
+				-e "s|\\$$|\\\\$$|g" >> $@; \
+		elif [ "$$f" = "src/main_tpl_makefile_eof" ]; \
+		then \
+			cat $$f >> $@; \
+		else \
+			echo "### Dist=[$(DIST_NAME)] File=[$$f]" >> $@; \
+			cat $$f >> $@; \
+		fi \
 	done
 	@chmod a+x $@
 

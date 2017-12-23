@@ -59,6 +59,7 @@ soaf_create_appli_nature $TEST_NATURE "" "" \
 test_display() {
 	soaf_dis_txt "[$NAME] = [$VAL] (NAME = VAL)"
 	soaf_dis_txt "[$TEST_NAME] = [$TEST_VAL] (TEST_NAME = TEST_VAL)"
+	soaf_dis_var_list "ERR_TYPE TEST_ERR_TYPE"
 }
 
 test_display_usage() {
@@ -183,6 +184,7 @@ test_init_dis_txt_off() {
 
 test_module() {
 	soaf_dis_txt "Test module ..."
+	soaf_dis_var_list "ERR_TYPE TEST_ERR_TYPE"
 }
 
 test_init_module() {

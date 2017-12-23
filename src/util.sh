@@ -19,7 +19,7 @@ soaf_define_add_this_init_fn soaf_util_init
 
 soaf_to_var() {
 	local NAME=$1
-	echo "$NAME" | tr '.-/' '___'
+	echo "$NAME" | tr '.\-/' '___'
 }
 
 soaf_upper() {

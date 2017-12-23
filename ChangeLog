@@ -8,6 +8,7 @@
 -- Add ext fn for roll nature
 -- Resolve module dependencies
 -- Variable content substitution
+-- Action to create a soaf project
 
 [0.9.0]
 

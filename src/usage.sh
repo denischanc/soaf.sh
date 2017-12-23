@@ -94,6 +94,8 @@ soaf_usage_dis_var() {
 		local ENUM_DIS=$(soaf_dis_echo_list "$ENUM")
 		[ -n "$A_E" ] && ENUM_DIS="$ENUM_DIS|"
 		TXT="$TXT [$ENUM_DIS]"
+	else
+		TXT="$TXT '...'"
 	fi
 	[ -n "$DFT_VAL" ] && TXT="$TXT (default: '$DFT_VAL')"
 	soaf_dis_txt "$TXT"
