@@ -22,7 +22,6 @@ soaf_main_create_prj() {
 	[ -z "$SOAF_PRJ_NAME" ] && SOAF_PRJ_NAME=$(basename $SOAF_PRJ_DIR)
 	local SRC_DIR=$SOAF_PRJ_DIR/src
 	soaf_mkdir $SRC_DIR $SOAF_LOG_INFO $SOAF_MAIN_LOG_NAME
-	[ $SOAF_RET -ne 0 ] && soaf_engine_exit
 	### src
 	soaf_main_tpl_version $SOAF_PRJ_NAME > $SRC_DIR/version.sh
 	soaf_main_tpl_main $SOAF_PRJ_NAME > $SRC_DIR/main.sh

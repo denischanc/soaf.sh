@@ -53,8 +53,7 @@ soaf_create_job() {
 
 soaf_job_notif_on_err() {
 	local JOB=$1
-	local NOTIF_ON_ERR=$2
-	soaf_map_extend $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR $NOTIF_ON_ERR
+	soaf_map_extend $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR "OK"
 }
 
 ################################################################################
@@ -84,18 +83,18 @@ soaf_do_job_roll() {
 soaf_do_job_process() {
 	local JOB=$1
 	local JOB_UPPER=$2
-	local LOG_JOB_DIR=$3
-	local LOG_JOB_FILE=$LOG_JOB_DIR/$JOB.log
-	local LOG_JOB_ERR_FILE=$LOG_JOB_DIR/$JOB-err.log
+	local LOG_DIR=$3
+	local LOG_FILE=$LOG_DIR/$JOB.log
+	local LOG_ERR_FILE=$LOG_DIR/$JOB-err.log
 	local ROLL_SIZE=$(soaf_map_get $JOB $SOAF_JOB_ROLL_SIZE_ATTR)
-	soaf_do_job_roll $LOG_JOB_FILE $ROLL_SIZE
-	soaf_do_job_roll $LOG_JOB_ERR_FILE $ROLL_SIZE
+	soaf_do_job_roll $LOG_FILE $ROLL_SIZE
+	soaf_do_job_roll $LOG_ERR_FILE $ROLL_SIZE
 	local CMD=$(soaf_map_get $JOB $SOAF_JOB_CMD_ATTR)
 	if [ -z "$CMD" ]
 	then
 		soaf_log_err "No command for job : [$JOB] ???" $SOAF_JOB_LOG_NAME
 	else
-		CMD="$CMD > $LOG_JOB_FILE 2> $LOG_JOB_ERR_FILE"
+		CMD="$CMD > $LOG_FILE 2> $LOG_ERR_FILE"
 		soaf_log_info "Start $JOB_UPPER ..." $SOAF_JOB_LOG_NAME
 		soaf_cmd_info "$CMD" $SOAF_JOB_LOG_NAME "OK"
 		if [ "$SOAF_RET" = "0" ]
@@ -117,18 +116,18 @@ soaf_do_job_valid() {
 	local JOB=$1
 	local APPLI_NAME=$(soaf_module_this_appli_name)
 	local JOB_UPPER=$(soaf_upper $JOB)
-	local JOB_LOG_DIR=$(soaf_map_get $JOB $SOAF_JOB_LOG_DIR_ATTR \
+	local LOG_DIR=$(soaf_map_get $JOB $SOAF_JOB_LOG_DIR_ATTR \
 		$SOAF_LOG_DIR/$APPLI_NAME.job.$JOB)
-	soaf_mkdir $JOB_LOG_DIR "" $SOAF_JOB_LOG_NAME
-	local JOB_INPROG_FILE=$JOB_LOG_DIR/$JOB.inprog
-	if [ ! -f $JOB_INPROG_FILE ]
+	soaf_mkdir "$LOG_DIR $SOAF_RUN_DIR" "" $SOAF_JOB_LOG_NAME
+	local PID_FILE=$SOAF_RUN_DIR/$APPLI_NAME.job.$JOB.pid
+	local PID=$(cat $PID_FILE 2> /dev/null)
+	if [ -z "$PID" -o ! -d /proc/$PID ]
 	then
-		touch $JOB_INPROG_FILE
-		soaf_do_job_process $JOB $JOB_UPPER $JOB_LOG_DIR
-		rm -f $JOB_INPROG_FILE
+		echo "$$" > $PID_FILE
+		soaf_do_job_process $JOB $JOB_UPPER $LOG_DIR
+		rm -f $PID_FILE
 	else
-		local MSG="$JOB_UPPER already in progress"
-		MSG="$MSG (file : [$JOB_INPROG_FILE]) ..."
+		local MSG="$JOB_UPPER already in progress (pid: [$PID]) ..."
 		soaf_log_warn "$MSG" $SOAF_JOB_LOG_NAME
 	fi
 }
