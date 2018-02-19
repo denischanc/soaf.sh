@@ -111,6 +111,14 @@ soaf_var_add_unsubst() {
 	SOAF_VAR_UNSUBST_LIST="$SOAF_VAR_UNSUBST_LIST $VAR_LIST"
 }
 
+soaf_var_subst_proc() {
+	local VAL=$1
+	local VAR=$2
+	eval local VAR_VAL=\$$VAR
+	local RULE="sµ$SOAF_VAR_PAT_O$VAR${SOAF_VAR_PAT_C}µ${VAR_VAL}µg"
+	SOAF_VAR_RET=$(echo "$VAL" | sed -e "$RULE")
+}
+
 soaf_var_subst() {
 	local VAR=$1
 	eval local VAL=\$$VAR
@@ -121,9 +129,8 @@ soaf_var_subst() {
 	do
 		soaf_list_found "$SOAF_VAR_OKSUBST_LIST" $__var
 		[ -z "$SOAF_RET_LIST" ] && soaf_var_subst $__var
-		eval local __VAL=\$$__var
-		local RULE="sµ$SOAF_VAR_PAT_O$__var${SOAF_VAR_PAT_C}µ${__VAL}µg"
-		VAL=$(echo "$VAL" | sed -e "$RULE")
+		soaf_var_subst_proc "$VAL" $__var
+		VAL=$SOAF_VAR_RET
 		SUBST_OK="OK"
 	done
 	[ -n "$SUBST_OK" ] && eval $VAR=\$VAL

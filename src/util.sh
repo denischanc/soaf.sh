@@ -242,3 +242,25 @@ soaf_check_var_list() {
 	done
 	SOAF_RET=$RET
 }
+
+################################################################################
+################################################################################
+
+soaf_fn_with_pid() {
+	local PID_FILE=$1
+	local LOG_NAME=$2
+	local FN_ARGS=$3
+	local PID_IN_PROG_MSG=$4
+	local PID_IN_PROG_MSG_LVL=${5:-$SOAF_LOG_WARN}
+	local PID=$(cat $PID_FILE 2> /dev/null)
+	if [ -n "$PID" -a -d /proc/$PID ]
+	then
+		soaf_var_subst_proc "$PID_IN_PROG_MSG" PID
+		soaf_log $PID_IN_PROG_MSG_LVL "$SOAF_VAR_RET" $LOG_NAME
+	else
+		soaf_mkdir $(dirname $PID_FILE) "" $LOG_NAME
+		echo "$$" > $PID_FILE
+		eval "$FN_ARGS"
+		rm -f $PID_FILE
+	fi
+}
