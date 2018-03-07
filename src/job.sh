@@ -114,22 +114,14 @@ soaf_do_job_process() {
 
 soaf_do_job_valid() {
 	local JOB=$1
-	local APPLI_NAME=$(soaf_module_this_appli_name)
 	local JOB_UPPER=$(soaf_upper $JOB)
 	local LOG_DIR=$(soaf_map_get $JOB $SOAF_JOB_LOG_DIR_ATTR \
-		$SOAF_LOG_DIR/$APPLI_NAME.job.$JOB)
-	soaf_mkdir "$LOG_DIR $SOAF_RUN_DIR" "" $SOAF_JOB_LOG_NAME
-	local PID_FILE=$SOAF_RUN_DIR/$APPLI_NAME.job.$JOB.pid
-	local PID=$(cat $PID_FILE 2> /dev/null)
-	if [ -z "$PID" -o ! -d /proc/$PID ]
-	then
-		echo "$$" > $PID_FILE
-		soaf_do_job_process $JOB $JOB_UPPER $LOG_DIR
-		rm -f $PID_FILE
-	else
-		local MSG="$JOB_UPPER already in progress (pid: [$PID]) ..."
-		soaf_log_warn "$MSG" $SOAF_JOB_LOG_NAME
-	fi
+		$SOAF_LOG_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB)
+	soaf_mkdir $LOG_DIR "" $SOAF_JOB_LOG_NAME
+	local PID_FILE=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB.pid
+	local FN_ARGS="soaf_do_job_process $JOB $JOB_UPPER $LOG_DIR"
+	local MSG="$JOB_UPPER already in progress (pid: [@[PID]]) ..."
+	soaf_fn_with_pid $PID_FILE $SOAF_JOB_LOG_NAME "$FN_ARGS" "$MSG"
 }
 
 ################################################################################

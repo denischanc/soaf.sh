@@ -1,28 +1,6 @@
 ################################################################################
 ################################################################################
 
-SOAF_MODULE_THIS_APPLI_NATURE_ATTR="soaf_module_this_appli_nature"
-
-################################################################################
-################################################################################
-
-soaf_module_this_set_appli_nature() {
-	local APPLI_NATURE=$1
-	soaf_map_extend $SOAF_NAME $SOAF_MODULE_THIS_APPLI_NATURE_ATTR \
-		$APPLI_NATURE
-}
-
-soaf_module_this_appli_nature() {
-	soaf_map_get $SOAF_NAME $SOAF_MODULE_THIS_APPLI_NATURE_ATTR
-}
-
-soaf_module_this_appli_name() {
-	soaf_map_get $(soaf_module_this_appli_nature) $SOAF_APPLI_NAME_ATTR
-}
-
-################################################################################
-################################################################################
-
 soaf_module_this_call_fn_list() {
 	local FN_LIST=$1
 	local fn

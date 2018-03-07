@@ -35,9 +35,8 @@ soaf_define_add_name_log_level_fn soaf_engine_log_level
 ################################################################################
 
 soaf_engine_source_ext_cfg() {
-	local APPLI_NAME=$(soaf_module_this_appli_name)
-	soaf_cfg_set SOAF_ENGINE_EXT_GLOB_DIR /etc/$APPLI_NAME
-	soaf_cfg_set SOAF_ENGINE_EXT_LOC_DIR $HOME/.$APPLI_NAME
+	soaf_cfg_set SOAF_ENGINE_EXT_GLOB_DIR /etc/$SOAF_APPLI_NAME
+	soaf_cfg_set SOAF_ENGINE_EXT_LOC_DIR $HOME/.$SOAF_APPLI_NAME
 	soaf_cfg_set SOAF_ENGINE_EXT_ALL_DIR \
 		"$SOAF_ENGINE_EXT_GLOB_DIR $SOAF_ENGINE_EXT_LOC_DIR"
 }
@@ -141,7 +140,7 @@ soaf_engine_exit_dev() {
 
 soaf_engine() {
 	local APPLI_NATURE=$1
-	soaf_module_this_set_appli_nature $APPLI_NATURE
+	soaf_appli_def_name $APPLI_NATURE
 	soaf_engine_source_ext_cfg
 	soaf_engine_module
 	soaf_engine_cfg

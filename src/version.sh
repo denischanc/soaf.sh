@@ -21,7 +21,6 @@ soaf_define_add_this_init_fn soaf_version_init
 ################################################################################
 
 soaf_version() {
-	local APPLI_NAME=$(soaf_module_this_appli_name)
-	soaf_dis_title "$APPLI_NAME"
+	soaf_dis_title "$SOAF_APPLI_NAME"
 	soaf_module_apply_all_reverse_fn soaf_module_version
 }

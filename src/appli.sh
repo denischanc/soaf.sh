@@ -5,7 +5,6 @@ SOAF_APPLI_SH_DIR=$(cd $(dirname $(which $0)); pwd)
 SOAF_APPLI_SH_NAME=$(basename $0 | sed -e s/\.sh$//)
 
 SOAF_APPLI_NAME_ATTR="soaf_appli_name"
-SOAF_APPLI_MODULE_NAME_ATTR="soaf_appli_module_name"
 
 ################################################################################
 ################################################################################
@@ -15,6 +14,14 @@ soaf_appli_init() {
 }
 
 soaf_define_add_this_init_fn soaf_appli_init
+
+################################################################################
+################################################################################
+
+soaf_appli_def_name() {
+	local NATURE=$1
+	SOAF_APPLI_NAME=$(soaf_map_get $NATURE $SOAF_APPLI_NAME_ATTR)
+}
 
 ################################################################################
 ################################################################################
@@ -35,5 +42,4 @@ soaf_create_appli_nature() {
 	soaf_create_module $MODULE_NAME $VERSION "$CFG_FN" "$INIT_FN" \
 		"$PREPENV_FN" "$PRE_ACTION_FN" "$POST_ACTION_FN" "$EXIT_FN"
 	soaf_map_extend $NATURE $SOAF_APPLI_NAME_ATTR $NAME
-	soaf_map_extend $NATURE $SOAF_APPLI_MODULE_NAME_ATTR $MODULE_NAME
 }

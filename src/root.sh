@@ -2,8 +2,7 @@
 ################################################################################
 
 soaf_root_cfg() {
-	local APPLI_NAME=$(soaf_module_this_appli_name)
-	SOAF_WORK_DIR=$HOME/work/$APPLI_NAME
+	SOAF_WORK_DIR=$HOME/work/$SOAF_APPLI_NAME
 	SOAF_RUN_DIR=@[SOAF_WORK_DIR]/run
 	soaf_var_add_unsubst SOAF_RUN_DIR
 }

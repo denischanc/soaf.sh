@@ -6,14 +6,35 @@ Denis Chancogne <denis.chancogne@free.fr>
 
 == Implementation normes
 
-- nature name
 - attribut name
+  [LIB]_[FEATURE]_[NAME]_ATTR="[lib]_[feature]_[name]"
+  example :
+    SOAF_JOB_CMD_ATTR="soaf_job_cmd"
 
-- suffix
+- property name
+  [LIB]_[FEATURE]_[NAME]_PROP="[lib].[feature].[name]"
+  example :
+    SOAF_UTIL_DAY_PROP="soaf.util.day"
+
+- nature name
+  ([prefix].)[lib].[feature].[name]
+  example :
+    $NATURE.soaf.state.prop
+
+- file name
+  [appli].([lib].[feature].)[name]
+  example :
+    $APPLI_NAME.prop
+    $APPLI_NAME.soaf.state.$NATURE.inactive
+
+- action name
+  TODO
 
 == Engine
 
 === Startup parts
+
+==== Module part (module)
 
 ==== Configuration part (cfg)
 
