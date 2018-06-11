@@ -45,15 +45,12 @@ soaf_create_job() {
 	local CMD=$2
 	local LOG_DIR=$3
 	local ROLL_SIZE=$4
+	local NOTIF_ON_ERR=$5
 	SOAF_JOB_LIST="$SOAF_JOB_LIST $JOB"
 	soaf_map_extend $JOB $SOAF_JOB_CMD_ATTR "$CMD"
 	soaf_map_extend $JOB $SOAF_JOB_LOG_DIR_ATTR $LOG_DIR
 	soaf_map_extend $JOB $SOAF_JOB_ROLL_SIZE_ATTR $ROLL_SIZE
-}
-
-soaf_job_notif_on_err() {
-	local JOB=$1
-	soaf_map_extend $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR "OK"
+	soaf_map_extend $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR $NOTIF_ON_ERR
 }
 
 ################################################################################
