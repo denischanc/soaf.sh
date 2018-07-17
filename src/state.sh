@@ -11,12 +11,14 @@ SOAF_STATE_STEP_WAITING="waiting"
 SOAF_STATE_STEP_WORKING="working"
 SOAF_STATE_STEP_SAVING="saving"
 SOAF_STATE_STEP_JUMPING="jumping"
+SOAF_STATE_STEP_INERR="in_error"
 
 SOAF_STATE_WORKING_FN_ATTR="soaf_state_working_fn"
 SOAF_STATE_WORKING_JOB_LIST_ATTR="soaf_state_working_job_list"
 SOAF_STATE_NEXT_FN_ATTR="soaf_state_next_fn"
 SOAF_STATE_NEXT_ATTR="soaf_state_next"
 SOAF_STATE_AUTO_REWORK_ATTR="soaf_state_auto_rework"
+SOAF_STATE_NOTIF_ON_ERR_ATTR="soaf_state_notif_on_err"
 
 SOAF_STATE_ENTRY_ATTR="soaf_state_entry"
 SOAF_STATE_WORK_DIR_ATTR="soaf_state_work_dir"
@@ -58,6 +60,7 @@ soaf_create_state() {
 	local NEXT_STATE_FN=$4
 	local NEXT_STATE=$5
 	local AUTO_REWORK=$6
+	local NOTIF_ON_ERR=$7
 	SOAF_STATE_LIST="$SOAF_STATE_LIST $STATE"
 	soaf_map_extend $STATE $SOAF_STATE_WORKING_FN_ATTR $WORKING_FN
 	soaf_map_extend $STATE $SOAF_STATE_WORKING_JOB_LIST_ATTR \
@@ -65,6 +68,7 @@ soaf_create_state() {
 	soaf_map_extend $STATE $SOAF_STATE_NEXT_FN_ATTR $NEXT_STATE_FN
 	soaf_map_extend $STATE $SOAF_STATE_NEXT_ATTR $NEXT_STATE
 	soaf_map_extend $STATE $SOAF_STATE_AUTO_REWORK_ATTR $AUTO_REWORK
+	soaf_map_extend $STATE $SOAF_STATE_NOTIF_ON_ERR_ATTR $NOTIF_ON_ERR
 }
 
 soaf_create_state_nature() {
@@ -245,6 +249,19 @@ soaf_state_waiting_step() {
 ################################################################################
 ################################################################################
 
+soaf_state_working_step_inerr() {
+	local NATURE=$1
+	local PROP_NATURE=$2
+	local CUR_STATE=$3
+	local MSG="Working error in state [$CUR_STATE] of nature [$NATURE]."
+	soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
+	local IS_NOTIF=$(soaf_map_get $NATURE $SOAF_STATE_NOTIF_ON_ERR_ATTR)
+	[ -n "$IS_NOTIF" ] && soaf_notif "$MSG"
+	soaf_prop_file_set $PROP_NATURE $SOAF_STATE_STEP_PROP \
+		$SOAF_STATE_STEP_INERR
+	[ -z "$SOAF_PROP_FILE_RET" ] && soaf_state_err
+}
+
 soaf_state_working_step_main() {
 	local NATURE=$1
 	local WORK_DIR=$2
@@ -254,8 +271,10 @@ soaf_state_working_step_main() {
 	[ -z "$FN" ] && FN=soaf_state_dft_work
 	SOAF_STATE_WORKING_RET=
 	$FN $NATURE $WORK_DIR $CUR_STATE
-	if [ -n "$SOAF_STATE_WORKING_RET" ]
+	if [ -z "$SOAF_STATE_WORKING_RET" ]
 	then
+		soaf_state_working_step_inerr $NATURE $PROP_NATURE $CUR_STATE
+	else
 		soaf_prop_file_set $PROP_NATURE $SOAF_STATE_STEP_PROP \
 			$SOAF_STATE_STEP_SAVING
 		if [ -z "$SOAF_PROP_FILE_RET" ]
@@ -268,34 +287,6 @@ soaf_state_working_step_main() {
 	fi
 }
 
-soaf_state_working_step_rework_or_not() {
-	local NATURE=$1
-	local WORK_DIR=$2
-	local PROP_NATURE=$3
-	local CUR_STATE=$4
-	local REWORK=
-	local AUTO_REWORK=$(soaf_map_get $CUR_STATE $SOAF_STATE_AUTO_REWORK_ATTR)
-	if [ -n "$AUTO_REWORK" ]
-	then
-		REWORK="OK"
-	else
-		soaf_state_rework_file $NATURE
-		if [ -f $SOAF_STATE_RET ]
-		then
-			soaf_rm $SOAF_STATE_RET "" $SOAF_STATE_LOG_NAME
-			REWORK="OK"
-		else
-			local MSG="State [$CUR_STATE] of nature [$NATURE] in"
-			MSG="$MSG step [$SOAF_STATE_STEP_WORKING] without running process"
-			MSG="$MSG (touch [$SOAF_STATE_RET] to rework)."
-			soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
-			soaf_notif "$MSG"
-		fi
-	fi
-	[ -n "$REWORK" ] && \
-		soaf_state_working_step_main $NATURE $WORK_DIR $PROP_NATURE $CUR_STATE
-}
-
 soaf_state_working_step_main_with_pid() {
 	local NATURE=$1
 	local WORK_DIR=$2
@@ -303,8 +294,8 @@ soaf_state_working_step_main_with_pid() {
 	local CUR_STATE=$4
 	local PID_FILE=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.state
 	PID_FILE=$PID_FILE.$NATURE.$CUR_STATE.pid
-	local FN_ARGS="soaf_state_working_step_rework_or_not"
-	FN_ARGS="$FN_ARGS $NATURE $WORK_DIR $PROP_NATURE $CUR_STATE"
+	local FN_ARGS="soaf_state_working_step_inerr"
+	FN_ARGS="$FN_ARGS $NATURE $PROP_NATURE $CUR_STATE"
 	local MSG="State [$CUR_STATE] of nature [$NATURE] works already"
 	MSG="$MSG (pid: [@[PID]])."
 	soaf_fn_with_pid $PID_FILE $SOAF_STATE_LOG_NAME "$FN_ARGS" \
@@ -400,6 +391,51 @@ soaf_state_jumping_step() {
 ################################################################################
 ################################################################################
 
+soaf_state_inerr_step_main() {
+	local NATURE=$1
+	local WORK_DIR=$2
+	local PROP_NATURE=$3
+	local CUR_STATE=$4
+	local REWORK=
+	local AUTO_REWORK=$(soaf_map_get $CUR_STATE $SOAF_STATE_AUTO_REWORK_ATTR)
+	if [ -n "$AUTO_REWORK" ]
+	then
+		REWORK="OK"
+	else
+		soaf_state_rework_file $NATURE
+		local REWORK_FILE=$SOAF_STATE_RET
+		if [ -f $REWORK_FILE ]
+		then
+			soaf_rm $REWORK_FILE "" $SOAF_STATE_LOG_NAME
+			if [ $SOAF_RET -ne 0 ]
+			then
+				soaf_state_err
+			else
+				REWORK="OK"
+			fi
+		else
+			local MSG="State [$CUR_STATE] of nature [$NATURE] in"
+			MSG="$MSG step [$SOAF_STATE_STEP_INERR]"
+			MSG="$MSG (touch [$REWORK_FILE] to rework)."
+			soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
+			soaf_notif "$MSG"
+		fi
+	fi
+	[ -n "$REWORK" ] && \
+		soaf_state_working_step_main $NATURE $WORK_DIR $PROP_NATURE $CUR_STATE
+}
+
+soaf_state_inerr_step() {
+	local NATURE=$1
+	local WORK_DIR=$2
+	local PROP_NATURE=$3
+	soaf_state_get_prop_n_call_fn $NATURE $WORK_DIR $PROP_NATURE \
+		$SOAF_STATE_CUR_PROP soaf_state_inerr_step_main
+}
+
+################################################################################
+################################################################################
+
 soaf_state_step_case() {
 	local NATURE=$1
 	local WORK_DIR=$2
@@ -422,6 +458,9 @@ soaf_state_step_case() {
 			;;
 		$SOAF_STATE_STEP_JUMPING)
 			local FN=soaf_state_jumping_step
+			;;
+		$SOAF_STATE_STEP_INERR)
+			local FN=soaf_state_inerr_step
 			;;
 		*)
 			local FN=soaf_state_init_step
