@@ -124,6 +124,13 @@ soaf_state_rework_file() {
 	SOAF_STATE_RET=$WORK_DIR/$SOAF_APPLI_NAME.soaf.state.rework.$NATURE
 }
 
+soaf_state_pid_file() {
+	local NATURE=$1
+	local CUR_STATE=$2
+	SOAF_STATE_RET=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.state
+	SOAF_STATE_RET=$SOAF_STATE_RET.$NATURE.$CUR_STATE.pid
+}
+
 ################################################################################
 ################################################################################
 
@@ -269,8 +276,11 @@ soaf_state_working_step_main() {
 	local CUR_STATE=$4
 	local FN=$(soaf_map_get $CUR_STATE $SOAF_STATE_WORKING_FN_ATTR)
 	[ -z "$FN" ] && FN=soaf_state_dft_work
+	local FN_ARGS="$FN $NATURE $WORK_DIR $CUR_STATE"
+	soaf_state_pid_file $NATURE $CUR_STATE
+	local PID_FILE=$SOAF_STATE_RET
 	SOAF_STATE_WORKING_RET=
-	$FN $NATURE $WORK_DIR $CUR_STATE
+	soaf_fn_args_set_pid "$FN_ARGS" $PID_FILE $SOAF_STATE_LOG_NAME
 	if [ -z "$SOAF_STATE_WORKING_RET" ]
 	then
 		soaf_state_working_step_inerr $NATURE $PROP_NATURE $CUR_STATE
@@ -292,13 +302,13 @@ soaf_state_working_step_main_with_pid() {
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
 	local CUR_STATE=$4
-	local PID_FILE=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.state
-	PID_FILE=$PID_FILE.$NATURE.$CUR_STATE.pid
+	soaf_state_pid_file $NATURE $CUR_STATE
+	local PID_FILE=$SOAF_STATE_RET
 	local FN_ARGS="soaf_state_working_step_inerr"
 	FN_ARGS="$FN_ARGS $NATURE $PROP_NATURE $CUR_STATE"
 	local MSG="State [$CUR_STATE] of nature [$NATURE] works already"
 	MSG="$MSG (pid: [@[PID]])."
-	soaf_fn_with_pid $PID_FILE $SOAF_STATE_LOG_NAME "$FN_ARGS" \
+	soaf_fn_args_check_pid "$FN_ARGS" $PID_FILE $SOAF_STATE_LOG_NAME \
 		"$MSG" $SOAF_LOG_DEBUG
 }
 

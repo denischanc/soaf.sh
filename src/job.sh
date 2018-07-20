@@ -118,7 +118,7 @@ soaf_do_job_valid() {
 	local PID_FILE=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB.pid
 	local FN_ARGS="soaf_do_job_process $JOB $JOB_UPPER $LOG_DIR"
 	local MSG="$JOB_UPPER already in progress (pid: [@[PID]]) ..."
-	soaf_fn_with_pid $PID_FILE $SOAF_JOB_LOG_NAME "$FN_ARGS" "$MSG"
+	soaf_fn_args_check_pid "$FN_ARGS" $PID_FILE $SOAF_JOB_LOG_NAME "$MSG"
 }
 
 ################################################################################
