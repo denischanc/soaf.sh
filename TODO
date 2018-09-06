@@ -1,8 +1,8 @@
 
 -- on state.sh
-   -- verify that entry_state is in state list
-   -- add InError step
-   -- rename if required AUTO_REWORK
+   -- verify that entry_state is in state list => OK
+   -- add InError step => OK
+   -- rename if required AUTO_REWORK => OK
 
 -- mng ssl certs (root to server) for free sms notif
 -- generate documentation (public/private)

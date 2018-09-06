@@ -41,7 +41,7 @@ File name::
 ***************************************
 $APPLI_NAME.prop
 
-$APPLI_NAME.soaf.state.$NATURE.inactive
+$APPLI_NAME.soaf.state.inactive.$NATURE
 ***************************************
 
 Action name::
@@ -51,16 +51,16 @@ Action name::
 
 === Natures
 
-The script creates lot of natures. A nature is composed of attributes values and functions.
-It has a unique name and created through a *create* function.
+The script creates lot of natures. A nature is composed of attributes values
+and functions. It has a unique name and created through a *create* function.
 
 All features of a nature are in fact set through environment variables, with
 unique name of nature and unique attribute name.
 
 === Engine
 
-The engine processes several stages, in same order. The names of these stages are : module,
-cfg, init, prepenv, execution.
+The engine processes several stages, in same order. The names of these stages
+are : module, cfg, init, prepenv, execution.
 
 ==== Module stage (module)
 
