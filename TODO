@@ -1,15 +1,13 @@
 
--- on state.sh
-   -- verify that entry_state is in state list => OK
-   -- add InError step => OK
-   -- rename if required AUTO_REWORK => OK
-
 -- mng ssl certs (root to server) for free sms notif
+
 -- generate documentation (public/private)
 -- continue adoc
 -- do mail notif (sms ok)
 -- daemon mode (interactive) : mng of log, display
+
 -- Save pid for job and state processes (add option to automatically restart)
+-- fn_args_with_pid : manage state when pid is found but no process associated
 
 [_DONE_]
 
@@ -18,3 +16,7 @@
 -- roll : define extension format as a pattern var => adab0ef9
 -- notif module => c060218d
 -- log as a module (fn as an argument) => b1c0f293
+-- on state.sh => d8943d10
+   -- verify that entry_state is in state list => OK
+   -- add InError step => OK
+   -- rename if required AUTO_REWORK => OK
