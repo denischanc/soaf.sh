@@ -1,42 +1,72 @@
+
 Guide of "Shell rOot Api Framework"
 ===================================
 Denis Chancogne <denis.chancogne@free.fr>
+:toc:
 
 == Quick startup
 
-== Implementation normes
+== Developers
 
-- attribut name
-  [LIB]_[FEATURE]_[NAME]_ATTR="[lib]_[feature]_[name]"
-  example :
-    SOAF_JOB_CMD_ATTR="soaf_job_cmd"
+=== Implementation syntax
 
-- property name
-  [LIB]_[FEATURE]_[NAME]_PROP="[lib].[feature].[name]"
-  example :
-    SOAF_UTIL_DAY_PROP="soaf.util.day"
+Attribut name::
+  [LIB]\_[FEATURE]\_[NAME]\_ATTR="[lib]\_[feature]_[name]"
 
-- nature name
+.Example
+********************************
+SOAF_JOB_CMD_ATTR="soaf_job_cmd"
+********************************
+
+Property name::
+  [LIB]\_[FEATURE]_[NAME]_PROP="[lib].[feature].[name]"
+
+.Example
+**********************************
+SOAF_UTIL_DAY_PROP="soaf.util.day"
+**********************************
+
+Nature name::
   ([prefix].)[lib].[feature].[name]
-  example :
-    $NATURE.soaf.state.prop
 
-- file name
+.Example
+***********************
+$NATURE.soaf.state.prop
+***********************
+
+File name::
   [appli].([lib].[feature].)[name]
-  example :
-    $APPLI_NAME.prop
-    $APPLI_NAME.soaf.state.$NATURE.inactive
 
-- action name
+.Example :
+***************************************
+$APPLI_NAME.prop
+
+$APPLI_NAME.soaf.state.$NATURE.inactive
+***************************************
+
+Action name::
   TODO
 
-== Engine
+== Architecture
 
-=== Startup parts
+=== Natures
 
-==== Module part (module)
+The script creates lot of natures. A nature is composed of attributes values and functions.
+It has a unique name and created through a *create* function.
 
-==== Configuration part (cfg)
+All features of a nature are in fact set through environment variables, with
+unique name of nature and unique attribute name.
+
+=== Engine
+
+The engine processes several stages, in same order. The names of these stages are : module,
+cfg, init, prepenv, execution.
+
+==== Module stage (module)
+
+TODO
+
+==== Configuration stage (cfg)
 
 This part allow to define value of variables. Variables are affected if they
 are still empty with the function *soaf_cfg_set()*.
@@ -46,7 +76,7 @@ Unless *SOAF_EXT_ALL_DIR* has been defined inside the application.
 Then modules are configured in reverse order, starting with extern modules,
 ending with application and soaf modules.
 
-=== Initialisation part (init)
+==== Initialisation stage (init)
 
 This part allow to execute functions to initialize action environment : natures
 creation, add info variables, add usage variables, ... Target is software
@@ -56,7 +86,7 @@ Engine start to source *init.sh* files, same way as *cfg.sh* files.
 Then modules are initialized in reverse order, starting with extern modules,
 ending with application and soaf modules.
 
-=== Prepare environment part (prepenv)
+==== Prepare environment stage (prepenv)
 
 This part allow to prepare working environment : directory creation, ... Target
 is system environment.
@@ -65,6 +95,10 @@ Engine start to initialize modules, starting soaf and application modules,
 ending with extern modules.
 Then it source *prepenv.sh* files, same way as *init.sh* files.
 
-== Modules
+=== Modules
 
-== Application
+TODO
+
+=== Application
+
+TODO
