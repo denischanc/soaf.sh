@@ -18,10 +18,9 @@ soaf_define_add_this_init_fn soaf_util_init
 ################################################################################
 
 soaf_to_var() {
-	local NAME=$1
-	SOAF_RET=$(tr '.\-/' '___' << _EOF_
-$NAME
-_EOF_)
+	local NAME=${1//./_}
+	NAME=${NAME//-/_}
+	SOAF_RET=${NAME//\//_}
 }
 
 soaf_upper() {
@@ -81,6 +80,14 @@ soaf_map_get_var() {
 	local DFT=$4
 	soaf_map_var $NAME $FIELD
 	eval $VAR_DST=\${$SOAF_RET:-\$DFT}
+}
+
+soaf_map_get_array_var() {
+	local VAR_DST=$1
+	local NAME=$2
+	local FIELD=$3
+	soaf_map_var $NAME $FIELD
+	eval $VAR_DST=\(\${$SOAF_RET[@]}\)
 }
 
 ################################################################################
