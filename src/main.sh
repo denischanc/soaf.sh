@@ -11,7 +11,7 @@ SOAF_MAIN_CREATE_PRJ_ACTION="create_prj"
 ################################################################################
 
 soaf_main_create_prj_usage() {
-	cat << _EOF_ | soaf_dis_txt_stdin
+	soaf_dis_txt_stdin << _EOF_
 Create a "Hello World !!!" project.
 Project is created in PRJ_DIR directory. If PRJ_NAME is empty then PRJ_NAME
 value is "basename PRJ_DIR".

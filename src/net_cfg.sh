@@ -23,12 +23,12 @@ soaf_create_net_account() {
 
 soaf_net_account_login() {
 	local ACCOUNT=$1
-	soaf_map_get $ACCOUNT $SOAF_NET_CFG_ACCOUNT_LOGIN_ATTR
+	soaf_map_get_var SOAF_NET_RET $ACCOUNT $SOAF_NET_CFG_ACCOUNT_LOGIN_ATTR
 }
 
 soaf_net_account_passwd() {
 	local ACCOUNT=$1
-	soaf_map_get $ACCOUNT $SOAF_NET_CFG_ACCOUNT_PASSWD_ATTR
+	soaf_map_get_var SOAF_NET_RET $ACCOUNT $SOAF_NET_CFG_ACCOUNT_PASSWD_ATTR
 }
 
 ################################################################################
@@ -44,12 +44,12 @@ soaf_create_net_endpoint() {
 
 soaf_net_endpoint_host() {
 	local ENDPOINT=$1
-	soaf_map_get $ENDPOINT $SOAF_NET_CFG_ENDPOINT_HOST_ATTR
+	soaf_map_get_var SOAF_NET_RET $ENDPOINT $SOAF_NET_CFG_ENDPOINT_HOST_ATTR
 }
 
 soaf_net_endpoint_port() {
 	local ENDPOINT=$1
-	soaf_map_get $ENDPOINT $SOAF_NET_CFG_ENDPOINT_PORT_ATTR
+	soaf_map_get_var SOAF_NET_RET $ENDPOINT $SOAF_NET_CFG_ENDPOINT_PORT_ATTR
 }
 
 ################################################################################
@@ -65,24 +65,28 @@ soaf_create_net_cfg_proxy_nature() {
 
 soaf_net_cfg_proxy_host() {
 	local NATURE=$1
-	local ENDPOINT=$(soaf_map_get $NATURE $SOAF_NET_CFG_PROXY_ENDPOINT_ATTR)
+	local ENDPOINT
+	soaf_map_get_var ENDPOINT $NATURE $SOAF_NET_CFG_PROXY_ENDPOINT_ATTR
 	soaf_net_endpoint_host $ENDPOINT
 }
 
 soaf_net_cfg_proxy_port() {
 	local NATURE=$1
-	local ENDPOINT=$(soaf_map_get $NATURE $SOAF_NET_CFG_PROXY_ENDPOINT_ATTR)
+	local ENDPOINT
+	soaf_map_get_var ENDPOINT $NATURE $SOAF_NET_CFG_PROXY_ENDPOINT_ATTR
 	soaf_net_endpoint_port $ENDPOINT
 }
 
 soaf_net_cfg_proxy_login() {
 	local NATURE=$1
-	local ACCOUNT=$(soaf_map_get $NATURE $SOAF_NET_CFG_PROXY_ACCOUNT_ATTR)
+	local ACCOUNT
+	soaf_map_get_var ACCOUNT $NATURE $SOAF_NET_CFG_PROXY_ACCOUNT_ATTR
 	soaf_net_account_login $ACCOUNT
 }
 
 soaf_net_cfg_proxy_passwd() {
 	local NATURE=$1
-	local ACCOUNT=$(soaf_map_get $NATURE $SOAF_NET_CFG_PROXY_ACCOUNT_ATTR)
+	local ACCOUNT
+	soaf_map_get_var ACCOUNT $NATURE $SOAF_NET_CFG_PROXY_ACCOUNT_ATTR
 	soaf_net_account_passwd $ACCOUNT
 }

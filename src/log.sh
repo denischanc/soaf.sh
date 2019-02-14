@@ -53,7 +53,8 @@ soaf_log_init() {
 }
 
 soaf_log_prepenv() {
-	local PREP_FN=$(soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_PREP_FN_ATTR)
+	local PREP_FN
+	soaf_map_get_var PREP_FN $SOAF_LOG_USED_NATURE $SOAF_LOG_PREP_FN_ATTR
 	[ -n "$PREP_FN" ] && $PREP_FN $SOAF_LOG_USED_NATURE
 	SOAF_LOG_STATE=$SOAF_LOG_ALIVE_S
 }
@@ -107,10 +108,10 @@ soaf_log_level() {
 	if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
 	then
 		SOAF_LOG_RET=$SOAF_LOG_LEVEL
-		[ -n "$NAME" ] && SOAF_LOG_RET=$(soaf_map_get $NAME \
-			$SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET)
+		[ -n "$NAME" ] && soaf_map_get_var SOAF_LOG_RET \
+			$NAME $SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET
 	else
-		SOAF_LOG_RET=${SOAF_LOG_LEVEL_STDERR:-$SOAF_LOG_ERR}
+		SOAF_LOG_RET=$SOAF_LOG_LEVEL_STDERR
 	fi
 }
 
@@ -198,7 +199,8 @@ soaf_log() {
 	local NAME=$3
 	if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
 	then
-		local FN=$(soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_FN_ATTR)
+		local FN
+		soaf_map_get_var FN $SOAF_LOG_USED_NATURE $SOAF_LOG_FN_ATTR
 		[ -n "$FN" ] && $FN $SOAF_LOG_USED_NATURE $LEVEL "$MSG" $NAME
 	elif [ "$SOAF_LOG_STATE" != "$SOAF_LOG_DEAD_S" ]
 	then
@@ -260,7 +262,7 @@ soaf_log_from_file() {
 	local NAME=$3
 	if [ -s "$FILE" ]
 	then
-		cat $FILE | soaf_log_stdin "$LEVEL" $NAME
+		soaf_log_stdin "$LEVEL" $NAME < $FILE
 	fi
 	rm -f $FILE 2> /dev/null
 }

@@ -62,7 +62,8 @@ soaf_prop_file_set_require() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE)
+	local FILE
+	soaf_map_get_var FILE $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
 	local PROP_UNIQ=$NATURE.$PROP
 	if [ -f $FILE ]
 	then
@@ -117,7 +118,8 @@ soaf_prop_file_set() {
 soaf_prop_file_get_no_cache() {
 	local NATURE=$1
 	local PROP=$2
-	local FILE=$(soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE)
+	local FILE
+	soaf_map_get_var FILE $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
 	local PROP_UNIQ=$NATURE.$PROP
 	SOAF_PROP_FILE_RET="OK"
 	SOAF_PROP_FILE_VAL=
@@ -159,10 +161,11 @@ soaf_prop_file_get() {
 	local NATURE=$1
 	local PROP=$2
 	local PROP_UNIQ=$NATURE.$PROP
-	local IN_CACHE=$(soaf_map_get $PROP_UNIQ $SOAF_PF_IN_CACHE_ATTR)
+	local IN_CACHE
+	soaf_map_get_var IN_CACHE $PROP_UNIQ $SOAF_PF_IN_CACHE_ATTR
 	if [ -n "$IN_CACHE" ]
 	then
-		SOAF_PROP_FILE_VAL=$(soaf_map_get $PROP_UNIQ $SOAF_PF_VAL_ATTR)
+		soaf_map_get_var SOAF_PROP_FILE_VAL $PROP_UNIQ $SOAF_PF_VAL_ATTR
 		SOAF_PROP_FILE_RET="OK"
 		if [ -z "$SOAF_PROP_FILE_NO_GET_LOG" ]
 		then
@@ -195,7 +198,8 @@ soaf_prop_file_list_add() {
 		then
 			soaf_prop_file_set $NATURE $PROP "$VAL"
 		else
-			local SEP=$(soaf_map_get $NATURE $SOAF_PF_SEP_ATTR)
+			local SEP
+			soaf_map_get_var SEP $NATURE $SOAF_PF_SEP_ATTR
 			soaf_prop_file_set $NATURE $PROP "$VAL_LIST$SEP$VAL"
 		fi
 	fi
@@ -205,7 +209,8 @@ soaf_prop_file_list_rm() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local SEP=$(soaf_map_get $NATURE $SOAF_PF_SEP_ATTR)
+	local SEP
+	soaf_map_get_var SEP $NATURE $SOAF_PF_SEP_ATTR
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
 	then
@@ -239,7 +244,8 @@ soaf_prop_file_is_val() {
 		SOAF_PROP_FILE_VAL=
 		if [ -n "$VAL_LIST" ]
 		then
-			local SEP=$(soaf_map_get $NATURE $SOAF_PF_SEP_ATTR)
+			local SEP
+			soaf_map_get_var SEP $NATURE $SOAF_PF_SEP_ATTR
 			VAL_LIST=$SEP$VAL_LIST$SEP
 			local DIFF=${VAL_LIST/$SEP$VAL$SEP}
 			[ "$DIFF" != "$VAL_LIST" ] && SOAF_PROP_FILE_VAL=$VAL

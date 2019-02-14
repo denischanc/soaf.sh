@@ -19,22 +19,25 @@ soaf_define_add_this_init_fn soaf_util_init
 
 soaf_to_var() {
 	local NAME=$1
-	echo "$NAME" | tr '.\-/' '___'
+	SOAF_RET=$(tr '.\-/' '___' << _EOF_
+$NAME
+_EOF_)
 }
 
 soaf_upper() {
 	local NAME=$1
-	echo "${NAME^^}"
+	SOAF_RET=${NAME^^}
 }
 
 soaf_lower() {
 	local NAME=$1
-	echo "${NAME,,}"
+	SOAF_RET=${NAME,,}
 }
 
 soaf_to_upper_var() {
 	local NAME=$1
-	echo "$(soaf_upper $(soaf_to_var $NAME))"
+	soaf_to_var $NAME
+	soaf_upper $SOAF_RET
 }
 
 ################################################################################
@@ -59,25 +62,25 @@ soaf_map_extend() {
 	local NAME=$1
 	local FIELD=$2
 	local VAL=$3
-	local VAR_NAME=$(soaf_map_var $NAME $FIELD)
-	eval $VAR_NAME=\$VAL
+	soaf_map_var $NAME $FIELD
+	eval $SOAF_RET=\$VAL
 }
 
 soaf_map_cat() {
 	local NAME=$1
 	local FIELD=$2
 	local VAL=$3
-	local VAR_NAME=$(soaf_map_var $NAME $FIELD)
-	eval $VAR_NAME=\"\$$VAR_NAME \$VAL\"
+	soaf_map_var $NAME $FIELD
+	eval $SOAF_RET=\"\$$SOAF_RET \$VAL\"
 }
 
-soaf_map_get() {
-	local NAME=$1
-	local FIELD=$2
-	local DFT=$3
-	local VAR_NAME=$(soaf_map_var $NAME $FIELD)
-	eval local VAL=\${$VAR_NAME:-\$DFT}
-	echo "$VAL"
+soaf_map_get_var() {
+	local VAR_DST=$1
+	local NAME=$2
+	local FIELD=$3
+	local DFT=$4
+	soaf_map_var $NAME $FIELD
+	eval $VAR_DST=\${$SOAF_RET:-\$DFT}
 }
 
 ################################################################################
@@ -115,7 +118,8 @@ soaf_cmd() {
 		fi
 		soaf_log $LOG_LEVEL "Command return : [$RET]." $LOG_NAME
 	else
-		local NOEXEC_FN=$(soaf_map_get $CMD_PROG $SOAF_UTIL_NOEXEC_FN_ATTR)
+		local NOEXEC_FN
+		soaf_map_get_var NOEXEC_FN $CMD_PROG $SOAF_UTIL_NOEXEC_FN_ATTR
 		SOAF_RET=
 		if [ -n "$NOEXEC_FN" ]
 		then
@@ -262,12 +266,22 @@ soaf_fn_args_check_pid() {
 	local LOG_NAME=$3
 	local PID_IN_PROG_MSG=$4
 	local PID_IN_PROG_MSG_LVL=${5:-$SOAF_LOG_WARN}
+	local ERR_ON_PID_WITHOUT_PROC=$6
+	local RET="OK"
+	local DO_FN_ARGS=
 	local PID=$(cat $PID_FILE 2> /dev/null)
-	if [ -n "$PID" -a -d /proc/$PID ]
+	if [ -n "$PID" ]
 	then
-		soaf_var_subst_proc "$PID_IN_PROG_MSG" PID
-		soaf_log $PID_IN_PROG_MSG_LVL "$SOAF_VAR_RET" $LOG_NAME
+		if [ -d /proc/$PID ]
+		then
+			soaf_var_subst_proc "$PID_IN_PROG_MSG" PID
+			soaf_log $PID_IN_PROG_MSG_LVL "$SOAF_VAR_RET" $LOG_NAME
+		else
+			[ -n "$ERR_ON_PID_WITHOUT_PROC" ] && RET= || DO_FN_ARGS="OK"
+		fi
 	else
-		soaf_fn_args_set_pid "$FN_ARGS" $PID_FILE $LOG_NAME
+		DO_FN_ARGS="OK"
 	fi
+	[ -n "$DO_FN_ARGS" ] && soaf_fn_args_set_pid "$FN_ARGS" $PID_FILE $LOG_NAME
+	SOAF_RET=$RET
 }

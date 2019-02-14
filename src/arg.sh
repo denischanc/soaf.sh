@@ -8,7 +8,8 @@ soaf_arg_parse() {
 	then
 		local __VAL_TMP=${__ARG_TMP#$__VAR_TMP}
 		__VAL_TMP=${__VAL_TMP#=}
-		eval $(soaf_to_var $__VAR_TMP)=\$__VAL_TMP 2> /dev/null
+		soaf_to_var $__VAR_TMP
+		eval $SOAF_RET=\$__VAL_TMP 2> /dev/null
 	fi
 }
 

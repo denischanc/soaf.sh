@@ -51,25 +51,34 @@ soaf_notif_sms_free() {
 	local MSG=$2
 	local PROG=$3
 	local HOST=$4
-	local ACCOUNT=$(soaf_map_get $NATURE $SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR)
-	local USER=$(soaf_net_account_login ${ACCOUNT:-unknown})
-	local PASS=$(soaf_net_account_passwd ${ACCOUNT:-unknown})
+	local ACCOUNT
+	soaf_map_get_var ACCOUNT $NATURE $SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR
+	soaf_net_account_login ${ACCOUNT:-unknown}
+	local USER=$SOAF_NET_RET
+	soaf_net_account_passwd ${ACCOUNT:-unknown}
+	local PASS=$SOAF_NET_RET
 	if [ -n "$USER" -a -n "$PASS" ]
 	then
 		local CURL_ARGS=
-		local PROXY_NATURE=$(soaf_map_get $NATURE \
-			$SOAF_NOTIF_SMS_FREE_PROXY_NATURE_ATTR)
+		local PROXY_NATURE
+		soaf_map_get_var PROXY_NATURE $NATURE \
+			$SOAF_NOTIF_SMS_FREE_PROXY_NATURE_ATTR
 		if [ -n "$PROXY_NATURE" ]
 		then
-			local PROXY_USER=$(soaf_net_cfg_proxy_login $PROXY_NATURE)
-			local PROXY_PASS=$(soaf_net_cfg_proxy_passwd $PROXY_NATURE)
-			local PROXY_HOST=$(soaf_net_cfg_proxy_host $PROXY_NATURE)
-			local PROXY_PORT=$(soaf_net_cfg_proxy_port $PROXY_NATURE)
+			soaf_net_cfg_proxy_login $PROXY_NATURE
+			local PROXY_USER=$SOAF_NET_RET
+			soaf_net_cfg_proxy_passwd $PROXY_NATURE
+			local PROXY_PASS=$SOAF_NET_RET
+			soaf_net_cfg_proxy_host $PROXY_NATURE
+			local PROXY_HOST=$SOAF_NET_RET
+			soaf_net_cfg_proxy_port $PROXY_NATURE
+			local PROXY_PORT=$SOAF_NET_RET
 			local PROXY="$PROXY_USER:$PROXY_PASS@$PROXY_HOST:$PROXY_PORT"
 			CURL_ARGS="$CURL_ARGS --proxy $PROXY"
 		fi
-		local CACERT_FILE=$(soaf_map_get $NATURE \
-			$SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR)
+		local CACERT_FILE
+		soaf_map_get_var CACERT_FILE $NATURE \
+			$SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR
 		if [ -n "$CACERT_FILE" ]
 		then
 			CURL_ARGS="$CURL_ARGS --cacert $CACERT_FILE"

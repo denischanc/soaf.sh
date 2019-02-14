@@ -82,12 +82,13 @@ soaf_usage_def_var() {
 
 soaf_usage_dis_var() {
 	local VAR=$1
-	local ENUM=$(soaf_map_get $VAR $SOAF_VAR_ENUM_ATTR)
-	local DFT_VAL=$(soaf_map_get $VAR $SOAF_VAR_DFT_VAL_ATTR)
-	local A_E=$(soaf_map_get $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR)
-	local ACTION_LIST=$(soaf_map_get $VAR $SOAF_USAGE_VAR_ACTION_LIST_ATTR)
-	local DIS_BY_ACTION=$(soaf_map_get $VAR $SOAF_USAGE_VAR_DIS_BY_ACTION_ATTR)
-	local FN=$(soaf_map_get $VAR $SOAF_USAGE_VAR_FN_ATTR)
+	local ENUM DFT_VAL A_E ACTION_LIST DIS_BY_ACTION FN
+	soaf_map_get_var ENUM $VAR $SOAF_VAR_ENUM_ATTR
+	soaf_map_get_var DFT_VAL $VAR $SOAF_VAR_DFT_VAL_ATTR
+	soaf_map_get_var A_E $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
+	soaf_map_get_var ACTION_LIST $VAR $SOAF_USAGE_VAR_ACTION_LIST_ATTR
+	soaf_map_get_var DIS_BY_ACTION $VAR $SOAF_USAGE_VAR_DIS_BY_ACTION_ATTR
+	soaf_map_get_var FN $VAR $SOAF_USAGE_VAR_FN_ATTR
 	local TXT="$VAR:"
 	if [ -n "$ENUM" ]
 	then
@@ -140,7 +141,8 @@ _EOF_
 
 soaf_usage_check_var_required() {
 	local VAR=$1
-	local ACTION_LIST=$(soaf_map_get $VAR $SOAF_USAGE_VAR_ACTION_LIST_ATTR)
+	local ACTION_LIST
+	soaf_map_get_var ACTION_LIST $VAR $SOAF_USAGE_VAR_ACTION_LIST_ATTR
 	SOAF_USAGE_RET="OK"
 	if [ -n "$ACTION_LIST" ]
 	then

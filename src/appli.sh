@@ -20,7 +20,7 @@ soaf_define_add_this_init_fn soaf_appli_init
 
 soaf_appli_def_name() {
 	local NATURE=$1
-	SOAF_APPLI_NAME=$(soaf_map_get $NATURE $SOAF_APPLI_NAME_ATTR)
+	soaf_map_get_var SOAF_APPLI_NAME $NATURE $SOAF_APPLI_NAME_ATTR
 }
 
 ################################################################################
@@ -36,8 +36,11 @@ soaf_create_appli_nature() {
 	local PRE_ACTION_FN=$7
 	local POST_ACTION_FN=$8
 	local EXIT_FN=$9
-	[ -z "$VERSION" ] && \
-		eval VERSION=\$\{$(soaf_to_upper_var $NAME)_VERSION:-0.1.0\}
+	if [ -z "$VERSION" ]
+	then
+		soaf_to_upper_var $NAME
+		eval VERSION=\$\{${SOAF_RET}_VERSION:-0.1.0\}
+	fi
 	local MODULE_NAME="soaf.appli.module.$NAME"
 	soaf_create_module $MODULE_NAME $VERSION "$CFG_FN" "$INIT_FN" \
 		"$PREPENV_FN" "$PRE_ACTION_FN" "$POST_ACTION_FN" "$EXIT_FN"

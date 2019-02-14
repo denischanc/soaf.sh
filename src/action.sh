@@ -56,8 +56,9 @@ soaf_action_add_usage_var() {
 
 soaf_action_dis_usage() {
 	local ACTION=$1
-	local FN=$(soaf_map_get $ACTION $SOAF_ACTION_USAGE_FN_ATTR)
-	local VAR_LIST=$(soaf_map_get $ACTION $SOAF_ACTION_USAGE_VAR_LIST_ATTR)
+	local FN VAR_LIST
+	soaf_map_get_var FN $ACTION $SOAF_ACTION_USAGE_FN_ATTR
+	soaf_map_get_var VAR_LIST $ACTION $SOAF_ACTION_USAGE_VAR_LIST_ATTR
 	if [ -n "$FN" -o -n "$VAR_LIST" ]
 	then
 		soaf_dis_title "ACTION=$ACTION"

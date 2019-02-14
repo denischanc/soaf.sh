@@ -39,7 +39,7 @@ soaf_define_add_name_log_level_fn soaf_notif_log_level
 soaf_create_notif_nature() {
 	local NATURE=$1
 	local FN=$2
-	local NB_TRY=${3:-$SOAF_NOTIF_NB_TRY_DFT}
+	local NB_TRY=$3
 	SOAF_NOTIF_NATURE_LIST="$SOAF_NOTIF_NATURE_LIST $NATURE"
 	soaf_map_extend $NATURE $SOAF_NOTIF_FN_ATTR $FN
 	soaf_map_extend $NATURE $SOAF_NOTIF_NB_TRY_ATTR $NB_TRY
@@ -66,8 +66,10 @@ soaf_notif() {
 	local nature
 	for nature in $SOAF_NOTIF_NATURE_LIST
 	do
-		local FN=$(soaf_map_get $nature $SOAF_NOTIF_FN_ATTR)
-		local NB_TRY=$(soaf_map_get $nature $SOAF_NOTIF_NB_TRY_ATTR)
+		local FN NB_TRY
+		soaf_map_get_var FN $nature $SOAF_NOTIF_FN_ATTR
+		soaf_map_get_var NB_TRY $nature $SOAF_NOTIF_NB_TRY_ATTR \
+			$SOAF_NOTIF_NB_TRY_DFT
 		local ID_TRY=1
 		while [ -n "$ID_TRY" -a ${ID_TRY:-1} -le $NB_TRY ]
 		do

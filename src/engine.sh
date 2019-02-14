@@ -110,7 +110,8 @@ soaf_engine_action() {
 	[ -z "$SOAF_RET_LIST" ] && soaf_engine_prepenv
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_ALIVE_S
 	soaf_module_apply_all_fn soaf_module_call_pre_action_fn $SOAF_ACTION
-	local FN=$(soaf_map_get $SOAF_ACTION $SOAF_ACTION_FN_ATTR)
+	local FN
+	soaf_map_get_var FN $SOAF_ACTION $SOAF_ACTION_FN_ATTR
 	[ -n "$FN" ] && $FN $SOAF_ACTION
 	soaf_module_apply_all_fn soaf_module_call_post_action_fn $SOAF_ACTION
 }
@@ -125,7 +126,7 @@ soaf_engine_exit() {
 	if [ "$SOAF_ENGINE_STATE" != "$SOAF_ENGINE_DEAD_S" ]
 	then
 		SOAF_ENGINE_STATE=$SOAF_ENGINE_DEAD_S
-		[ -n "$ERR_MSG" ] &&  soaf_log_err "$ERR_MSG" $LOG_NAME
+		[ -n "$ERR_MSG" ] && soaf_log_err "$ERR_MSG" $LOG_NAME
 		[ $ERR -ne 0 ] && soaf_log_stop
 		soaf_module_apply_all_reverse_fn soaf_module_call_exit_fn $ERR
 		exit $ERR
