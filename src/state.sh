@@ -283,7 +283,7 @@ soaf_state_working_step_inerr() {
 	local MSG="Working error in state [$CUR_STATE] of nature [$NATURE]."
 	soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
 	local IS_NOTIF
-	soaf_map_get_var IS_NOTIF $NATURE $SOAF_STATE_NOTIF_ON_ERR_ATTR
+	soaf_map_get_var IS_NOTIF $CUR_STATE $SOAF_STATE_NOTIF_ON_ERR_ATTR
 	[ -n "$IS_NOTIF" ] && soaf_notif "$MSG"
 	soaf_state_advance_step $PROP_NATURE $SOAF_STATE_STEP_INERR
 }
