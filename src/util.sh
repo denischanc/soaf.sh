@@ -82,14 +82,6 @@ soaf_map_get_var() {
 	eval $VAR_DST=\${$SOAF_RET:-\$DFT}
 }
 
-soaf_map_get_array_var() {
-	local VAR_DST=$1
-	local NAME=$2
-	local FIELD=$3
-	soaf_map_var $NAME $FIELD
-	eval $VAR_DST=\(\${$SOAF_RET[@]}\)
-}
-
 ################################################################################
 ################################################################################
 
