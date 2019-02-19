@@ -35,6 +35,7 @@ test_init() {
 	test_init_dis_txt_off
 	test_init_module
 	test_init_env
+	test_init_varargs
 }
 
 ################################################################################
@@ -203,6 +204,27 @@ test_env() {
 
 test_init_env() {
 	soaf_create_action "env" test_env
+}
+
+################################################################################
+################################################################################
+
+test_varargs_fn() {
+	while [ -n "$1" ]
+	do
+		soaf_dis_txt "[[$1]]"
+		shift
+	done
+}
+
+test_varargs() {
+	local NATURE="test.varargs"
+	soaf_create_varargs_nature $NATURE "cc cc" "dd dd"
+	soaf_varargs_fn_apply $NATURE test_varargs_fn "aa aa" "bb bb" -- "ee ee"
+}
+
+test_init_varargs() {
+	soaf_create_action "varargs" test_varargs
 }
 
 ################################################################################
