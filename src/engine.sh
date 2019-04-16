@@ -68,7 +68,7 @@ soaf_engine_module() {
 soaf_engine_cfg() {
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_CFG_S
 	### MODULEs
-	soaf_module_apply_all_fn soaf_module_call_cfg_fn
+	soaf_module_apply_all_fn_attr $SOAF_MODULE_CFG_FN_ATTR
 	### FILEs
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_CFG_FILE
 	### VARs
@@ -83,7 +83,7 @@ soaf_engine_init() {
 	### FILEs
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_INIT_FILE
 	### MODULEs
-	soaf_module_apply_all_reverse_fn soaf_module_call_init_fn
+	soaf_module_apply_all_reverse_fn_attr $SOAF_MODULE_INIT_FN_ATTR
 	### ENGINE
 	soaf_action_list
 	soaf_usage_def_var ACTION "" "$SOAF_ACTION_RET_LIST" $SOAF_USAGE_ACTION \
@@ -97,7 +97,7 @@ soaf_engine_init() {
 soaf_engine_prepenv() {
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_PREP_S
 	### MODULEs
-	soaf_module_apply_all_fn soaf_module_call_prepenv_fn
+	soaf_module_apply_all_fn_attr $SOAF_MODULE_PREPENV_FN_ATTR
 	### FILEs
 	soaf_engine_source_ext $SOAF_ENGINE_EXT_PREPENV_FILE
 }
@@ -109,11 +109,13 @@ soaf_engine_action() {
 	soaf_list_found "$SOAF_ACTION_NOPREPENV_LIST" $SOAF_ACTION
 	[ -z "$SOAF_RET_LIST" ] && soaf_engine_prepenv
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_ALIVE_S
-	soaf_module_apply_all_fn soaf_module_call_pre_action_fn $SOAF_ACTION
+	local VA_NATURE=soaf.engine.va.action
+	soaf_create_varargs_nature $VA_NATURE $SOAF_ACTION
+	soaf_module_apply_all_fn_attr $SOAF_MODULE_PRE_ACTION_FN_ATTR $VA_NATURE
 	local FN
 	soaf_map_get_var FN $SOAF_ACTION $SOAF_ACTION_FN_ATTR
 	[ -n "$FN" ] && $FN $SOAF_ACTION
-	soaf_module_apply_all_fn soaf_module_call_post_action_fn $SOAF_ACTION
+	soaf_module_apply_all_fn_attr $SOAF_MODULE_POST_ACTION_FN_ATTR $VA_NATURE
 }
 
 ################################################################################
@@ -128,7 +130,10 @@ soaf_engine_exit() {
 		SOAF_ENGINE_STATE=$SOAF_ENGINE_DEAD_S
 		[ -n "$ERR_MSG" ] && soaf_log_err "$ERR_MSG" $LOG_NAME
 		[ $ERR -ne 0 ] && soaf_log_stop
-		soaf_module_apply_all_reverse_fn soaf_module_call_exit_fn $ERR
+		local VA_NATURE=soaf.engine.va._exit
+		soaf_create_varargs_nature $VA_NATURE $ERR
+		soaf_module_apply_all_reverse_fn_attr $SOAF_MODULE_EXIT_FN_ATTR \
+			$VA_NATURE
 		exit $ERR
 	fi
 }

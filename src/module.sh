@@ -101,95 +101,57 @@ soaf_module_version() {
 
 soaf_module_call_fn() {
 	local MODULE_NAME=$1
-	local FN_ATTR=$2
-	local ARG_1=$3
-	local ARG_2=$4
-	local ARG_3=$5
-	local FN
-	soaf_map_get_var FN $MODULE_NAME $FN_ATTR
-	[ -n "$FN" ] && $FN $MODULE_NAME "$ARG_1" "$ARG_2" "$ARG_3"
+	local FN=$2
+	local VA_NATURE=$3
+	if [ -n "$FN" ]
+	then
+		if [ -n "$VA_NATURE" ]
+		then
+			soaf_varargs_fn_apply $VA_NATURE $FN $MODULE_NAME
+		else
+			$FN $MODULE_NAME
+		fi
+	fi
 }
-
-################################################################################
-################################################################################
-
-soaf_module_call_cfg_fn() {
-	local MODULE_NAME=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
-	soaf_module_call_fn $MODULE_NAME $SOAF_MODULE_CFG_FN_ATTR \
-		"$ARG_1" "$ARG_2" "$ARG_3"
-}
-
-soaf_module_call_init_fn() {
-	local MODULE_NAME=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
-	soaf_module_call_fn $MODULE_NAME $SOAF_MODULE_INIT_FN_ATTR \
-		"$ARG_1" "$ARG_2" "$ARG_3"
-}
-
-soaf_module_call_prepenv_fn() {
-	local MODULE_NAME=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
-	soaf_module_call_fn $MODULE_NAME $SOAF_MODULE_PREPENV_FN_ATTR \
-		"$ARG_1" "$ARG_2" "$ARG_3"
-}
-
-soaf_module_call_pre_action_fn() {
-	local MODULE_NAME=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
-	soaf_module_call_fn $MODULE_NAME $SOAF_MODULE_PRE_ACTION_FN_ATTR \
-		"$ARG_1" "$ARG_2" "$ARG_3"
-}
-
-soaf_module_call_post_action_fn() {
-	local MODULE_NAME=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
-	soaf_module_call_fn $MODULE_NAME $SOAF_MODULE_POST_ACTION_FN_ATTR \
-		"$ARG_1" "$ARG_2" "$ARG_3"
-}
-
-soaf_module_call_exit_fn() {
-	local MODULE_NAME=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
-	soaf_module_call_fn $MODULE_NAME $SOAF_MODULE_EXIT_FN_ATTR \
-		"$ARG_1" "$ARG_2" "$ARG_3"
-}
-
-################################################################################
-################################################################################
 
 soaf_module_apply_all_fn() {
 	local FN=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
+	local VA_NATURE=$2
 	local module
 	for module in $SOAF_MODULE_SORT_LIST
 	do
-		$FN $module "$ARG_1" "$ARG_2" "$ARG_3"
+		soaf_module_call_fn $module $FN $VA_NATURE
+	done
+}
+
+soaf_module_apply_all_fn_attr() {
+	local FN_ATTR=$1
+	local VA_NATURE=$2
+	local module FN
+	for module in $SOAF_MODULE_SORT_LIST
+	do
+		soaf_map_get_var FN $module $FN_ATTR
+		[ -n "$FN" ] && soaf_module_call_fn $module $FN $VA_NATURE
 	done
 }
 
 soaf_module_apply_all_reverse_fn() {
 	local FN=$1
-	local ARG_1=$2
-	local ARG_2=$3
-	local ARG_3=$4
+	local VA_NATURE=$2
 	local module
 	for module in $SOAF_MODULE_SORT_R_LIST
 	do
-		$FN $module "$ARG_1" "$ARG_2" "$ARG_3"
+		soaf_module_call_fn $module $FN $VA_NATURE
+	done
+}
+
+soaf_module_apply_all_reverse_fn_attr() {
+	local FN_ATTR=$1
+	local VA_NATURE=$2
+	local module FN
+	for module in $SOAF_MODULE_SORT_R_LIST
+	do
+		soaf_map_get_var FN $module $FN_ATTR
+		[ -n "$FN" ] && soaf_module_call_fn $module $FN $VA_NATURE
 	done
 }
