@@ -95,10 +95,10 @@ soaf_notif_sms_free() {
 		CURL_ARGS="$CURL_ARGS --fail --get $SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT"
 		MSG="[$HOST:$PROG] $MSG"
 		### USER and PASS must not be logged
-		soaf_log_prep_cmd_out_err $SOAF_NOTIF_SMS_FREE_LOG_NAME
-		curl $CURL_ARGS --data user=$USER --data pass=$PASS \
-			--data-urlencode msg="$MSG" $SOAF_NOTIF_SMS_FREE_URL \
-			> /dev/null 2> $SOAF_LOG_CMD_ERR_FILE
+		soaf_log_prep_cmd_err "curl $CURL_ARGS \
+			--data user=$USER --data pass=$PASS --data-urlencode msg=\"$MSG\" \
+			$SOAF_NOTIF_SMS_FREE_URL > /dev/null" $SOAF_NOTIF_SMS_FREE_LOG_NAME
+		eval "$SOAF_LOG_RET"
 		if [ $? -eq 0 ]
 		then
 			SOAF_NOTIF_RET="OK"

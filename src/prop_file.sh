@@ -128,9 +128,9 @@ soaf_prop_file_get_no_cache() {
 		local NB_LINE=$(grep "^$PROP_UNIQ=" $FILE 2> /dev/null | wc -l)
 		if [ $NB_LINE -le 1 ]
 		then
-			soaf_log_prep_cmd_out_err $SOAF_PF_LOG_NAME
-			local VAR_LINE=$(grep "^$PROP_UNIQ=" $FILE \
-				2> $SOAF_LOG_CMD_ERR_FILE)
+			soaf_log_prep_cmd_err "grep \"^$PROP_UNIQ=\" $FILE" \
+				$SOAF_PF_LOG_NAME
+			local VAR_LINE=$(eval "$SOAF_LOG_RET")
 			local RET=$?
 			soaf_log_cmd_err $SOAF_PF_LOG_NAME
 			if [ $RET -ge 2 ]

@@ -8,10 +8,15 @@ SOAF_ACTION_USAGE_VAR_LIST_ATTR="soaf_action_usage_var_list"
 ################################################################################
 ################################################################################
 
+soaf_action_cfg() {
+	SOAF_ACTION_NAME_COLOR=36
+}
+
 soaf_action_init() {
 	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_PRE
 }
 
+soaf_define_add_this_cfg_fn soaf_action_cfg
 soaf_define_add_this_init_fn soaf_action_init
 
 ################################################################################
@@ -61,7 +66,8 @@ soaf_action_dis_usage() {
 	soaf_map_get_var VAR_LIST $ACTION $SOAF_ACTION_USAGE_VAR_LIST_ATTR
 	if [ -n "$FN" -o -n "$VAR_LIST" ]
 	then
-		soaf_dis_title "ACTION=$ACTION"
+		soaf_console_msg_color $ACTION $SOAF_ACTION_NAME_COLOR
+		soaf_dis_title "ACTION=$SOAF_CONSOLE_RET"
 		[ -n "$FN" ] && $FN $ACTION
 		for var in $VAR_LIST
 		do

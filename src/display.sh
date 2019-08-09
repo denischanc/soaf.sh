@@ -20,14 +20,37 @@ soaf_define_add_this_cfg_fn soaf_dis_cfg
 ################################################################################
 ################################################################################
 
+soaf_dis_use_usermsgproc() {
+	SOAF_DIS_USERMSGPROC_USED="OK"
+}
+
+soaf_define_add_use_usermsgproc_fn soaf_dis_use_usermsgproc
+
+################################################################################
+################################################################################
+
+soaf_dis_route_() {
+	local MSG=$1
+	if [ -n "$SOAF_DIS_USERMSGPROC_USED" ]
+	then
+		soaf_usermsgproc__ $SOAF_USERMSGPROC_TXT_ORG "$MSG"
+	else
+		soaf_console_info "$MSG"
+	fi
+}
+
+################################################################################
+################################################################################
+
 soaf_dis_title() {
 	local MSG=$1
-	echo "$SOAF_TITLE_PRE$MSG"
+	soaf_console_msg_color "$MSG" 35
+	soaf_dis_route_ "$SOAF_TITLE_PRE$SOAF_CONSOLE_RET"
 }
 
 soaf_dis_txt() {
 	local MSG=$1
-	echo "$SOAF_TXT_PRE$MSG"
+	soaf_dis_route_ "$SOAF_TXT_PRE$MSG"
 }
 
 soaf_dis_txt_off() {
@@ -46,7 +69,7 @@ soaf_dis_txt_off() {
 		done
 		eval $VAR=\$TXT_PRE
 	fi
-	echo "$TXT_PRE$MSG"
+	soaf_dis_route_ "$TXT_PRE$MSG"
 }
 
 ################################################################################
@@ -54,7 +77,7 @@ soaf_dis_txt_off() {
 
 soaf_dis_txt_stdin() {
 	local line
-	while read line
+	soaf_console_filter_stdin | while read line
 	do
 		soaf_dis_txt "$line"
 	done
@@ -63,7 +86,7 @@ soaf_dis_txt_stdin() {
 soaf_dis_txt_off_stdin() {
 	local OFF=$1
 	local line
-	while read line
+	soaf_console_filter_stdin | while read line
 	do
 		soaf_dis_txt_off "$line" $OFF
 	done
@@ -85,6 +108,7 @@ soaf_dis_var_list() {
 ################################################################################
 ################################################################################
 
+### TODO : move away
 soaf_dis_echo_list() {
 	local LIST=$1
 	echo $LIST | tr ' ' '|'

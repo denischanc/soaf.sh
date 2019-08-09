@@ -12,11 +12,16 @@ SOAF_USAGE_VAR_DIS_BY_ACTION_ATTR="soaf_usage_var_dis_by_action"
 ################################################################################
 ################################################################################
 
+soaf_usage_cfg() {
+	SOAF_USAGE_DEF_NAME_COLOR=33
+}
+
 soaf_usage_init() {
 	soaf_create_action $SOAF_USAGE_ACTION soaf_usage "" $SOAF_POS_PRE
 	soaf_no_prepenv_action $SOAF_USAGE_ACTION
 }
 
+soaf_define_add_this_cfg_fn soaf_usage_cfg
 soaf_define_add_this_init_fn soaf_usage_init
 
 ################################################################################
@@ -80,6 +85,7 @@ soaf_usage_def_var() {
 ################################################################################
 ################################################################################
 
+### TODO : move into var.sh
 soaf_usage_dis_var() {
 	local VAR=$1
 	local ENUM DFT_VAL A_E ACTION_LIST DIS_BY_ACTION FN
@@ -89,7 +95,8 @@ soaf_usage_dis_var() {
 	soaf_map_get_var ACTION_LIST $VAR $SOAF_USAGE_VAR_ACTION_LIST_ATTR
 	soaf_map_get_var DIS_BY_ACTION $VAR $SOAF_USAGE_VAR_DIS_BY_ACTION_ATTR
 	soaf_map_get_var FN $VAR $SOAF_USAGE_VAR_FN_ATTR
-	local TXT="$VAR:"
+	soaf_console_msg_color $VAR $SOAF_USAGE_DEF_NAME_COLOR
+	local TXT="$SOAF_CONSOLE_RET:"
 	if [ -n "$ENUM" ]
 	then
 		local ENUM_DIS=$(soaf_dis_echo_list "$ENUM")
@@ -116,9 +123,13 @@ soaf_usage() {
 	soaf_dis_title "USAGE"
 	soaf_pmp_list_cat SOAF_USAGE_VAR
 	local VAR_LIST=$(soaf_dis_echo_list "$SOAF_RET_LIST")
+	soaf_console_msg_color "usage" $SOAF_USAGE_DEF_NAME_COLOR
+	local USAGE_DIS=$SOAF_CONSOLE_RET
+	soaf_console_msg_color "variable" $SOAF_USAGE_DEF_NAME_COLOR
+	local VARIABLE_DIS=$SOAF_CONSOLE_RET
 	soaf_dis_txt_stdin << _EOF_
-usage: $0 ([variable]=[value])*
-variable: [$VAR_LIST]
+$USAGE_DIS: $0 ([variable]=[value])*
+$VARIABLE_DIS: [$VAR_LIST]
 _EOF_
 	### Variables
 	local var

@@ -1,4 +1,19 @@
 
+-- log
+     -- level as 1, 2, 3, 4, ... io "DEBUG", "INFO", ...
+     -- soaf_log_stderr_ : ERROR -> >&2, ... -> >&1; rename ? console ?
+     -- fix bug on directory creation when usermsgproc; no preparation when
+        no execute fn
+     -- create following loggers : to_file, to_file_n_console, to_console
+-- usermsgproc
+     -- define following modes : NORMAL, CONSOLE, QUIET
+
+        | MODE          | TXT             | LOG
+
+        | NORMAL        | OK              | OK
+        | QUIET         | > /dev/null     | OK
+        | NORMAL        | OK              | log_to_console
+
 -- mng ssl certs (root to server) for free sms notif
 
 -- generate documentation (public/private)

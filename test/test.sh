@@ -21,6 +21,8 @@ make -C $TEST_HOME/.. > /dev/null 2>&1
 
 test_cfg() {
 	SOAF_WORK_DIR=$TEST_HOME
+	[ "$ACTION" = "err_on_log_prep" ] && \
+		SOAF_LOG_DIR=$SOAF_APPLI_SH_DIR/../TODO
 }
 
 test_init() {
@@ -36,6 +38,7 @@ test_init() {
 	test_init_module
 	test_init_env
 	test_init_varargs
+	soaf_create_action "err_on_log_prep" not_a_function
 }
 
 ################################################################################
@@ -61,6 +64,10 @@ test_display() {
 	soaf_dis_txt "[$NAME] = [$VAL] (NAME = VAL)"
 	soaf_dis_txt "[$TEST_NAME] = [$TEST_VAL] (TEST_NAME = TEST_VAL)"
 	soaf_dis_var_list "ERR_TYPE TEST_ERR_TYPE"
+	soaf_create_usermsgproc_debug
+	soaf_usermsgproc__ $SOAF_USERMSGPROC_LOG_ORG "log color test;"
+	soaf_usermsgproc__ $SOAF_USERMSGPROC_TXT_ORG "text color test;"
+	soaf_usermsgproc__ OTHER "other color test;"
 }
 
 test_display_usage() {

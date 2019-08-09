@@ -108,8 +108,8 @@ soaf_cmd() {
 			eval "$CMD"
 			RET=$?
 		else
-			soaf_log_prep_cmd_out_err $LOG_NAME
-			eval "$CMD > $SOAF_LOG_CMD_OUT_FILE 2> $SOAF_LOG_CMD_ERR_FILE"
+			soaf_log_prep_cmd_out_err "$CMD" $LOG_NAME
+			eval "$SOAF_LOG_RET"
 			RET=$?
 			local LOG_LEVEL_ERR=
 			[ $RET -eq 0 ] && LOG_LEVEL_ERR=$LOG_LEVEL
