@@ -99,7 +99,8 @@ soaf_usage_dis_var() {
 	local TXT="$SOAF_CONSOLE_RET:"
 	if [ -n "$ENUM" ]
 	then
-		local ENUM_DIS=$(soaf_dis_echo_list "$ENUM")
+		soaf_list_join "$ENUM"
+		local ENUM_DIS=$SOAF_RET_LIST
 		[ -n "$A_E" ] && ENUM_DIS="$ENUM_DIS|"
 		TXT="$TXT [$ENUM_DIS]"
 	else
@@ -113,8 +114,8 @@ soaf_usage_dis_var() {
 	soaf_dis_txt "$TXT"
 	if [ -n "$ACTION_LIST" -a -z "$DIS_BY_ACTION" ]
 	then
-		TXT=$(soaf_dis_echo_list "$ACTION_LIST")
-		TXT="ACTION=[$TXT]"
+		soaf_list_join "$ACTION_LIST"
+		TXT="ACTION=[$SOAF_RET_LIST]"
 		soaf_dis_txt_off "$TXT" 2
 	fi
 	[ -n "$FN" ] && $FN $VAR
@@ -126,7 +127,8 @@ soaf_usage_dis_var() {
 soaf_usage() {
 	soaf_dis_title "USAGE"
 	soaf_pmp_list_cat SOAF_USAGE_VAR
-	local VAR_LIST=$(soaf_dis_echo_list "$SOAF_RET_LIST")
+	soaf_list_join "$SOAF_RET_LIST"
+	local VAR_LIST=$SOAF_RET_LIST
 	soaf_console_msg_ctl "usage" $SOAF_USAGE_DEF_NAME_COLOR
 	local USAGE_DIS=$SOAF_CONSOLE_RET
 	soaf_console_msg_ctl "variable" $SOAF_USAGE_DEF_NAME_COLOR

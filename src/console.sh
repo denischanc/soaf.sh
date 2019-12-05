@@ -57,13 +57,9 @@ soaf_console_msg_ctl() {
 	then
 		SOAF_CONSOLE_RET=$MSG
 	else
-		local CTL_CAT= ctl
-		for ctl in $CTL_LIST
-		do
-			[ -z "$CTL_CAT" ] && CTL_CAT=$ctl || CTL_CAT="$CTL_CAT;$ctl"
-		done
 		local ESC=$SOAF_CONSOLE_ESC
-		SOAF_CONSOLE_RET="$ESC[${CTL_CAT}m$MSG$ESC[0m"
+		soaf_list_join "$CTL_LIST" ";"
+		SOAF_CONSOLE_RET="$ESC[${SOAF_RET_LIST}m$MSG$ESC[0m"
 	fi
 }
 

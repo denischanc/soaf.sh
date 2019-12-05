@@ -41,8 +41,8 @@ soaf_var_err_msg_notinenum() {
 	local VAR=$1
 	local VAL=$2
 	local ENUM=$3
-	local ENUM_DIS=$(soaf_dis_echo_list "$ENUM")
-	SOAF_VAR_ERR_MSG="Value ($VAL) of variable [$VAR] not in enum [$ENUM_DIS]."
+	soaf_list_join "$ENUM"
+	SOAF_VAR_ERR_MSG="Val ($VAL) of var [$VAR] not in enum [$SOAF_RET_LIST]."
 }
 
 ################################################################################
