@@ -44,7 +44,8 @@ soaf_dis_route_() {
 
 soaf_dis_title() {
 	local MSG=$1
-	soaf_console_msg_color "$MSG" 35
+	soaf_console_msg_ctl "$MSG" \
+		"$SOAF_CONSOLE_FG_B_BLUE $SOAF_CONSOLE_CTL_UNDERLINE"
 	soaf_dis_route_ "$SOAF_TITLE_PRE$SOAF_CONSOLE_RET"
 }
 

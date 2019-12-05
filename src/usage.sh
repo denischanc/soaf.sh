@@ -13,7 +13,7 @@ SOAF_USAGE_VAR_DIS_BY_ACTION_ATTR="soaf_usage_var_dis_by_action"
 ################################################################################
 
 soaf_usage_cfg() {
-	SOAF_USAGE_DEF_NAME_COLOR=33
+	SOAF_USAGE_DEF_NAME_COLOR=$SOAF_CONSOLE_FG_B_MAGENTA
 }
 
 soaf_usage_init() {
@@ -95,7 +95,7 @@ soaf_usage_dis_var() {
 	soaf_map_get_var ACTION_LIST $VAR $SOAF_USAGE_VAR_ACTION_LIST_ATTR
 	soaf_map_get_var DIS_BY_ACTION $VAR $SOAF_USAGE_VAR_DIS_BY_ACTION_ATTR
 	soaf_map_get_var FN $VAR $SOAF_USAGE_VAR_FN_ATTR
-	soaf_console_msg_color $VAR $SOAF_USAGE_DEF_NAME_COLOR
+	soaf_console_msg_ctl $VAR $SOAF_USAGE_DEF_NAME_COLOR
 	local TXT="$SOAF_CONSOLE_RET:"
 	if [ -n "$ENUM" ]
 	then
@@ -105,7 +105,11 @@ soaf_usage_dis_var() {
 	else
 		TXT="$TXT '...'"
 	fi
-	[ -n "$DFT_VAL" ] && TXT="$TXT (default: '$DFT_VAL')"
+	if [ -n "$DFT_VAL" ]
+	then
+		soaf_console_msg_ctl "$DFT_VAL" $SOAF_CONSOLE_CTL_BOLD
+		TXT="$TXT (default: '$SOAF_CONSOLE_RET')"
+	fi
 	soaf_dis_txt "$TXT"
 	if [ -n "$ACTION_LIST" -a -z "$DIS_BY_ACTION" ]
 	then
@@ -123,9 +127,9 @@ soaf_usage() {
 	soaf_dis_title "USAGE"
 	soaf_pmp_list_cat SOAF_USAGE_VAR
 	local VAR_LIST=$(soaf_dis_echo_list "$SOAF_RET_LIST")
-	soaf_console_msg_color "usage" $SOAF_USAGE_DEF_NAME_COLOR
+	soaf_console_msg_ctl "usage" $SOAF_USAGE_DEF_NAME_COLOR
 	local USAGE_DIS=$SOAF_CONSOLE_RET
-	soaf_console_msg_color "variable" $SOAF_USAGE_DEF_NAME_COLOR
+	soaf_console_msg_ctl "variable" $SOAF_USAGE_DEF_NAME_COLOR
 	local VARIABLE_DIS=$SOAF_CONSOLE_RET
 	soaf_dis_txt_stdin << _EOF_
 $USAGE_DIS: $0 ([variable]=[value])*

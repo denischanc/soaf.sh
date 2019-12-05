@@ -33,7 +33,7 @@ SOAF_LOG_COLOR_MAP="soaf.log.color"
 
 soaf_log_cfg() {
 	SOAF_LOG_LEVEL=$SOAF_LOG_INFO
-	SOAF_LOG_LEVEL_STDERR=$SOAF_LOG_ERR
+	SOAF_LOG_LEVEL_CONSOLE=$SOAF_LOG_ERR
 	###---------------
 	SOAF_LOG_ROLL_NATURE=$SOAF_LOG_ROLL_DFT_NATURE
 	###---------------
@@ -44,22 +44,22 @@ soaf_log_cfg() {
 	SOAF_LOG_CMD_ERR_FILE=@[SOAF_LOG_CMD_OUT_ERR_DIR]/$SOAF_APPLI_NAME.cmd.err
 	soaf_var_add_unsubst "SOAF_LOG_DIR SOAF_LOG_FILE SOAF_LOG_CMD_OUT_ERR_DIR \
 		SOAF_LOG_CMD_OUT_FILE SOAF_LOG_CMD_ERR_FILE"
+	###---------------
+	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_DEV_ERR $SOAF_CONSOLE_FG_RED
+	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_ERR $SOAF_CONSOLE_FG_RED
+	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_WARN $SOAF_CONSOLE_FG_YELLOW
+	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_INFO $SOAF_CONSOLE_FG_MAGENTA
+	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_DEBUG $SOAF_CONSOLE_FG_CYAN
 }
 
 soaf_log_init() {
-	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_LEVEL_STDERR"
+	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_LEVEL_CONSOLE"
 	soaf_info_add_var "SOAF_LOG_DIR SOAF_LOG_FILE SOAF_LOG_USED_NATURE"
 	soaf_info_add_var SOAF_LOG_CMD_OUT_ERR_DIR
 	###---------------
 	[ -z "$SOAF_LOG_USED_NATURE" ] && soaf_create_log_dft_
 	[ "$SOAF_LOG_ROLL_NATURE" = "$SOAF_LOG_ROLL_DFT_NATURE" ] && \
 		soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_DFT_NATURE
-	###---------------
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_DEV_ERR 31
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_ERR 31
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_WARN 33
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_INFO 35
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_DEBUG 36
 }
 
 soaf_log_prepenv() {
@@ -141,7 +141,7 @@ soaf_log_level() {
 		[ -n "$NAME" ] && soaf_map_get_var SOAF_LOG_RET \
 			$NAME $SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET
 	else
-		SOAF_LOG_RET=$SOAF_LOG_LEVEL_STDERR
+		SOAF_LOG_RET=${SOAF_LOG_LEVEL_CONSOLE:-$SOAF_LOG_ERR}
 	fi
 }
 
@@ -163,14 +163,22 @@ soaf_log_build_msg_() {
 	local LEVEL=$1
 	local MSG=$2
 	local NAME=$3
-	[ -n "$NAME" ] && MSG="{$NAME} $MSG"
+	if [ -n "$NAME" ]
+	then
+		if [ -n "$SOAF_LOG_COLOR" ]
+		then
+			soaf_console_msg_ctl $NAME $SOAF_CONSOLE_CTL_BOLD
+			NAME=$SOAF_CONSOLE_RET
+		fi
+		MSG="{$NAME} $MSG"
+	fi
 	soaf_log_label_level_ $LEVEL
 	local LEVEL_LABEL=$SOAF_LOG_RET
 	if [ -n "$SOAF_LOG_COLOR" ]
 	then
 		local COLOR
 		soaf_map_get_var COLOR $SOAF_LOG_COLOR_MAP $LEVEL
-		soaf_console_msg_color $LEVEL_LABEL ${COLOR:-31}
+		soaf_console_msg_ctl $LEVEL_LABEL ${COLOR:-$SOAF_CONSOLE_FG_RED}
 		LEVEL_LABEL=$SOAF_CONSOLE_RET
 	fi
 	local DATE_TIME=$(date +%x_%X)
@@ -230,9 +238,8 @@ soaf_log_usermsgproc_() {
 ################################################################################
 
 soaf_log_filter_() {
-	local NATURE=$1
-	local LEVEL=$2
-	local NAME=$3
+	local LEVEL=$1
+	local NAME=$2
 	soaf_log_level $NAME
 	local CUR_LEVEL=$SOAF_LOG_RET
 	SOAF_LOG_RET=
@@ -262,7 +269,7 @@ soaf_log() {
 	local LEVEL=${1:-$SOAF_LOG_INFO}
 	local MSG=$2
 	local NAME=$3
-	soaf_log_filter_ $SOAF_LOG_USED_NATURE $LEVEL $NAME
+	soaf_log_filter_ $LEVEL $NAME
 	if [ -n "$SOAF_LOG_RET" ]
 	then
 		if [ "$SOAF_LOG_STATE" != "$SOAF_LOG_DEAD_S" ]

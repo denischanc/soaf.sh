@@ -36,15 +36,12 @@ soaf_usermsgproc_debug() {
 	local ORG=$1
 	local MSG=$2
 	case $ORG in
-	$SOAF_USERMSGPROC_TXT_ORG) local COLOR_ORG=32; local COLOR_MSG=42;;
-	$SOAF_USERMSGPROC_LOG_ORG) local COLOR_ORG=34; local COLOR_MSG=44;;
-	*) local COLOR_ORG=36; local COLOR_MSG=46;;
+		$SOAF_USERMSGPROC_TXT_ORG) local COLOR_ORG=$SOAF_CONSOLE_FG_GREEN;;
+		$SOAF_USERMSGPROC_LOG_ORG) local COLOR_ORG=$SOAF_CONSOLE_FG_CYAN;;
+		*) local COLOR_ORG=$SOAF_CONSOLE_FG_MAGENTA;;
 	esac
-	soaf_console_msg_color $ORG $COLOR_ORG
-	local END_MSG="[$SOAF_CONSOLE_RET]"
-	soaf_console_msg_color "$MSG" $COLOR_MSG
-	END_MSG="$END_MSG$SOAF_CONSOLE_RET"
-	soaf_console_info "$END_MSG"
+	soaf_console_msg_ctl $ORG "$COLOR_ORG $SOAF_CONSOLE_CTL_BOLD"
+	soaf_console_info "[[$SOAF_CONSOLE_RET]] $MSG"
 }
 
 soaf_create_usermsgproc_debug() {
