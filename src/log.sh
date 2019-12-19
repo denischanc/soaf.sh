@@ -320,10 +320,9 @@ soaf_log_dev_err() {
 soaf_log_stdin() {
 	local LEVEL=${1:-$SOAF_LOG_ERR}
 	local NAME=$2
-	local line
-	while read line
+	while read
 	do
-		soaf_log $LEVEL "$line" $NAME
+		soaf_log $LEVEL "$REPLY" $NAME
 	done
 }
 
