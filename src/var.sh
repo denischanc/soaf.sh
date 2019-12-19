@@ -25,7 +25,7 @@ soaf_create_var() {
 		soaf_list_found "$ENUM" $DFT_VAL
 		if [ -z "$SOAF_RET_LIST" ]
 		then
-			soaf_var_err_msg_notinenum $VAR "$DFT_VAL" "$ENUM"
+			soaf_var_err_msg_notinenum_ $VAR "$DFT_VAL" "$ENUM"
 			soaf_engine_exit_dev "$SOAF_VAR_ERR_MSG"
 		fi
 	fi
@@ -37,7 +37,7 @@ soaf_create_var() {
 ################################################################################
 ################################################################################
 
-soaf_var_err_msg_notinenum() {
+soaf_var_err_msg_notinenum_() {
 	local VAR=$1
 	local VAL=$2
 	local ENUM=$3
@@ -54,9 +54,6 @@ soaf_var_real_name() {
 	soaf_map_get_var PREFIX $VAR $SOAF_VAR_PREFIX_ATTR
 	[ -n "$PREFIX" ] && SOAF_VAR_RET=${PREFIX}_$VAR || SOAF_VAR_RET=$VAR
 }
-
-################################################################################
-################################################################################
 
 soaf_var_prefix_name() {
 	local VAR=$1
@@ -102,7 +99,7 @@ soaf_var_check() {
 				if [ -z "$SOAF_RET_LIST" ]
 				then
 					RET=
-					soaf_var_err_msg_notinenum $VAR $VAL "$ENUM"
+					soaf_var_err_msg_notinenum_ $VAR $VAL "$ENUM"
 					ERR_MSG=$SOAF_VAR_ERR_MSG
 				fi
 			fi
@@ -130,6 +127,7 @@ soaf_var_subst_proc() {
 
 soaf_var_subst() {
 	local VAR=$1
+	SOAF_VAR_OKSUBST_LIST="$SOAF_VAR_OKSUBST_LIST $VAR"
 	eval local VAL=\$$VAR
 	local SUBST_OK=
 	local __var
@@ -143,7 +141,6 @@ soaf_var_subst() {
 		SUBST_OK="OK"
 	done
 	[ -n "$SUBST_OK" ] && eval $VAR=\$VAL
-	SOAF_VAR_OKSUBST_LIST="$SOAF_VAR_OKSUBST_LIST $VAR"
 }
 
 soaf_var_subst_all() {
