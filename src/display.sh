@@ -15,7 +15,7 @@ soaf_dis_cfg() {
 		SOAF_DISPLAY_TXT_PRE_3"
 }
 
-soaf_define_add_this_cfg_fn soaf_dis_cfg
+soaf_create_module soaf.core.display $SOAF_VERSION soaf_dis_cfg
 
 ################################################################################
 ################################################################################

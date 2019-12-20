@@ -20,8 +20,7 @@ soaf_notif_init() {
 	soaf_info_add_var "SOAF_NOTIF_DIR SOAF_NOTIF_NATURE_LIST"
 }
 
-soaf_define_add_this_cfg_fn soaf_notif_cfg
-soaf_define_add_this_init_fn soaf_notif_init
+soaf_create_module soaf.core.notif $SOAF_VERSION soaf_notif_cfg soaf_notif_init
 
 ################################################################################
 ################################################################################

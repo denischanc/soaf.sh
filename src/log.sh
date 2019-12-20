@@ -72,9 +72,8 @@ soaf_log_prepenv() {
 	SOAF_LOG_STATE=$SOAF_LOG_ALIVE_S
 }
 
-soaf_define_add_this_cfg_fn soaf_log_cfg
-soaf_define_add_this_init_fn soaf_log_init
-soaf_define_add_this_prepenv_fn soaf_log_prepenv $SOAF_POS_PRE
+soaf_create_module soaf.core.log $SOAF_VERSION soaf_log_cfg soaf_log_init \
+	soaf_log_prepenv "" "" "" "" $SOAF_POS_PRE
 
 ################################################################################
 ################################################################################

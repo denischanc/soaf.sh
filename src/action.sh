@@ -16,8 +16,8 @@ soaf_action_init() {
 	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_PRE
 }
 
-soaf_define_add_this_cfg_fn soaf_action_cfg
-soaf_define_add_this_init_fn soaf_action_init
+soaf_create_module soaf.core.action $SOAF_VERSION \
+	soaf_action_cfg soaf_action_init
 
 ################################################################################
 ################################################################################

@@ -38,7 +38,7 @@ soaf_state_init() {
 	fi
 }
 
-soaf_define_add_this_init_fn soaf_state_init
+soaf_create_module soaf.extra.state $SOAF_VERSION "" soaf_state_init
 
 ################################################################################
 ################################################################################

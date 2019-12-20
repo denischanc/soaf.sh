@@ -11,7 +11,7 @@ soaf_info_init() {
 	soaf_no_prepenv_action $SOAF_INFO_ACTION
 }
 
-soaf_define_add_this_init_fn soaf_info_init
+soaf_create_module soaf.core.info $SOAF_VERSION "" soaf_info_init
 
 ################################################################################
 ################################################################################

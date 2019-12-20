@@ -21,8 +21,7 @@ soaf_pf_init() {
 	soaf_info_add_var SOAF_PF_FILE
 }
 
-soaf_define_add_this_cfg_fn soaf_pf_cfg
-soaf_define_add_this_init_fn soaf_pf_init
+soaf_create_module soaf.extra.pf $SOAF_VERSION soaf_pf_cfg soaf_pf_init
 
 ################################################################################
 ################################################################################

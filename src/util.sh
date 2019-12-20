@@ -12,16 +12,10 @@ soaf_util_init() {
 	soaf_info_add_var SOAF_NOEXEC_PROG_LIST
 }
 
-soaf_define_add_this_init_fn soaf_util_init
+soaf_create_module soaf.core.util $SOAF_VERSION "" soaf_util_init
 
 ################################################################################
 ################################################################################
-
-soaf_to_var() {
-	local NAME=${1//./_}
-	NAME=${NAME//-/_}
-	SOAF_RET=${NAME//\//_}
-}
 
 soaf_upper() {
 	local NAME=$1
@@ -46,40 +40,6 @@ soaf_cfg_set() {
 	local VAR=$1
 	local VAL=$2
 	eval $VAR=\${$VAR:-\$VAL}
-}
-
-################################################################################
-################################################################################
-
-soaf_map_var() {
-	local NAME=$1
-	local FIELD=$2
-	soaf_to_var __${NAME}__$FIELD
-}
-
-soaf_map_extend() {
-	local NAME=$1
-	local FIELD=$2
-	local VAL=$3
-	soaf_map_var $NAME $FIELD
-	eval $SOAF_RET=\$VAL
-}
-
-soaf_map_cat() {
-	local NAME=$1
-	local FIELD=$2
-	local VAL=$3
-	soaf_map_var $NAME $FIELD
-	eval $SOAF_RET=\"\$$SOAF_RET \$VAL\"
-}
-
-soaf_map_get_var() {
-	local VAR_DST=$1
-	local NAME=$2
-	local FIELD=$3
-	local DFT=$4
-	soaf_map_var $NAME $FIELD
-	eval $VAR_DST=\${$SOAF_RET:-\$DFT}
 }
 
 ################################################################################

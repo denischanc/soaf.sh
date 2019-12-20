@@ -31,8 +31,7 @@ soaf_roll_init() {
 	soaf_info_add_var "SOAF_ROLL_COMPRESS_CMD"
 }
 
-soaf_define_add_this_cfg_fn soaf_roll_cfg
-soaf_define_add_this_init_fn soaf_roll_init
+soaf_create_module soaf.core.roll $SOAF_VERSION soaf_roll_cfg soaf_roll_init
 
 ################################################################################
 ################################################################################

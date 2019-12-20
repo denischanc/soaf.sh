@@ -15,7 +15,8 @@ soaf_notif_sms_free_cfg() {
 	SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT="--ipv4"
 }
 
-soaf_define_add_this_cfg_fn soaf_notif_sms_free_cfg
+soaf_create_module soaf.extra.notif_sms_free $SOAF_VERSION \
+	soaf_notif_sms_free_cfg
 
 ################################################################################
 ################################################################################

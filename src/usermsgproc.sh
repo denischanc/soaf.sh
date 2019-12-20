@@ -17,7 +17,7 @@ soaf_usermsgproc_init() {
 	fi
 }
 
-soaf_define_add_this_init_fn soaf_usermsgproc_init
+soaf_create_module soaf.core.usermsgproc $SOAF_VERSION "" soaf_usermsgproc_init
 
 ################################################################################
 ################################################################################

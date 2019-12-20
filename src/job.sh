@@ -25,7 +25,7 @@ soaf_job_init() {
 	fi
 }
 
-soaf_define_add_this_init_fn soaf_job_init
+soaf_create_module soaf.extra.job $SOAF_VERSION "" soaf_job_init
 
 ################################################################################
 ################################################################################

@@ -28,7 +28,8 @@ soaf_create_module() {
 	local POST_ACTION_FN=$7
 	local EXIT_FN=$8
 	local DEP_LIST=$9
-	SOAF_MODULE_LIST="$SOAF_MODULE_LIST $NAME"
+	local POS=${10}
+	soaf_pmp_list_fill "$POS" SOAF_MODULE_LIST $NAME
 	soaf_map_extend $NAME $SOAF_MODULE_VERSION_ATTR $VERSION
 	soaf_map_extend $NAME $SOAF_MODULE_CFG_FN_ATTR $CFG_FN
 	soaf_map_extend $NAME $SOAF_MODULE_INIT_FN_ATTR $INIT_FN
@@ -44,11 +45,11 @@ soaf_create_module() {
 ################################################################################
 ################################################################################
 
-soaf_module_resolve_dep_module() {
+soaf_module_resolve_dep_module_() {
 	local MODULE=$1
 	local DEP_LIST_MSG=$2
 	local ERR_MSG=
-	soaf_list_found "$SOAF_MODULE_LIST" $MODULE
+	soaf_list_found "$SOAF_MODULE_LIST_" $MODULE
 	if [ -z "$SOAF_RET_LIST" ]
 	then
 		local ERR_MSG="Module not found : [$MODULE]."
@@ -67,7 +68,7 @@ soaf_module_resolve_dep_module() {
 			soaf_map_get_var DEP_LIST $MODULE $SOAF_MODULE_DEP_LIST_ATTR
 			for dep_module in $DEP_LIST
 			do
-				soaf_module_resolve_dep_module $dep_module "$DEP_LIST_MSG"
+				soaf_module_resolve_dep_module_ $dep_module "$DEP_LIST_MSG"
 			done
 			SOAF_MODULE_SORT_LIST="$SOAF_MODULE_SORT_LIST $MODULE"
 			SOAF_MODULE_SORT_R_LIST="$MODULE $SOAF_MODULE_SORT_R_LIST"
@@ -79,10 +80,12 @@ soaf_module_resolve_dep_module() {
 }
 
 soaf_module_resolve_dep() {
+	soaf_pmp_list_cat SOAF_MODULE_LIST
+	SOAF_MODULE_LIST_=$SOAF_RET_LIST
 	local module
-	for module in $SOAF_MODULE_LIST
+	for module in $SOAF_MODULE_LIST_
 	do
-		soaf_module_resolve_dep_module $module
+		soaf_module_resolve_dep_module_ $module
 	done
 }
 
@@ -99,7 +102,7 @@ soaf_module_version() {
 ################################################################################
 ################################################################################
 
-soaf_module_call_fn() {
+soaf_module_call_fn_() {
 	local MODULE_NAME=$1
 	local FN=$2
 	local VA_NATURE=$3
@@ -114,44 +117,55 @@ soaf_module_call_fn() {
 	fi
 }
 
+################################################################################
+################################################################################
+
+soaf_module_apply_fn_() {
+	local MODULE_LIST=$1
+	local FN=$2
+	local VA_NATURE=$3
+	local module
+	for module in $MODULE_LIST
+	do
+		soaf_module_call_fn_ $module $FN $VA_NATURE
+	done
+}
+
 soaf_module_apply_all_fn() {
 	local FN=$1
 	local VA_NATURE=$2
-	local module
-	for module in $SOAF_MODULE_SORT_LIST
+	soaf_module_apply_fn_ "$SOAF_MODULE_SORT_LIST" $FN $VA_NATURE
+}
+
+soaf_module_apply_all_reverse_fn() {
+	local FN=$1
+	local VA_NATURE=$2
+	soaf_module_apply_fn_ "$SOAF_MODULE_SORT_R_LIST" $FN $VA_NATURE
+}
+
+################################################################################
+################################################################################
+
+soaf_module_apply_fn_attr_() {
+	local MODULE_LIST=$1
+	local FN_ATTR=$2
+	local VA_NATURE=$3
+	local module FN
+	for module in $MODULE_LIST
 	do
-		soaf_module_call_fn $module $FN $VA_NATURE
+		soaf_map_get_var FN $module $FN_ATTR
+		[ -n "$FN" ] && soaf_module_call_fn_ $module $FN $VA_NATURE
 	done
 }
 
 soaf_module_apply_all_fn_attr() {
 	local FN_ATTR=$1
 	local VA_NATURE=$2
-	local module FN
-	for module in $SOAF_MODULE_SORT_LIST
-	do
-		soaf_map_get_var FN $module $FN_ATTR
-		[ -n "$FN" ] && soaf_module_call_fn $module $FN $VA_NATURE
-	done
-}
-
-soaf_module_apply_all_reverse_fn() {
-	local FN=$1
-	local VA_NATURE=$2
-	local module
-	for module in $SOAF_MODULE_SORT_R_LIST
-	do
-		soaf_module_call_fn $module $FN $VA_NATURE
-	done
+	soaf_module_apply_fn_attr_ "$SOAF_MODULE_SORT_LIST" $FN_ATTR $VA_NATURE
 }
 
 soaf_module_apply_all_reverse_fn_attr() {
 	local FN_ATTR=$1
 	local VA_NATURE=$2
-	local module FN
-	for module in $SOAF_MODULE_SORT_R_LIST
-	do
-		soaf_map_get_var FN $module $FN_ATTR
-		[ -n "$FN" ] && soaf_module_call_fn $module $FN $VA_NATURE
-	done
+	soaf_module_apply_fn_attr_ "$SOAF_MODULE_SORT_R_LIST" $FN_ATTR $VA_NATURE
 }

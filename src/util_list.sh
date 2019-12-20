@@ -8,31 +8,31 @@ SOAF_POS_POST="post"
 ################################################################################
 ################################################################################
 
-soaf_pmp_list_var() {
+soaf_pmp_list_attr_() {
 	local POS=$1
-	local VAR_PRE=$2
 	case $POS in
-		$SOAF_POS_PRE) SOAF_RET_LIST=__${VAR_PRE}__soaf_pmp_pre_list;;
-		$SOAF_POS_POST) SOAF_RET_LIST=__${VAR_PRE}__soaf_pmp_post_list;;
-		*) SOAF_RET_LIST=__${VAR_PRE}__soaf_pmp_main_list;;
+		$SOAF_POS_PRE) SOAF_RET_LIST=soaf_pmp_pre_list;;
+		$SOAF_POS_POST) SOAF_RET_LIST=soaf_pmp_post_list;;
+		*) SOAF_RET_LIST=soaf_pmp_main_list;;
 	esac
 }
 
 soaf_pmp_list_fill() {
 	local POS=$1
-	local VAR_PRE=$2
+	local LIST_VAR=$2
 	local ELMT_LIST=$3
-	soaf_pmp_list_var "$POS" $VAR_PRE
-	eval $SOAF_RET_LIST=\"\$$SOAF_RET_LIST \$ELMT_LIST\"
+	soaf_pmp_list_attr_ $POS
+	soaf_map_cat $LIST_VAR $SOAF_RET_LIST "$ELMT_LIST"
 }
 
 soaf_pmp_list_cat() {
-	local VAR_PRE=$1
-	local RET_LIST pos
+	local LIST_VAR=$1
+	local RET_LIST pos VAL_PART
 	for pos in $SOAF_POS_PRE $SOAF_POS_MAIN $SOAF_POS_POST
 	do
-		soaf_pmp_list_var $pos $VAR_PRE
-		eval RET_LIST=\"\$RET_LIST\$$SOAF_RET_LIST\"
+		soaf_pmp_list_attr_ $pos
+		soaf_map_get_var VAL_PART $LIST_VAR $SOAF_RET_LIST
+		RET_LIST="$RET_LIST$VAL_PART"
 	done
 	SOAF_RET_LIST=$RET_LIST
 }
