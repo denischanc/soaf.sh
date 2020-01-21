@@ -13,7 +13,8 @@ SOAF_USAGE_VAR_DIS_BY_ACTION_ATTR="soaf_usage_var_dis_by_action"
 ################################################################################
 
 soaf_usage_cfg() {
-	SOAF_USAGE_DEF_NAME_COLOR=$SOAF_CONSOLE_FG_B_MAGENTA
+	SOAF_USAGE_VAR_CTL_LIST=$SOAF_CONSOLE_FG_B_MAGENTA
+	SOAF_USAGE_VAL_CTL_LIST="$SOAF_CONSOLE_FG_CYAN $SOAF_CONSOLE_CTL_ITALIC"
 }
 
 soaf_usage_init() {
@@ -94,11 +95,11 @@ soaf_usage_dis_var() {
 	soaf_map_get_var ACTION_LIST $VAR $SOAF_USAGE_VAR_ACTION_LIST_ATTR
 	soaf_map_get_var DIS_BY_ACTION $VAR $SOAF_USAGE_VAR_DIS_BY_ACTION_ATTR
 	soaf_map_get_var FN $VAR $SOAF_USAGE_VAR_FN_ATTR
-	soaf_console_msg_ctl $VAR $SOAF_USAGE_DEF_NAME_COLOR
+	soaf_console_msg_ctl $VAR "$SOAF_USAGE_VAR_CTL_LIST"
 	local TXT="$SOAF_CONSOLE_RET:"
 	if [ -n "$ENUM" ]
 	then
-		soaf_list_join "$ENUM"
+		soaf_list_join "$ENUM" "" "$SOAF_USAGE_VAL_CTL_LIST"
 		local ENUM_DIS=$SOAF_RET_LIST
 		[ -n "$A_E" ] && ENUM_DIS="$ENUM_DIS|"
 		TXT="$TXT [$ENUM_DIS]"
@@ -126,11 +127,11 @@ soaf_usage_dis_var() {
 soaf_usage() {
 	soaf_dis_title "USAGE"
 	soaf_pmp_list_cat SOAF_USAGE_VAR
-	soaf_list_join "$SOAF_RET_LIST"
+	soaf_list_join "$SOAF_RET_LIST" "" "$SOAF_USAGE_VAL_CTL_LIST"
 	local VAR_LIST=$SOAF_RET_LIST
-	soaf_console_msg_ctl "usage" $SOAF_USAGE_DEF_NAME_COLOR
+	soaf_console_msg_ctl "usage" "$SOAF_USAGE_VAR_CTL_LIST"
 	local USAGE_DIS=$SOAF_CONSOLE_RET
-	soaf_console_msg_ctl "variable" $SOAF_USAGE_DEF_NAME_COLOR
+	soaf_console_msg_ctl "variable" "$SOAF_USAGE_VAR_CTL_LIST"
 	local VARIABLE_DIS=$SOAF_CONSOLE_RET
 	soaf_dis_txt_stdin << _EOF_
 $USAGE_DIS: $0 ([variable]=[value])*
