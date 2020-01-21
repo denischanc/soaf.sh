@@ -78,18 +78,18 @@ soaf_dis_txt_off() {
 
 soaf_dis_txt_stdin() {
 	local line
-	soaf_console_filter_stdin | while read line
+	soaf_console_filter_stdin | while read
 	do
-		soaf_dis_txt "$line"
+		soaf_dis_txt "$REPLY"
 	done
 }
 
 soaf_dis_txt_off_stdin() {
 	local OFF=$1
 	local line
-	soaf_console_filter_stdin | while read line
+	soaf_console_filter_stdin | while read
 	do
-		soaf_dis_txt_off "$line" $OFF
+		soaf_dis_txt_off "$REPLY" $OFF
 	done
 }
 
