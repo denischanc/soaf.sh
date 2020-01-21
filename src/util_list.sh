@@ -58,11 +58,17 @@ soaf_list_found() {
 soaf_list_join() {
 	local LIST=$1
 	local SEP=${2:-|}
-	SOAF_RET_LIST=
+	local CTL_LIST=$3
+	local RET_LIST=
 	local e
 	for e in $LIST
 	do
-		[ -z "$SOAF_RET_LIST" ] && SOAF_RET_LIST=$e || \
-			SOAF_RET_LIST="$SOAF_RET_LIST$SEP$e"
+		if [ -n "$CTL_LIST" ]
+		then
+			soaf_console_msg_ctl "$e" "$CTL_LIST"
+			e=$SOAF_CONSOLE_RET
+		fi
+		[ -z "$RET_LIST" ] && RET_LIST=$e || RET_LIST="$RET_LIST$SEP$e"
 	done
+	SOAF_RET_LIST=$RET_LIST
 }
