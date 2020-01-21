@@ -68,6 +68,8 @@ soaf_console_filter_stdin() {
 	then
 		local ESC=$SOAF_CONSOLE_ESC
 		sed -e "s/x1B\[/$ESC\[/g"
+	else
+		cat -
 	fi
 }
 
