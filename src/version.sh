@@ -12,7 +12,7 @@ soaf_version_init() {
 	soaf_no_prepenv_action $SOAF_VERSION_ACTION
 }
 
-soaf_create_module soaf.core.version $SOAF_VERSION "" soaf_version_init
+soaf_create_module soaf.core.version $SOAF_VERSION "" "" soaf_version_init
 
 ################################################################################
 ################################################################################

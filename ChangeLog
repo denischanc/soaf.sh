@@ -10,6 +10,7 @@
 -- Variable content substitution
 -- Action to create a soaf project
 -- Manage pid to determine if job already in progress
+-- Add static stage
 
 [0.9.0]
 

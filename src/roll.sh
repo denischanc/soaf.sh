@@ -18,6 +18,10 @@ SOAF_ROLL_FILE_EXT_DFT_FN=soaf_roll_file_ext
 ################################################################################
 ################################################################################
 
+soaf_roll_static() {
+	soaf_log_add_log_level_fn soaf_roll_log_level
+}
+
 soaf_roll_cfg() {
 	SOAF_ROLL_SIZE=4
 	SOAF_ROLL_FILE_SIZE=100000
@@ -31,7 +35,8 @@ soaf_roll_init() {
 	soaf_info_add_var "SOAF_ROLL_COMPRESS_CMD"
 }
 
-soaf_create_module soaf.core.roll $SOAF_VERSION soaf_roll_cfg soaf_roll_init
+soaf_create_module soaf.core.roll $SOAF_VERSION soaf_roll_static \
+	soaf_roll_cfg soaf_roll_init
 
 ################################################################################
 ################################################################################
@@ -40,8 +45,6 @@ soaf_roll_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_ROLL_LOG_NAME $LOG_LEVEL
 }
-
-soaf_define_add_name_log_level_fn soaf_roll_log_level
 
 ################################################################################
 ################################################################################

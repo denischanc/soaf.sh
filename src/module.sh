@@ -2,6 +2,7 @@
 ################################################################################
 
 SOAF_MODULE_VERSION_ATTR="soaf_module_version"
+SOAF_MODULE_STATIC_FN_ATTR="soaf_module_static_fn"
 SOAF_MODULE_CFG_FN_ATTR="soaf_module_cfg_fn"
 SOAF_MODULE_INIT_FN_ATTR="soaf_module_init_fn"
 SOAF_MODULE_PREPENV_FN_ATTR="soaf_module_prepenv_fn"
@@ -21,16 +22,19 @@ SOAF_MODULE_DEP_OK_S="OK"
 soaf_create_module() {
 	local NAME=$1
 	local VERSION=$2
-	local CFG_FN=$3
-	local INIT_FN=$4
-	local PREPENV_FN=$5
-	local PRE_ACTION_FN=$6
-	local POST_ACTION_FN=$7
-	local EXIT_FN=$8
-	local DEP_LIST=$9
-	local POS=${10}
+	local STATIC_FN=$3
+	local CFG_FN=$4
+	local INIT_FN=$5
+	local PREPENV_FN=$6
+	local PRE_ACTION_FN=$7
+	local POST_ACTION_FN=$8
+	local EXIT_FN=$9
+	local DEP_LIST=${10}
+	local POS=${11}
+	[ "${NAME#soaf.core.}" = "$NAME" ] && POS=
 	soaf_pmp_list_fill "$POS" SOAF_MODULE_LIST $NAME
 	soaf_map_extend $NAME $SOAF_MODULE_VERSION_ATTR $VERSION
+	soaf_map_extend $NAME $SOAF_MODULE_STATIC_FN_ATTR $STATIC_FN
 	soaf_map_extend $NAME $SOAF_MODULE_CFG_FN_ATTR $CFG_FN
 	soaf_map_extend $NAME $SOAF_MODULE_INIT_FN_ATTR $INIT_FN
 	soaf_map_extend $NAME $SOAF_MODULE_PREPENV_FN_ATTR $PREPENV_FN

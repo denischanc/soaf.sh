@@ -17,7 +17,8 @@ soaf_usermsgproc_init() {
 	fi
 }
 
-soaf_create_module soaf.core.usermsgproc $SOAF_VERSION "" soaf_usermsgproc_init
+soaf_create_module soaf.core.usermsgproc $SOAF_VERSION "" \
+	"" soaf_usermsgproc_init
 
 ################################################################################
 ################################################################################
@@ -52,8 +53,14 @@ soaf_create_usermsgproc_debug() {
 ################################################################################
 ################################################################################
 
+soaf_usermsgproc_add_use_fn() {
+	local FN_LIST=$1
+	local POS=${2:-$SOAF_POS_MAIN}
+	soaf_pmp_list_fill $POS SOAF_USERMSGPROC_USE_FN "$FN_LIST"
+}
+
 soaf_all_use_usermsgproc() {
-	soaf_pmp_list_cat SOAF_USE_USERMSGPROC_FN
+	soaf_pmp_list_cat SOAF_USERMSGPROC_USE_FN
 	local fn
 	for fn in $SOAF_RET_LIST
 	do

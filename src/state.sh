@@ -29,6 +29,10 @@ SOAF_STATE_INACTIVE_FILE_ACTION="state_inactive_file"
 ################################################################################
 ################################################################################
 
+soaf_state_static() {
+	soaf_log_add_log_level_fn soaf_state_log_level
+}
+
 soaf_state_init() {
 	if [ -n "$SOAF_STATE_NATURE_LIST" ]
 	then
@@ -38,7 +42,8 @@ soaf_state_init() {
 	fi
 }
 
-soaf_create_module soaf.extra.state $SOAF_VERSION "" soaf_state_init
+soaf_create_module soaf.extra.state $SOAF_VERSION soaf_state_static \
+	"" soaf_state_init
 
 ################################################################################
 ################################################################################
@@ -47,8 +52,6 @@ soaf_state_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_STATE_LOG_NAME $LOG_LEVEL
 }
-
-soaf_define_add_name_log_level_fn soaf_state_log_level
 
 ################################################################################
 ################################################################################

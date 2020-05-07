@@ -12,6 +12,10 @@ SOAF_PF_IN_CACHE_ATTR="soaf_pf_in_cache"
 ################################################################################
 ################################################################################
 
+soaf_pf_static() {
+	soaf_log_add_log_level_fn soaf_pf_log_level
+}
+
 soaf_pf_cfg() {
 	SOAF_PF_FILE=@[SOAF_WORK_DIR]/$SOAF_APPLI_NAME.prop
 	soaf_var_add_unsubst SOAF_PF_FILE
@@ -21,7 +25,8 @@ soaf_pf_init() {
 	soaf_info_add_var SOAF_PF_FILE
 }
 
-soaf_create_module soaf.extra.pf $SOAF_VERSION soaf_pf_cfg soaf_pf_init
+soaf_create_module soaf.extra.pf $SOAF_VERSION soaf_pf_static \
+	soaf_pf_cfg soaf_pf_init
 
 ################################################################################
 ################################################################################
@@ -30,8 +35,6 @@ soaf_pf_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_PF_LOG_NAME $LOG_LEVEL
 }
-
-soaf_define_add_name_log_level_fn soaf_pf_log_level
 
 ################################################################################
 ################################################################################

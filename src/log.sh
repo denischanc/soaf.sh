@@ -31,6 +31,10 @@ SOAF_LOG_COLOR_MAP="soaf.log.color"
 ################################################################################
 ################################################################################
 
+soaf_log_static() {
+	soaf_usermsgproc_add_use_fn soaf_log_use_usermsgproc
+}
+
 soaf_log_cfg() {
 	SOAF_LOG_LEVEL=$SOAF_LOG_INFO
 	SOAF_LOG_LEVEL_CONSOLE=$SOAF_LOG_ERR
@@ -72,8 +76,8 @@ soaf_log_prepenv() {
 	SOAF_LOG_STATE=$SOAF_LOG_ALIVE_S
 }
 
-soaf_create_module soaf.core.log $SOAF_VERSION soaf_log_cfg soaf_log_init \
-	soaf_log_prepenv "" "" "" "" $SOAF_POS_PRE
+soaf_create_module soaf.core.log $SOAF_VERSION soaf_log_static \
+	soaf_log_cfg soaf_log_init soaf_log_prepenv "" "" "" "" $SOAF_POS_PRE
 
 ################################################################################
 ################################################################################
@@ -81,8 +85,6 @@ soaf_create_module soaf.core.log $SOAF_VERSION soaf_log_cfg soaf_log_init \
 soaf_log_use_usermsgproc() {
 	SOAF_LOG_USERMSGPROC_USED="OK"
 }
-
-soaf_define_add_use_usermsgproc_fn soaf_log_use_usermsgproc
 
 ################################################################################
 ################################################################################
@@ -107,9 +109,15 @@ soaf_create_log_dft_() {
 ################################################################################
 ################################################################################
 
+soaf_log_add_log_level_fn() {
+	local FN_LIST=$1
+	local POS=${2:-$SOAF_POS_MAIN}
+	soaf_pmp_list_fill $POS SOAF_LOG_LOGLVL_FN "$FN_LIST"
+}
+
 soaf_all_log_level() {
 	local LOG_LEVEL=$1 fn
-	soaf_pmp_list_cat SOAF_NAME_LOGLVL_FN
+	soaf_pmp_list_cat SOAF_LOG_LOGLVL_FN
 	for fn in $SOAF_RET_LIST
 	do
 		$fn $LOG_LEVEL

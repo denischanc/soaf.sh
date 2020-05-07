@@ -12,6 +12,10 @@ SOAF_USAGE_VAR_DIS_BY_ACTION_ATTR="soaf_usage_var_dis_by_action"
 ################################################################################
 ################################################################################
 
+soaf_usage_static() {
+	soaf_log_add_log_level_fn soaf_usage_log_level
+}
+
 soaf_usage_cfg() {
 	SOAF_USAGE_VAR_CTL_LIST=$SOAF_CONSOLE_FG_B_MAGENTA
 	SOAF_USAGE_VAL_CTL_LIST="$SOAF_CONSOLE_FG_CYAN $SOAF_CONSOLE_CTL_ITALIC"
@@ -22,7 +26,8 @@ soaf_usage_init() {
 	soaf_no_prepenv_action $SOAF_USAGE_ACTION
 }
 
-soaf_create_module soaf.core.usage $SOAF_VERSION soaf_usage_cfg soaf_usage_init
+soaf_create_module soaf.core.usage $SOAF_VERSION soaf_usage_static \
+	soaf_usage_cfg soaf_usage_init
 
 ################################################################################
 ################################################################################
@@ -31,8 +36,6 @@ soaf_usage_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_USAGE_LOG_NAME $LOG_LEVEL
 }
-
-soaf_define_add_name_log_level_fn soaf_usage_log_level
 
 ################################################################################
 ################################################################################

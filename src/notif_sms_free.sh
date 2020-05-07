@@ -10,13 +10,17 @@ SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR="soaf_notif_sms_free_cacert_file"
 ################################################################################
 ################################################################################
 
+soaf_notif_sms_free_static() {
+	soaf_log_add_log_level_fn soaf_notif_sms_free_log_level
+}
+
 soaf_notif_sms_free_cfg() {
 	SOAF_NOTIF_SMS_FREE_URL="https://smsapi.free-mobile.fr/sendmsg"
 	SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT="--ipv4"
 }
 
 soaf_create_module soaf.extra.notif_sms_free $SOAF_VERSION \
-	soaf_notif_sms_free_cfg
+	soaf_notif_sms_free_static soaf_notif_sms_free_cfg
 
 ################################################################################
 ################################################################################
@@ -25,8 +29,6 @@ soaf_notif_sms_free_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_NOTIF_SMS_FREE_LOG_NAME $LOG_LEVEL
 }
-
-soaf_define_add_name_log_level_fn soaf_notif_sms_free_log_level
 
 ################################################################################
 ################################################################################

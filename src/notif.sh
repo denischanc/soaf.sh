@@ -11,6 +11,10 @@ SOAF_NOTIF_NB_TRY_DFT=3
 ################################################################################
 ################################################################################
 
+soaf_notif_static() {
+	soaf_log_add_log_level_fn soaf_notif_log_level
+}
+
 soaf_notif_cfg() {
 	SOAF_NOTIF_DIR=@[SOAF_WORK_DIR]/notif
 	soaf_var_add_unsubst SOAF_NOTIF_DIR
@@ -20,7 +24,8 @@ soaf_notif_init() {
 	soaf_info_add_var "SOAF_NOTIF_DIR SOAF_NOTIF_NATURE_LIST"
 }
 
-soaf_create_module soaf.core.notif $SOAF_VERSION soaf_notif_cfg soaf_notif_init
+soaf_create_module soaf.core.notif $SOAF_VERSION soaf_notif_static \
+	soaf_notif_cfg soaf_notif_init
 
 ################################################################################
 ################################################################################
@@ -29,8 +34,6 @@ soaf_notif_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_NOTIF_LOG_NAME $LOG_LEVEL
 }
-
-soaf_define_add_name_log_level_fn soaf_notif_log_level
 
 ################################################################################
 ################################################################################

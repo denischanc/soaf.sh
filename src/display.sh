@@ -8,6 +8,10 @@ SOAF_DISPLAY_TXT_PRE_3="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
 ################################################################################
 ################################################################################
 
+soaf_dis_static() {
+	soaf_usermsgproc_add_use_fn soaf_dis_use_usermsgproc
+}
+
 soaf_dis_cfg() {
 	SOAF_TITLE_PRE="==[[ "
 	SOAF_TXT_PRE="  "
@@ -15,7 +19,7 @@ soaf_dis_cfg() {
 		SOAF_DISPLAY_TXT_PRE_3"
 }
 
-soaf_create_module soaf.core.display $SOAF_VERSION soaf_dis_cfg
+soaf_create_module soaf.core.display $SOAF_VERSION soaf_dis_static soaf_dis_cfg
 
 ################################################################################
 ################################################################################
@@ -23,8 +27,6 @@ soaf_create_module soaf.core.display $SOAF_VERSION soaf_dis_cfg
 soaf_dis_use_usermsgproc() {
 	SOAF_DIS_USERMSGPROC_USED="OK"
 }
-
-soaf_define_add_use_usermsgproc_fn soaf_dis_use_usermsgproc
 
 ################################################################################
 ################################################################################

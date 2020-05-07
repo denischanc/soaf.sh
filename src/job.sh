@@ -15,6 +15,10 @@ SOAF_JOB_ACTION="job"
 ################################################################################
 ################################################################################
 
+soaf_job_static() {
+	soaf_log_add_log_level_fn soaf_job_log_level
+}
+
 soaf_job_init() {
 	if [ -n "$SOAF_JOB_LIST" -a -z "$SOAF_JOB_NO_ACTION" ]
 	then
@@ -25,7 +29,8 @@ soaf_job_init() {
 	fi
 }
 
-soaf_create_module soaf.extra.job $SOAF_VERSION "" soaf_job_init
+soaf_create_module soaf.extra.job $SOAF_VERSION soaf_job_static \
+	"" soaf_job_init
 
 ################################################################################
 ################################################################################
@@ -34,8 +39,6 @@ soaf_job_log_level() {
 	local LOG_LEVEL=$1
 	soaf_log_name_log_level $SOAF_JOB_LOG_NAME $LOG_LEVEL
 }
-
-soaf_define_add_name_log_level_fn soaf_job_log_level
 
 ################################################################################
 ################################################################################

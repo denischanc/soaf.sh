@@ -13,7 +13,7 @@ soaf_appli_init() {
 	soaf_info_add_var "SOAF_APPLI_SH_DIR SOAF_APPLI_SH_NAME"
 }
 
-soaf_create_module soaf.core.appli $SOAF_VERSION "" soaf_appli_init
+soaf_create_module soaf.core.appli $SOAF_VERSION "" "" soaf_appli_init
 
 ################################################################################
 ################################################################################
@@ -42,7 +42,7 @@ soaf_create_appli_nature() {
 		eval VERSION=\$\{${SOAF_RET}_VERSION:-0.1.0\}
 	fi
 	local MODULE_NAME="soaf.appli.$NAME"
-	soaf_create_module $MODULE_NAME $VERSION "$CFG_FN" "$INIT_FN" \
+	soaf_create_module $MODULE_NAME $VERSION "" "$CFG_FN" "$INIT_FN" \
 		"$PREPENV_FN" "$PRE_ACTION_FN" "$POST_ACTION_FN" "$EXIT_FN"
 	soaf_map_extend $NATURE $SOAF_APPLI_NAME_ATTR $NAME
 }
