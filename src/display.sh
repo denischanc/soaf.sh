@@ -5,6 +5,8 @@ SOAF_DISPLAY_TXT_PRE_1="@[SOAF_TXT_PRE]"
 SOAF_DISPLAY_TXT_PRE_2="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
 SOAF_DISPLAY_TXT_PRE_3="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
 
+SOAF_DISPLAY_VAR2FN_MAP="soaf.dis.var2fn"
+
 ################################################################################
 ################################################################################
 
@@ -98,12 +100,26 @@ soaf_dis_txt_off_stdin() {
 ################################################################################
 ################################################################################
 
+soaf_dis_var_w_fn() {
+	local VAR=$1
+	local FN=$2
+	soaf_map_extend $SOAF_DISPLAY_VAR2FN_MAP $VAR $FN
+}
+
 soaf_dis_var_list() {
 	local VAR_LIST=$1
 	local var
 	for var in $VAR_LIST
 	do
-		eval local VAL=\$$var
+		local FN
+		soaf_map_get_var FN $SOAF_DISPLAY_VAR2FN_MAP $var
+		if [ -n "$FN" ]
+		then
+			$FN $var
+			local VAL=$SOAF_RET
+		else
+			eval local VAL=\$$var
+		fi
 		soaf_dis_txt "$var = [$VAL]"
 	done
 }

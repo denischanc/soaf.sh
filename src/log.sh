@@ -37,7 +37,7 @@ soaf_log_static() {
 
 soaf_log_cfg() {
 	SOAF_LOG_LEVEL=$SOAF_LOG_INFO
-	SOAF_LOG_LEVEL_CONSOLE=$SOAF_LOG_ERR
+	SOAF_LOG_LEVEL_NOT_ALIVE=$SOAF_LOG_ERR
 	###---------------
 	SOAF_LOG_ROLL_NATURE=$SOAF_LOG_ROLL_DFT_NATURE
 	###---------------
@@ -57,7 +57,9 @@ soaf_log_cfg() {
 }
 
 soaf_log_init() {
-	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_LEVEL_CONSOLE"
+	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_LEVEL_NOT_ALIVE"
+	soaf_dis_var_w_fn SOAF_LOG_LEVEL soaf_log_val_of_lvl_var_
+	soaf_dis_var_w_fn SOAF_LOG_LEVEL_NOT_ALIVE soaf_log_val_of_lvl_var_
 	soaf_info_add_var "SOAF_LOG_DIR SOAF_LOG_FILE SOAF_LOG_USED_NATURE"
 	soaf_info_add_var SOAF_LOG_CMD_OUT_ERR_DIR
 	###---------------
@@ -148,7 +150,7 @@ soaf_log_level() {
 		[ -n "$NAME" ] && soaf_map_get_var SOAF_LOG_RET \
 			$NAME $SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET
 	else
-		SOAF_LOG_RET=${SOAF_LOG_LEVEL_CONSOLE:-$SOAF_LOG_ERR}
+		SOAF_LOG_RET=${SOAF_LOG_LEVEL_NOT_ALIVE:-$SOAF_LOG_ERR}
 	fi
 }
 
@@ -161,6 +163,12 @@ soaf_log_label_level_() {
 	$SOAF_LOG_DEV_ERR) SOAF_LOG_RET=$SOAF_LOG_DEV_ERR_LABEL;;
 	*) SOAF_LOG_RET=$SOAF_LOG_DEBUG_LABEL;;
 	esac
+}
+
+soaf_log_val_of_lvl_var_() {
+	local VAR=$1
+	eval soaf_log_label_level_ \$$VAR
+	SOAF_RET=$SOAF_LOG_RET
 }
 
 ################################################################################
