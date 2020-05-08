@@ -22,9 +22,8 @@ soaf_job_static_() {
 soaf_job_init_() {
 	if [ -n "$SOAF_JOB_LIST" -a -z "$SOAF_JOB_NO_ACTION" ]
 	then
-		soaf_usage_add_var JOB $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_POST
-		soaf_create_var_usage JOB "" "$SOAF_JOB_LIST" "" "" \
-			"$SOAF_JOB_ACTION" "OK"
+		soaf_create_var_usage_exp JOB "" "$SOAF_JOB_LIST" "" "" \
+			"$SOAF_JOB_ACTION" "OK" $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_POST
 		soaf_create_action $SOAF_JOB_ACTION soaf_job_ "" $SOAF_POS_POST
 	fi
 }

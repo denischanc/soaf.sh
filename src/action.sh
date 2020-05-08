@@ -13,10 +13,9 @@ soaf_action_cfg_() {
 }
 
 soaf_action_init_() {
-	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_PRE
 	soaf_action_list
-	soaf_create_var_usage ACTION "" "$SOAF_ACTION_RET_LIST" \
-		$SOAF_USAGE_ACTION "" "" "" $SOAF_POS_PRE
+	soaf_create_var_usage_exp ACTION "" "$SOAF_ACTION_RET_LIST" \
+		$SOAF_USAGE_ACTION "" "" "" $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_PRE
 }
 
 soaf_create_module soaf.core.action $SOAF_VERSION "" \
@@ -75,7 +74,7 @@ soaf_action_dis_usage() {
 		[ -n "$FN" ] && $FN $ACTION
 		for var in $VAR_LIST
 		do
-			soaf_var_usage_dis $var
+			soaf_var_usage_exp_dis $var
 		done
 	fi
 }

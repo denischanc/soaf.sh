@@ -40,10 +40,10 @@ soaf_usage_add_var() {
 ################################################################################
 ################################################################################
 
-soaf_usage_add_expanded_var() {
+soaf_usage_add_var_exp() {
 	local VAR=$1
 	local USAGE_POS=$2
-	soaf_pmp_list_fill "$USAGE_POS" SOAF_USAGE_EXPANDED_VAR $VAR
+	soaf_pmp_list_fill "$USAGE_POS" SOAF_USAGE_VAR_EXP $VAR
 }
 
 ################################################################################
@@ -64,10 +64,10 @@ $VARIABLE_DIS: [$VAR_LIST]
 _EOF_
 	### Variables
 	local var
-	soaf_pmp_list_cat SOAF_USAGE_EXPANDED_VAR
+	soaf_pmp_list_cat SOAF_USAGE_VAR_EXP
 	for var in $SOAF_RET_LIST
 	do
-		soaf_var_usage_dis $var
+		soaf_var_usage_exp_dis $var
 	done
 	### Actions
 	soaf_action_list

@@ -59,8 +59,8 @@ ${LOWER_VAR_NAME}_hw() {
 ${LOWER_VAR_NAME}_init() {
 	soaf_create_action \$${UPPER_VAR_NAME}_HW_ACTION \\
 		${LOWER_VAR_NAME}_hw ${LOWER_VAR_NAME}_hw_usage
-	soaf_usage_add_var NAME ${UPPER_VAR_NAME}
-	soaf_create_var_usage NAME "" "" "" "OK" \$${UPPER_VAR_NAME}_HW_ACTION "OK"
+	soaf_create_var_usage_exp NAME "" "" "" "OK" \\
+		\$${UPPER_VAR_NAME}_HW_ACTION "OK" ${UPPER_VAR_NAME}
 }
 
 ################################################################################

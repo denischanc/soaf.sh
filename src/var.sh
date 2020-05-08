@@ -27,7 +27,7 @@ soaf_create_module soaf.core.var $SOAF_VERSION "" soaf_var_cfg_
 ################################################################################
 ################################################################################
 
-soaf_create_var() {
+soaf_create_var_nature() {
 	local VAR=$1
 	local ENUM=$2
 	local DFT_VAL=$3
@@ -71,8 +71,11 @@ soaf_var_real_name_() {
 soaf_var_prefix_name() {
 	local VAR=$1
 	local PREFIX=$2
-	soaf_map_extend $VAR $SOAF_VAR_PREFIX_ATTR $PREFIX
-	eval ${PREFIX}_$VAR=\$$VAR
+	if [ -n "$PREFIX" ]
+	then
+		soaf_map_extend $VAR $SOAF_VAR_PREFIX_ATTR $PREFIX
+		eval ${PREFIX}_$VAR=\$$VAR
+	fi
 }
 
 ################################################################################
@@ -119,7 +122,7 @@ soaf_var_check_all() {
 	local var
 	for var in $SOAF_VAR_ALL_LIST
 	do
-		soaf_var_usage_check_required $var
+		soaf_var_usage_exp_check_required $var
 		[ -n "$SOAF_VAR_USAGE_RET" ] && soaf_var_check_ $var
 	done
 }

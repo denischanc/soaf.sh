@@ -1,14 +1,14 @@
 ################################################################################
 ################################################################################
 
-SOAF_VAR_USAGE_FN_ATTR="soaf_var_usage_fn"
-SOAF_VAR_USAGE_ACTION_LIST_ATTR="soaf_var_usage_action_list"
-SOAF_VAR_USAGE_DIS_BY_ACTION_ATTR="soaf_var_usage_dis_by_action"
+SOAF_VAR_USAGE_EXP_FN_ATTR="soaf_var_usage_exp_fn"
+SOAF_VAR_USAGE_EXP_ACTION_LIST_ATTR="soaf_var_usage_exp_action_list"
+SOAF_VAR_USAGE_EXP_DIS_BY_ACTION_ATTR="soaf_var_usage_exp_dis_by_action"
 
 ################################################################################
 ################################################################################
 
-soaf_create_var_usage() {
+soaf_create_var_usage_exp() {
 	local VAR=$1
 	local FN=$2
 	local ENUM=$3
@@ -16,11 +16,13 @@ soaf_create_var_usage() {
 	local ACCEPT_EMPTY=$5
 	local ACTION_LIST=$6
 	local DIS_BY_ACTION=$7
-	local USAGE_POS=$8
-	soaf_create_var $VAR "$ENUM" "$DFT_VAL" $ACCEPT_EMPTY
+	local PREFIX=$8
+	local USAGE_POS=$9
+	soaf_create_var_nature $VAR "$ENUM" "$DFT_VAL" $ACCEPT_EMPTY
 	soaf_map_extend $VAR $SOAF_VAR_USAGE_FN_ATTR $FN
 	soaf_map_extend $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR "$ACTION_LIST"
 	soaf_map_extend $VAR $SOAF_VAR_USAGE_DIS_BY_ACTION_ATTR $DIS_BY_ACTION
+	soaf_usage_add_var $VAR "$PREFIX" $USAGE_POS
 	if [ -n "$DIS_BY_ACTION" -a -n "$ACTION_LIST" ]
 	then
 		local action
@@ -29,14 +31,14 @@ soaf_create_var_usage() {
 			soaf_action_add_usage_var $action $VAR
 		done
 	else
-		soaf_usage_add_expanded_var $VAR $USAGE_POS
+		soaf_usage_add_var_exp $VAR $USAGE_POS
 	fi
 }
 
 ################################################################################
 ################################################################################
 
-soaf_var_usage_dis() {
+soaf_var_usage_exp_dis() {
 	local VAR=$1
 	soaf_var_dis $VAR
 	soaf_map_get $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR
@@ -56,7 +58,7 @@ soaf_var_usage_dis() {
 ################################################################################
 ################################################################################
 
-soaf_var_usage_check_required() {
+soaf_var_usage_exp_check_required() {
 	local VAR=$1
 	local RET="OK"
 	soaf_map_get $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR
