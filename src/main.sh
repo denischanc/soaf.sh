@@ -38,7 +38,7 @@ soaf_main_init() {
 	soaf_create_action $SOAF_MAIN_CREATE_PRJ_ACTION \
 		soaf_main_create_prj soaf_main_create_prj_usage
 	soaf_usage_add_var "PRJ_DIR PRJ_NAME" $SOAF_DEFINE_VAR_PREFIX
-	soaf_usage_def_var PRJ_DIR "" "" "" "" $SOAF_MAIN_CREATE_PRJ_ACTION "OK"
+	soaf_create_var_usage PRJ_DIR "" "" "" "" $SOAF_MAIN_CREATE_PRJ_ACTION "OK"
 }
 
 ################################################################################

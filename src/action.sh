@@ -71,7 +71,7 @@ soaf_action_dis_usage() {
 		[ -n "$FN" ] && $FN $ACTION
 		for var in $VAR_LIST
 		do
-			soaf_usage_dis_var $var
+			soaf_var_usage_dis $var
 		done
 	fi
 }

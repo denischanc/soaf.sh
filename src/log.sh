@@ -31,11 +31,11 @@ SOAF_LOG_COLOR_MAP="soaf.log.color"
 ################################################################################
 ################################################################################
 
-soaf_log_static() {
+soaf_log_static_() {
 	soaf_usermsgproc_add_use_fn soaf_log_use_usermsgproc
 }
 
-soaf_log_cfg() {
+soaf_log_cfg_() {
 	SOAF_LOG_LEVEL=$SOAF_LOG_INFO
 	SOAF_LOG_LEVEL_NOT_ALIVE=$SOAF_LOG_ERR
 	###---------------
@@ -56,7 +56,7 @@ soaf_log_cfg() {
 	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_DEBUG $SOAF_CONSOLE_FG_CYAN
 }
 
-soaf_log_init() {
+soaf_log_init_() {
 	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_LEVEL_NOT_ALIVE"
 	soaf_dis_var_w_fn SOAF_LOG_LEVEL soaf_log_val_of_lvl_var_
 	soaf_dis_var_w_fn SOAF_LOG_LEVEL_NOT_ALIVE soaf_log_val_of_lvl_var_
@@ -68,7 +68,7 @@ soaf_log_init() {
 		soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_DFT_NATURE
 }
 
-soaf_log_prepenv() {
+soaf_log_prepenv_() {
 	if [ -z "$SOAF_LOG_USERMSGPROC_USED" ]
 	then
 		local PREP_FN
@@ -78,8 +78,8 @@ soaf_log_prepenv() {
 	SOAF_LOG_STATE=$SOAF_LOG_ALIVE_S
 }
 
-soaf_create_module soaf.core.log $SOAF_VERSION soaf_log_static \
-	soaf_log_cfg soaf_log_init soaf_log_prepenv "" "" "" "" $SOAF_POS_PRE
+soaf_create_module soaf.core.log $SOAF_VERSION soaf_log_static_ \
+	soaf_log_cfg_ soaf_log_init_ soaf_log_prepenv_ "" "" "" "" $SOAF_POS_PRE
 
 ################################################################################
 ################################################################################

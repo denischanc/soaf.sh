@@ -98,9 +98,11 @@ soaf_engine_init() {
 	### MODULEs
 	soaf_module_apply_all_reverse_fn_attr $SOAF_MODULE_INIT_FN_ATTR
 	### ENGINE
+	### TODO : move into action.sh
 	soaf_action_list
-	soaf_usage_def_var ACTION "" "$SOAF_ACTION_RET_LIST" $SOAF_USAGE_ACTION \
-		"" "" "" $SOAF_POS_PRE
+	soaf_create_var_usage ACTION "" "$SOAF_ACTION_RET_LIST" \
+		$SOAF_USAGE_ACTION "" "" "" $SOAF_POS_PRE
+	### TODO : move into action.sh
 	soaf_info_add_var "SOAF_ENGINE_EXT_ALL_DIR $SOAF_ENGINE_EXT_VF_L"
 }
 
@@ -165,7 +167,7 @@ soaf_engine() {
 	soaf_engine_static
 	soaf_engine_cfg
 	soaf_engine_init
-	soaf_usage_check
+	soaf_var_check_all
 	soaf_engine_action
 	soaf_engine_exit 0
 }

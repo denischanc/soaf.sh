@@ -1,6 +1,8 @@
 ################################################################################
 ################################################################################
 
+SOAF_VAR_LOG_NAME="soaf.var"
+
 SOAF_VAR_ENUM_ATTR="soaf_var_enum"
 SOAF_VAR_DFT_VAL_ATTR="soaf_var_dft_val"
 SOAF_VAR_ACCEPT_EMPTY_ATTR="soaf_var_accept_empty"
@@ -11,6 +13,16 @@ SOAF_VAR_PAT_O="@\["
 SOAF_VAR_PAT_V="[_a-zA-Z0-9]\+"
 SOAF_VAR_PAT_C="\]"
 SOAF_VAR_PAT_G="$SOAF_VAR_PAT_O$SOAF_VAR_PAT_V$SOAF_VAR_PAT_C"
+
+################################################################################
+################################################################################
+
+soaf_var_cfg() {
+	SOAF_VAR_CTL_LIST=$SOAF_CONSOLE_FG_B_MAGENTA
+	SOAF_VAR_VAL_CTL_LIST="$SOAF_CONSOLE_FG_CYAN $SOAF_CONSOLE_CTL_ITALIC"
+}
+
+soaf_create_module soaf.core.var $SOAF_VERSION "" soaf_var_cfg
 
 ################################################################################
 ################################################################################
@@ -29,6 +41,7 @@ soaf_create_var() {
 			soaf_engine_exit_dev "$SOAF_VAR_ERR_MSG"
 		fi
 	fi
+	[ "$VAR" != "ACTION" ] && SOAF_VAR_ALL_LIST="$SOAF_VAR_ALL_LIST $VAR"
 	soaf_map_extend $VAR $SOAF_VAR_ENUM_ATTR "$ENUM"
 	soaf_map_extend $VAR $SOAF_VAR_DFT_VAL_ATTR "$DFT_VAL"
 	soaf_map_extend $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR $ACCEPT_EMPTY
@@ -48,7 +61,7 @@ soaf_var_err_msg_notinenum_() {
 ################################################################################
 ################################################################################
 
-soaf_var_real_name() {
+soaf_var_real_name_() {
 	local VAR=$1
 	local PREFIX
 	soaf_map_get_var PREFIX $VAR $SOAF_VAR_PREFIX_ATTR
@@ -65,15 +78,13 @@ soaf_var_prefix_name() {
 ################################################################################
 ################################################################################
 
-soaf_var_check() {
+soaf_var_check_() {
 	local VAR=$1
 	local DFT_VAL
 	soaf_map_get_var DFT_VAL $VAR $SOAF_VAR_DFT_VAL_ATTR
-	soaf_var_real_name $VAR
+	soaf_var_real_name_ $VAR
 	local VAR_REAL=$SOAF_VAR_RET
 	eval local VAL=\$$VAR_REAL
-	local RET="OK"
-	local ERR_MSG=
 	if [ -z "$VAL" -a -n "$DFT_VAL" ]
 	then
 		### Fix default value
@@ -84,11 +95,9 @@ soaf_var_check() {
 			### Check if val empty accepted
 			local A_E
 			soaf_map_get_var A_E $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
-			if [ -z "$A_E" ]
-			then
-				RET=
-				ERR_MSG="Variable [$VAR] not filled."
-			fi
+			[ -z "$A_E" ] && \
+				soaf_engine_exit "" "Variable [$VAR] not filled." \
+					$SOAF_VAR_LOG_NAME
 		else
 			local ENUM
 			soaf_map_get_var ENUM $VAR $SOAF_VAR_ENUM_ATTR
@@ -98,15 +107,22 @@ soaf_var_check() {
 				soaf_list_found "$ENUM" $VAL
 				if [ -z "$SOAF_RET_LIST" ]
 				then
-					RET=
 					soaf_var_err_msg_notinenum_ $VAR $VAL "$ENUM"
-					ERR_MSG=$SOAF_VAR_ERR_MSG
+					soaf_engine_exit "" "$SOAF_VAR_ERR_MSG" $SOAF_VAR_LOG_NAME
 				fi
 			fi
 		fi
 	fi
-	SOAF_VAR_RET=$RET
-	SOAF_VAR_ERR_MSG=$ERR_MSG
+}
+
+soaf_var_check_all() {
+	soaf_var_check_ ACTION
+	local var
+	for var in $SOAF_VAR_ALL_LIST
+	do
+		soaf_var_usage_check_required $var
+		[ -n "$SOAF_VAR_USAGE_RET" ] && soaf_var_check_ $var
+	done
 }
 
 ################################################################################
@@ -125,7 +141,7 @@ soaf_var_subst_proc() {
 	SOAF_VAR_RET=$(echo "$VAL" | sed -e "$RULE")
 }
 
-soaf_var_subst() {
+soaf_var_subst_() {
 	local VAR=$1
 	SOAF_VAR_OKSUBST_LIST="$SOAF_VAR_OKSUBST_LIST $VAR"
 	eval local VAL=\$$VAR
@@ -135,7 +151,7 @@ soaf_var_subst() {
 		sed -e s:$SOAF_VAR_PAT_O:: -e s:$SOAF_VAR_PAT_C:: | sort | uniq)
 	do
 		soaf_list_found "$SOAF_VAR_OKSUBST_LIST" $__var
-		[ -z "$SOAF_RET_LIST" ] && soaf_var_subst $__var
+		[ -z "$SOAF_RET_LIST" ] && soaf_var_subst_ $__var
 		soaf_var_subst_proc "$VAL" $__var
 		VAL=$SOAF_VAR_RET
 		SUBST_OK="OK"
@@ -147,6 +163,35 @@ soaf_var_subst_all() {
 	local var
 	for var in $SOAF_VAR_UNSUBST_LIST
 	do
-		soaf_var_subst $var
+		soaf_var_subst_ $var
 	done
+}
+
+################################################################################
+################################################################################
+
+soaf_var_dis() {
+	local VAR=$1
+	soaf_console_msg_ctl $VAR "$SOAF_VAR_CTL_LIST"
+	local TXT="$SOAF_CONSOLE_RET:"
+	local ENUM A_E
+	soaf_map_get_var ENUM $VAR $SOAF_VAR_ENUM_ATTR
+	soaf_map_get_var A_E $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
+	if [ -n "$ENUM" ]
+	then
+		soaf_list_join "$ENUM" "" "$SOAF_VAR_VAL_CTL_LIST"
+		local ENUM_DIS=$SOAF_RET_LIST
+		[ -n "$A_E" ] && ENUM_DIS="$ENUM_DIS|"
+		TXT="$TXT [$ENUM_DIS]"
+	else
+		TXT="$TXT '...'"
+	fi
+	local DFT_VAL
+	soaf_map_get_var DFT_VAL $VAR $SOAF_VAR_DFT_VAL_ATTR
+	if [ -n "$DFT_VAL" ]
+	then
+		soaf_console_msg_ctl "$DFT_VAL" $SOAF_CONSOLE_CTL_BOLD
+		TXT="$TXT (default: '$SOAF_CONSOLE_RET')"
+	fi
+	soaf_dis_txt "$TXT"
 }

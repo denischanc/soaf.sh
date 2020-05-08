@@ -15,22 +15,22 @@ SOAF_JOB_ACTION="job"
 ################################################################################
 ################################################################################
 
-soaf_job_static() {
+soaf_job_static_() {
 	soaf_log_add_log_level_fn soaf_job_log_level
 }
 
-soaf_job_init() {
+soaf_job_init_() {
 	if [ -n "$SOAF_JOB_LIST" -a -z "$SOAF_JOB_NO_ACTION" ]
 	then
 		soaf_usage_add_var JOB $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_POST
-		soaf_usage_def_var JOB "" "$SOAF_JOB_LIST" "" "" \
+		soaf_create_var_usage JOB "" "$SOAF_JOB_LIST" "" "" \
 			"$SOAF_JOB_ACTION" "OK"
-		soaf_create_action $SOAF_JOB_ACTION soaf_job "" $SOAF_POS_POST
+		soaf_create_action $SOAF_JOB_ACTION soaf_job_ "" $SOAF_POS_POST
 	fi
 }
 
-soaf_create_module soaf.extra.job $SOAF_VERSION soaf_job_static \
-	"" soaf_job_init
+soaf_create_module soaf.extra.job $SOAF_VERSION soaf_job_static_ \
+	"" soaf_job_init_
 
 ################################################################################
 ################################################################################
@@ -59,7 +59,7 @@ soaf_create_job() {
 ################################################################################
 ################################################################################
 
-soaf_job() {
+soaf_job_() {
 	soaf_do_job $SOAF_JOB
 	if [ -z "$SOAF_JOB_RET" ]
 	then
@@ -70,7 +70,7 @@ soaf_job() {
 ################################################################################
 ################################################################################
 
-soaf_do_job_roll() {
+soaf_do_job_roll_() {
 	local FILE=$1
 	local SIZE=$2
 	soaf_create_roll_nature $SOAF_JOB_ROLL_NATURE $SIZE
@@ -80,7 +80,7 @@ soaf_do_job_roll() {
 ################################################################################
 ################################################################################
 
-soaf_do_job_process() {
+soaf_do_job_process_() {
 	local JOB=$1
 	local JOB_UPPER=$2
 	local LOG_DIR=$3
@@ -88,8 +88,8 @@ soaf_do_job_process() {
 	local LOG_ERR_FILE=$LOG_DIR/$JOB-err.log
 	local ROLL_SIZE
 	soaf_map_get_var ROLL_SIZE $JOB $SOAF_JOB_ROLL_SIZE_ATTR
-	soaf_do_job_roll $LOG_FILE $ROLL_SIZE
-	soaf_do_job_roll $LOG_ERR_FILE $ROLL_SIZE
+	soaf_do_job_roll_ $LOG_FILE $ROLL_SIZE
+	soaf_do_job_roll_ $LOG_ERR_FILE $ROLL_SIZE
 	local CMD
 	soaf_map_get_var CMD $JOB $SOAF_JOB_CMD_ATTR
 	if [ -z "$CMD" ]
@@ -115,7 +115,7 @@ soaf_do_job_process() {
 ################################################################################
 ################################################################################
 
-soaf_do_job_valid() {
+soaf_do_job_valid_() {
 	local JOB=$1
 	soaf_upper $JOB
 	local JOB_UPPER=$SOAF_RET
@@ -124,7 +124,7 @@ soaf_do_job_valid() {
 		$SOAF_LOG_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB
 	soaf_mkdir $LOG_DIR "" $SOAF_JOB_LOG_NAME
 	local PID_FILE=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB.pid
-	local FN_ARGS="soaf_do_job_process $JOB $JOB_UPPER $LOG_DIR"
+	local FN_ARGS="soaf_do_job_process_ $JOB $JOB_UPPER $LOG_DIR"
 	local MSG="$JOB_UPPER already in progress (pid: [@[PID]]) ..."
 	soaf_fn_args_check_pid "$FN_ARGS" $PID_FILE $SOAF_JOB_LOG_NAME "$MSG"
 }
@@ -138,7 +138,7 @@ soaf_do_job() {
 	soaf_list_found "$SOAF_JOB_LIST" $JOB
 	if [ -n "$SOAF_RET_LIST" ]
 	then
-		soaf_do_job_valid $JOB
+		soaf_do_job_valid_ $JOB
 	else
 		soaf_log_err "Unknown job : [$JOB]." $SOAF_JOB_LOG_NAME
 	fi
