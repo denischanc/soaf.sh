@@ -19,9 +19,9 @@ soaf_create_var_usage_exp() {
 	local PREFIX=$8
 	local USAGE_POS=$9
 	soaf_create_var_nature $VAR "$ENUM" "$DFT_VAL" $ACCEPT_EMPTY
-	soaf_map_extend $VAR $SOAF_VAR_USAGE_FN_ATTR $FN
-	soaf_map_extend $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR "$ACTION_LIST"
-	soaf_map_extend $VAR $SOAF_VAR_USAGE_DIS_BY_ACTION_ATTR $DIS_BY_ACTION
+	soaf_map_extend $VAR $SOAF_VAR_USAGE_EXP_FN_ATTR $FN
+	soaf_map_extend $VAR $SOAF_VAR_USAGE_EXP_ACTION_LIST_ATTR "$ACTION_LIST"
+	soaf_map_extend $VAR $SOAF_VAR_USAGE_EXP_DIS_BY_ACTION_ATTR $DIS_BY_ACTION
 	soaf_usage_add_var $VAR "$PREFIX" $USAGE_POS
 	if [ -n "$DIS_BY_ACTION" -a -n "$ACTION_LIST" ]
 	then
@@ -41,9 +41,9 @@ soaf_create_var_usage_exp() {
 soaf_var_usage_exp_dis() {
 	local VAR=$1
 	soaf_var_dis $VAR
-	soaf_map_get $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR
+	soaf_map_get $VAR $SOAF_VAR_USAGE_EXP_ACTION_LIST_ATTR
 	local ACTION_LIST=$SOAF_RET
-	soaf_map_get $VAR $SOAF_VAR_USAGE_DIS_BY_ACTION_ATTR
+	soaf_map_get $VAR $SOAF_VAR_USAGE_EXP_DIS_BY_ACTION_ATTR
 	local DIS_BY_ACTION=$SOAF_RET
 	if [ -n "$ACTION_LIST" -a -z "$DIS_BY_ACTION" ]
 	then
@@ -51,7 +51,7 @@ soaf_var_usage_exp_dis() {
 		TXT="ACTION=[$SOAF_RET_LIST]"
 		soaf_dis_txt_off "$TXT" 2
 	fi
-	soaf_map_get $VAR $SOAF_VAR_USAGE_FN_ATTR
+	soaf_map_get $VAR $SOAF_VAR_USAGE_EXP_FN_ATTR
 	[ -n "$SOAF_RET" ] && $SOAF_RET $VAR
 }
 
@@ -61,7 +61,7 @@ soaf_var_usage_exp_dis() {
 soaf_var_usage_exp_check_required() {
 	local VAR=$1
 	local RET="OK"
-	soaf_map_get $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR
+	soaf_map_get $VAR $SOAF_VAR_USAGE_EXP_ACTION_LIST_ATTR
 	local ACTION_LIST=$SOAF_RET
 	if [ -n "$ACTION_LIST" ]
 	then

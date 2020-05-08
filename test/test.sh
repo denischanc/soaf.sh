@@ -26,8 +26,8 @@ test_cfg() {
 }
 
 test_init() {
-	soaf_usage_add_var "NAME VAL MSG" "TEST"
-	soaf_create_var_usage VAL "" "" '  __££ $$  {}  =__  '
+	soaf_usage_add_var "NAME MSG" "TEST"
+	soaf_create_var_usage_exp VAL "" "" '  __££ $$  {}  =__  ' "" "" "" "TEST"
 	test_init_display
 	test_init_space
 	test_init_job
@@ -197,8 +197,8 @@ test_module() {
 
 test_init_module() {
 	soaf_create_action "module" test_module
-	soaf_usage_add_var ERR_TYPE "TEST"
-	soaf_create_var_usage ERR_TYPE "" "deadlock notfnd ok" "ok" "" "module" "OK"
+	soaf_create_var_usage_exp ERR_TYPE "" "deadlock notfnd ok" "ok" "" \
+		"module" "OK" "TEST"
 }
 
 ################################################################################
