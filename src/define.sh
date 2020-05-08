@@ -8,5 +8,3 @@ SOAF_VERSION="0.10.0-dev"
 ################################################################################
 
 SOAF_DEFINE_VAR_PREFIX="SOAF"
-
-SOAF_DEFINE_USAGE_ACTION="usage"

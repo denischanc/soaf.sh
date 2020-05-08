@@ -14,10 +14,13 @@ soaf_action_cfg_() {
 
 soaf_action_init_() {
 	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_PRE
+	soaf_action_list
+	soaf_create_var_usage ACTION "" "$SOAF_ACTION_RET_LIST" \
+		$SOAF_USAGE_ACTION "" "" "" $SOAF_POS_PRE
 }
 
 soaf_create_module soaf.core.action $SOAF_VERSION "" \
-	soaf_action_cfg_ soaf_action_init_
+	soaf_action_cfg_ soaf_action_init_ "" "" "" "" "" $SOAF_POS_PRE
 
 ################################################################################
 ################################################################################
@@ -36,7 +39,7 @@ soaf_create_action() {
 
 soaf_no_prepenv_action() {
 	local ACTION=$1
-	SOAF_ACTION_NOPREPENV_LIST="$SOAF_ACTION_NOPREPENV_LIST $ACTION"
+	SOAF_ACTION_NOPREPENV_LIST+=" $ACTION"
 }
 
 ################################################################################

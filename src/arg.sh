@@ -18,7 +18,7 @@ soaf_arg_parse_all() {
 	for arg in "${SOAF_ARG_ALL[@]}"
 	do
 		case $arg in
-			--help|-h) ACTION=$SOAF_DEFINE_USAGE_ACTION;;
+			--help|-h) ACTION=$SOAF_USAGE_ACTION;;
 			*) soaf_arg_parse_ "$arg";;
 		esac
 	done

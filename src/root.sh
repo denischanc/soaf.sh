@@ -12,4 +12,4 @@ soaf_root_init_() {
 }
 
 soaf_create_module soaf.core.root $SOAF_VERSION "" \
-	soaf_root_cfg_ soaf_root_init_ "" "" "" "" "" $SOAF_POS_PRE
+	soaf_root_cfg_ soaf_root_init_
