@@ -31,15 +31,13 @@ soaf_map_cat() {
 	eval $SOAF_RET[$FIELD]+=\" \$VAL\"
 }
 
-### TODO : update SOAF_RET in return io $VAR_DST
 soaf_map_get_var() {
-	local VAR_DST=$1
-	local NAME=$2
-	local FIELD=$3
-	local DFT=$4
+	local NAME=$1
+	local FIELD=$2
+	local DFT=$3
 	soaf_map_var_ $NAME
 	declare -Ag $SOAF_RET
-	eval $VAR_DST=\${$SOAF_RET[$FIELD]:-\$DFT}
+	eval SOAF_RET=\${$SOAF_RET[$FIELD]:-\$DFT}
 }
 
 ################################################################################
