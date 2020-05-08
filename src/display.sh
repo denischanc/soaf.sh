@@ -70,7 +70,7 @@ soaf_dis_txt_off() {
 		local I=0
 		while [ $I -lt $OFF ]
 		do
-			TXT_PRE=$TXT_PRE$SOAF_TXT_PRE
+			TXT_PRE+=$SOAF_TXT_PRE
 			I=$(($I + 1))
 		done
 		eval $VAR=\$TXT_PRE

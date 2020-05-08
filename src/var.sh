@@ -142,7 +142,7 @@ soaf_var_subst_proc() {
 
 soaf_var_subst_() {
 	local VAR=$1
-	SOAF_VAR_OKSUBST_LIST="$SOAF_VAR_OKSUBST_LIST $VAR"
+	SOAF_VAR_OKSUBST_LIST+=" $VAR"
 	eval local VAL=\$$VAR
 	local SUBST_OK=
 	local __var
@@ -180,17 +180,17 @@ soaf_var_dis() {
 		soaf_list_join "$ENUM" "" "$SOAF_VAR_VAL_CTL_LIST"
 		local ENUM_DIS=$SOAF_RET_LIST
 		soaf_map_get $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
-		[ -n "$SOAF_RET" ] && ENUM_DIS="$ENUM_DIS|"
-		TXT="$TXT [$ENUM_DIS]"
+		[ -n "$SOAF_RET" ] && ENUM_DIS+="|"
+		TXT+=" [$ENUM_DIS]"
 	else
-		TXT="$TXT '...'"
+		TXT+=" '...'"
 	fi
 	soaf_map_get $VAR $SOAF_VAR_DFT_VAL_ATTR
 	local DFT_VAL=$SOAF_RET
 	if [ -n "$DFT_VAL" ]
 	then
 		soaf_console_msg_ctl "$DFT_VAL" $SOAF_CONSOLE_CTL_BOLD
-		TXT="$TXT (default: '$SOAF_CONSOLE_RET')"
+		TXT+=" (default: '$SOAF_CONSOLE_RET')"
 	fi
 	soaf_dis_txt "$TXT"
 }

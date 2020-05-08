@@ -96,7 +96,7 @@ soaf_do_job_process_() {
 	then
 		soaf_log_err "No command for job : [$JOB] ???" $SOAF_JOB_LOG_NAME
 	else
-		CMD="$CMD > $LOG_FILE 2> $LOG_ERR_FILE"
+		CMD+=" > $LOG_FILE 2> $LOG_ERR_FILE"
 		soaf_log_info "Start $JOB_UPPER ..." $SOAF_JOB_LOG_NAME
 		soaf_cmd_info "$CMD" $SOAF_JOB_LOG_NAME "OK"
 		if [ "$SOAF_RET" = "0" ]

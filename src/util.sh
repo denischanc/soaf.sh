@@ -48,7 +48,7 @@ soaf_cfg_set() {
 soaf_noexec_prog() {
 	local PROG=$1
 	local FN=$2
-	SOAF_NOEXEC_PROG_LIST="$SOAF_NOEXEC_PROG_LIST $PROG"
+	SOAF_NOEXEC_PROG_LIST+=" $PROG"
 	soaf_map_extend $PROG $SOAF_UTIL_NOEXEC_FN_ATTR $FN
 }
 

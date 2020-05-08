@@ -129,7 +129,7 @@ soaf_state_pid_file_() {
 	local NATURE=$1
 	local CUR_STATE=$2
 	SOAF_STATE_RET=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.state
-	SOAF_STATE_RET=$SOAF_STATE_RET.$NATURE.$CUR_STATE.pid
+	SOAF_STATE_RET+=.$NATURE.$CUR_STATE.pid
 }
 
 ################################################################################
@@ -317,9 +317,9 @@ soaf_state_working_step_main_with_pid_() {
 	soaf_state_pid_file_ $NATURE $CUR_STATE
 	local PID_FILE=$SOAF_STATE_RET
 	local FN_ARGS="soaf_state_working_step_inerr_"
-	FN_ARGS="$FN_ARGS $NATURE $PROP_NATURE $CUR_STATE"
+	FN_ARGS+=" $NATURE $PROP_NATURE $CUR_STATE"
 	local MSG="State [$CUR_STATE] of nature [$NATURE] works already"
-	MSG="$MSG (pid: [@[PID]])."
+	MSG+=" (pid: [@[PID]])."
 	soaf_fn_args_check_pid "$FN_ARGS" $PID_FILE $SOAF_STATE_LOG_NAME \
 		"$MSG" $SOAF_LOG_DEBUG
 }
@@ -439,8 +439,8 @@ soaf_state_inerr_step_main_() {
 			fi
 		else
 			local MSG="State [$CUR_STATE] of nature [$NATURE] in"
-			MSG="$MSG step [$SOAF_STATE_STEP_INERR]"
-			MSG="$MSG (touch [$REWORK_FILE] to rework)."
+			MSG+=" step [$SOAF_STATE_STEP_INERR]"
+			MSG+=" (touch [$REWORK_FILE] to rework)."
 			soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
 			soaf_notif "$MSG"
 		fi

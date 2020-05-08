@@ -76,24 +76,24 @@ soaf_notif_sms_free_() {
 			soaf_net_cfg_proxy_port $PROXY_NATURE
 			local PROXY_PORT=$SOAF_NET_RET
 			local PROXY="$PROXY_USER:$PROXY_PASS@$PROXY_HOST:$PROXY_PORT"
-			CURL_ARGS="$CURL_ARGS --proxy $PROXY"
+			CURL_ARGS+=" --proxy $PROXY"
 		fi
 		soaf_map_get $NATURE $SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR
 		local CACERT_FILE=$SOAF_RET
 		if [ -n "$CACERT_FILE" ]
 		then
-			CURL_ARGS="$CURL_ARGS --cacert $CACERT_FILE"
+			CURL_ARGS+=" --cacert $CACERT_FILE"
 		else
-			CURL_ARGS="$CURL_ARGS --insecure"
+			CURL_ARGS+=" --insecure"
 		fi
 		soaf_log_level $SOAF_NOTIF_SMS_FREE_LOG_NAME
 		if [ "$SOAF_LOG_RET" = "$SOAF_LOG_DEBUG" ]
 		then
-			CURL_ARGS="$CURL_ARGS --verbose"
+			CURL_ARGS+=" --verbose"
 		else
-			CURL_ARGS="$CURL_ARGS --silent --show-error"
+			CURL_ARGS+=" --silent --show-error"
 		fi
-		CURL_ARGS="$CURL_ARGS --fail --get $SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT"
+		CURL_ARGS+=" --fail --get $SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT"
 		MSG="[$HOST:$PROG] $MSG"
 		### USER and PASS must not be logged
 		soaf_log_prep_cmd_err "curl $CURL_ARGS \

@@ -18,7 +18,7 @@ soaf_create_module soaf.core.info $SOAF_VERSION "" "" soaf_info_init_
 
 soaf_info_add_var() {
 	local VAR_LIST=$1
-	SOAF_INFO_VAR_LIST="$SOAF_INFO_VAR_LIST $VAR_LIST"
+	SOAF_INFO_VAR_LIST+=" $VAR_LIST"
 }
 
 ################################################################################
