@@ -1,7 +1,7 @@
 ################################################################################
 ################################################################################
 
-soaf_arg_parse() {
+soaf_arg_parse_() {
 	local __ARG_TMP=$1
 	local __VAR_TMP=${__ARG_TMP%%=*}
 	if [ -n "$__VAR_TMP" ]
@@ -19,7 +19,7 @@ soaf_arg_parse_all() {
 	do
 		case $arg in
 			--help|-h) ACTION=$SOAF_DEFINE_USAGE_ACTION;;
-			*) soaf_arg_parse "$arg";;
+			*) soaf_arg_parse_ "$arg";;
 		esac
 	done
 }

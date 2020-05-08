@@ -39,18 +39,18 @@ soaf_create_var_usage() {
 soaf_var_usage_dis() {
 	local VAR=$1
 	soaf_var_dis $VAR
-	local ACTION_LIST DIS_BY_ACTION
-	soaf_map_get_var ACTION_LIST $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR
-	soaf_map_get_var DIS_BY_ACTION $VAR $SOAF_VAR_USAGE_DIS_BY_ACTION_ATTR
+	soaf_map_get_var $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR
+	local ACTION_LIST=$SOAF_RET
+	soaf_map_get_var $VAR $SOAF_VAR_USAGE_DIS_BY_ACTION_ATTR
+	local DIS_BY_ACTION=$SOAF_RET
 	if [ -n "$ACTION_LIST" -a -z "$DIS_BY_ACTION" ]
 	then
 		soaf_list_join "$ACTION_LIST"
 		TXT="ACTION=[$SOAF_RET_LIST]"
 		soaf_dis_txt_off "$TXT" 2
 	fi
-	local FN
-	soaf_map_get_var FN $VAR $SOAF_VAR_USAGE_FN_ATTR
-	[ -n "$FN" ] && $FN $VAR
+	soaf_map_get_var $VAR $SOAF_VAR_USAGE_FN_ATTR
+	[ -n "$SOAF_RET" ] && $SOAF_RET $VAR
 }
 
 ################################################################################
@@ -59,8 +59,8 @@ soaf_var_usage_dis() {
 soaf_var_usage_check_required() {
 	local VAR=$1
 	local RET="OK"
-	local ACTION_LIST
-	soaf_map_get_var ACTION_LIST $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR
+	soaf_map_get_var $VAR $SOAF_VAR_USAGE_ACTION_LIST_ATTR
+	local ACTION_LIST=$SOAF_RET
 	if [ -n "$ACTION_LIST" ]
 	then
 		soaf_list_found "$ACTION_LIST" $SOAF_ACTION

@@ -10,18 +10,19 @@ SOAF_DISPLAY_VAR2FN_MAP="soaf.dis.var2fn"
 ################################################################################
 ################################################################################
 
-soaf_dis_static() {
+soaf_dis_static_() {
 	soaf_usermsgproc_add_use_fn soaf_dis_use_usermsgproc
 }
 
-soaf_dis_cfg() {
+soaf_dis_cfg_() {
 	SOAF_TITLE_PRE="==[[ "
 	SOAF_TXT_PRE="  "
 	soaf_var_add_unsubst "SOAF_DISPLAY_TXT_PRE_1 SOAF_DISPLAY_TXT_PRE_2 \
 		SOAF_DISPLAY_TXT_PRE_3"
 }
 
-soaf_create_module soaf.core.display $SOAF_VERSION soaf_dis_static soaf_dis_cfg
+soaf_create_module soaf.core.display $SOAF_VERSION soaf_dis_static_ \
+	soaf_dis_cfg_
 
 ################################################################################
 ################################################################################
@@ -111,8 +112,8 @@ soaf_dis_var_list() {
 	local var
 	for var in $VAR_LIST
 	do
-		local FN
-		soaf_map_get_var FN $SOAF_DISPLAY_VAR2FN_MAP $var
+		soaf_map_get_var $SOAF_DISPLAY_VAR2FN_MAP $var
+		local FN=$SOAF_RET
 		if [ -n "$FN" ]
 		then
 			$FN $var

@@ -10,7 +10,7 @@ SOAF_MAIN_CREATE_PRJ_ACTION="create_prj"
 ################################################################################
 ################################################################################
 
-soaf_main_create_prj_usage() {
+soaf_main_create_prj_usage_() {
 	soaf_dis_txt_stdin << _EOF_
 Create a "Hello World !!!" project.
 Project is created in PRJ_DIR directory. If PRJ_NAME is empty then PRJ_NAME
@@ -18,7 +18,7 @@ value is "basename PRJ_DIR".
 _EOF_
 }
 
-soaf_main_create_prj() {
+soaf_main_create_prj_() {
 	[ -z "$SOAF_PRJ_NAME" ] && SOAF_PRJ_NAME=$(basename $SOAF_PRJ_DIR)
 	local SRC_DIR=$SOAF_PRJ_DIR/src
 	soaf_mkdir $SRC_DIR $SOAF_LOG_INFO $SOAF_MAIN_LOG_NAME
@@ -34,9 +34,9 @@ soaf_main_create_prj() {
 ################################################################################
 ################################################################################
 
-soaf_main_init() {
+soaf_main_init_() {
 	soaf_create_action $SOAF_MAIN_CREATE_PRJ_ACTION \
-		soaf_main_create_prj soaf_main_create_prj_usage
+		soaf_main_create_prj_ soaf_main_create_prj_usage_
 	soaf_usage_add_var "PRJ_DIR PRJ_NAME" $SOAF_DEFINE_VAR_PREFIX
 	soaf_create_var_usage PRJ_DIR "" "" "" "" $SOAF_MAIN_CREATE_PRJ_ACTION "OK"
 }
@@ -44,9 +44,9 @@ soaf_main_init() {
 ################################################################################
 ################################################################################
 
-soaf_main__() {
+soaf_main_() {
 	soaf_create_appli_nature $SOAF_MAIN_APPLI_NATURE "" "" \
-		"" soaf_main_init
+		"" soaf_main_init_
 	soaf_engine $SOAF_MAIN_APPLI_NATURE
 }
 
@@ -55,5 +55,5 @@ soaf_main__() {
 
 if [ "$(basename $0)" = "$SOAF_NAME" ]
 then
-	soaf_main__
+	soaf_main_
 fi

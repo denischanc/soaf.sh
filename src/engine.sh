@@ -34,14 +34,14 @@ soaf_engine_log_level() {
 ################################################################################
 ################################################################################
 
-soaf_engine_source_ext_cfg() {
+soaf_engine_source_ext_cfg_() {
 	soaf_cfg_set SOAF_ENGINE_EXT_GLOB_DIR /etc/$SOAF_APPLI_NAME
 	soaf_cfg_set SOAF_ENGINE_EXT_LOC_DIR $HOME/.$SOAF_APPLI_NAME
 	soaf_cfg_set SOAF_ENGINE_EXT_ALL_DIR \
 		"$SOAF_ENGINE_EXT_GLOB_DIR $SOAF_ENGINE_EXT_LOC_DIR"
 }
 
-soaf_engine_source_ext() {
+soaf_engine_source_ext_() {
 	local FILE=$1
 	local d
 	for d in $SOAF_ENGINE_EXT_ALL_DIR
@@ -54,10 +54,10 @@ soaf_engine_source_ext() {
 ################################################################################
 ################################################################################
 
-soaf_engine_module() {
+soaf_engine_module_() {
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_MODULE_S
 	### FILEs
-	soaf_engine_source_ext $SOAF_ENGINE_EXT_MODULE_FILE
+	soaf_engine_source_ext_ $SOAF_ENGINE_EXT_MODULE_FILE
 	### MODULEs
 	soaf_module_resolve_dep
 }
@@ -65,24 +65,24 @@ soaf_engine_module() {
 ################################################################################
 ################################################################################
 
-soaf_engine_static() {
+soaf_engine_static_() {
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_STATIC_S
 	soaf_log_add_log_level_fn soaf_engine_log_level
 	### MODULEs
 	soaf_module_apply_all_fn_attr $SOAF_MODULE_STATIC_FN_ATTR
 	### FILEs
-	soaf_engine_source_ext $SOAF_ENGINE_EXT_STATIC_FILE
+	soaf_engine_source_ext_ $SOAF_ENGINE_EXT_STATIC_FILE
 }
 
 ################################################################################
 ################################################################################
 
-soaf_engine_cfg() {
+soaf_engine_cfg_() {
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_CFG_S
 	### MODULEs
 	soaf_module_apply_all_fn_attr $SOAF_MODULE_CFG_FN_ATTR
 	### FILEs
-	soaf_engine_source_ext $SOAF_ENGINE_EXT_CFG_FILE
+	soaf_engine_source_ext_ $SOAF_ENGINE_EXT_CFG_FILE
 	### ARGs
 	soaf_arg_parse_all
 	### VARs
@@ -92,10 +92,10 @@ soaf_engine_cfg() {
 ################################################################################
 ################################################################################
 
-soaf_engine_init() {
+soaf_engine_init_() {
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_INIT_S
 	### FILEs
-	soaf_engine_source_ext $SOAF_ENGINE_EXT_INIT_FILE
+	soaf_engine_source_ext_ $SOAF_ENGINE_EXT_INIT_FILE
 	### MODULEs
 	soaf_module_apply_all_reverse_fn_attr $SOAF_MODULE_INIT_FN_ATTR
 	### ENGINE
@@ -110,26 +110,26 @@ soaf_engine_init() {
 ################################################################################
 ################################################################################
 
-soaf_engine_prepenv() {
+soaf_engine_prepenv_() {
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_PREP_S
 	### MODULEs
 	soaf_module_apply_all_fn_attr $SOAF_MODULE_PREPENV_FN_ATTR
 	### FILEs
-	soaf_engine_source_ext $SOAF_ENGINE_EXT_PREPENV_FILE
+	soaf_engine_source_ext_ $SOAF_ENGINE_EXT_PREPENV_FILE
 }
 
 ################################################################################
 ################################################################################
 
-soaf_engine_action() {
+soaf_engine_action_() {
 	soaf_list_found "$SOAF_ACTION_NOPREPENV_LIST" $SOAF_ACTION
-	[ -z "$SOAF_RET_LIST" ] && soaf_engine_prepenv
+	[ -z "$SOAF_RET_LIST" ] && soaf_engine_prepenv_
 	SOAF_ENGINE_STATE=$SOAF_ENGINE_ALIVE_S
 	local VA_NATURE=soaf.engine.va.action
 	soaf_create_varargs_nature $VA_NATURE $SOAF_ACTION
 	soaf_module_apply_all_fn_attr $SOAF_MODULE_PRE_ACTION_FN_ATTR $VA_NATURE
-	local FN
-	soaf_map_get_var FN $SOAF_ACTION $SOAF_ACTION_FN_ATTR
+	soaf_map_get_var $SOAF_ACTION $SOAF_ACTION_FN_ATTR
+	local FN=$SOAF_RET
 	[ -n "$FN" ] && $FN $SOAF_ACTION
 	soaf_module_apply_all_fn_attr $SOAF_MODULE_POST_ACTION_FN_ATTR $VA_NATURE
 }
@@ -163,12 +163,12 @@ soaf_engine_exit_dev() {
 soaf_engine() {
 	local APPLI_NATURE=$1
 	soaf_appli_def_name $APPLI_NATURE
-	soaf_engine_source_ext_cfg
-	soaf_engine_module
-	soaf_engine_static
-	soaf_engine_cfg
-	soaf_engine_init
+	soaf_engine_source_ext_cfg_
+	soaf_engine_module_
+	soaf_engine_static_
+	soaf_engine_cfg_
+	soaf_engine_init_
 	soaf_var_check_all
-	soaf_engine_action
+	soaf_engine_action_
 	soaf_engine_exit 0
 }

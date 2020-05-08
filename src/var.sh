@@ -17,12 +17,12 @@ SOAF_VAR_PAT_G="$SOAF_VAR_PAT_O$SOAF_VAR_PAT_V$SOAF_VAR_PAT_C"
 ################################################################################
 ################################################################################
 
-soaf_var_cfg() {
+soaf_var_cfg_() {
 	SOAF_VAR_CTL_LIST=$SOAF_CONSOLE_FG_B_MAGENTA
 	SOAF_VAR_VAL_CTL_LIST="$SOAF_CONSOLE_FG_CYAN $SOAF_CONSOLE_CTL_ITALIC"
 }
 
-soaf_create_module soaf.core.var $SOAF_VERSION "" soaf_var_cfg
+soaf_create_module soaf.core.var $SOAF_VERSION "" soaf_var_cfg_
 
 ################################################################################
 ################################################################################
@@ -63,8 +63,8 @@ soaf_var_err_msg_notinenum_() {
 
 soaf_var_real_name_() {
 	local VAR=$1
-	local PREFIX
-	soaf_map_get_var PREFIX $VAR $SOAF_VAR_PREFIX_ATTR
+	soaf_map_get_var $VAR $SOAF_VAR_PREFIX_ATTR
+	local PREFIX=$SOAF_RET
 	[ -n "$PREFIX" ] && SOAF_VAR_RET=${PREFIX}_$VAR || SOAF_VAR_RET=$VAR
 }
 
@@ -80,8 +80,8 @@ soaf_var_prefix_name() {
 
 soaf_var_check_() {
 	local VAR=$1
-	local DFT_VAL
-	soaf_map_get_var DFT_VAL $VAR $SOAF_VAR_DFT_VAL_ATTR
+	soaf_map_get_var $VAR $SOAF_VAR_DFT_VAL_ATTR
+	local DFT_VAL=$SOAF_RET
 	soaf_var_real_name_ $VAR
 	local VAR_REAL=$SOAF_VAR_RET
 	eval local VAL=\$$VAR_REAL
@@ -93,14 +93,13 @@ soaf_var_check_() {
 		if [ -z "$VAL" ]
 		then
 			### Check if val empty accepted
-			local A_E
-			soaf_map_get_var A_E $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
-			[ -z "$A_E" ] && \
+			soaf_map_get_var $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
+			[ -z "$SOAF_RET" ] && \
 				soaf_engine_exit "" "Variable [$VAR] not filled." \
 					$SOAF_VAR_LOG_NAME
 		else
-			local ENUM
-			soaf_map_get_var ENUM $VAR $SOAF_VAR_ENUM_ATTR
+			soaf_map_get_var $VAR $SOAF_VAR_ENUM_ATTR
+			local ENUM=$SOAF_RET
 			if [ -n "$ENUM" ]
 			then
 				### Check val in enum
@@ -174,20 +173,20 @@ soaf_var_dis() {
 	local VAR=$1
 	soaf_console_msg_ctl $VAR "$SOAF_VAR_CTL_LIST"
 	local TXT="$SOAF_CONSOLE_RET:"
-	local ENUM A_E
-	soaf_map_get_var ENUM $VAR $SOAF_VAR_ENUM_ATTR
-	soaf_map_get_var A_E $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
+	soaf_map_get_var $VAR $SOAF_VAR_ENUM_ATTR
+	local ENUM=$SOAF_RET
 	if [ -n "$ENUM" ]
 	then
 		soaf_list_join "$ENUM" "" "$SOAF_VAR_VAL_CTL_LIST"
 		local ENUM_DIS=$SOAF_RET_LIST
-		[ -n "$A_E" ] && ENUM_DIS="$ENUM_DIS|"
+		soaf_map_get_var $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
+		[ -n "$SOAF_RET" ] && ENUM_DIS="$ENUM_DIS|"
 		TXT="$TXT [$ENUM_DIS]"
 	else
 		TXT="$TXT '...'"
 	fi
-	local DFT_VAL
-	soaf_map_get_var DFT_VAL $VAR $SOAF_VAR_DFT_VAL_ATTR
+	soaf_map_get_var $VAR $SOAF_VAR_DFT_VAL_ATTR
+	local DFT_VAL=$SOAF_RET
 	if [ -n "$DFT_VAL" ]
 	then
 		soaf_console_msg_ctl "$DFT_VAL" $SOAF_CONSOLE_CTL_BOLD

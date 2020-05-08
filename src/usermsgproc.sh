@@ -9,7 +9,7 @@ SOAF_USERMSGPROC_LOG_ORG="LOG"
 ################################################################################
 ################################################################################
 
-soaf_usermsgproc_init() {
+soaf_usermsgproc_init_() {
 	if [ -n "$SOAF_USERMSG_DEBUG" ]
 	then
 		soaf_all_use_usermsgproc
@@ -18,7 +18,7 @@ soaf_usermsgproc_init() {
 }
 
 soaf_create_module soaf.core.usermsgproc $SOAF_VERSION "" \
-	"" soaf_usermsgproc_init
+	"" soaf_usermsgproc_init_
 
 ################################################################################
 ################################################################################
@@ -33,7 +33,7 @@ soaf_create_usermsgproc_nature() {
 ################################################################################
 ################################################################################
 
-soaf_usermsgproc_debug() {
+soaf_usermsgproc_debug_() {
 	local ORG=$1
 	local MSG=$2
 	case $ORG in
@@ -47,7 +47,7 @@ soaf_usermsgproc_debug() {
 
 soaf_create_usermsgproc_debug() {
 	soaf_create_usermsgproc_nature "soaf.usermsgproc.debug" \
-		soaf_usermsgproc_debug
+		soaf_usermsgproc_debug_
 }
 
 ################################################################################
@@ -77,8 +77,7 @@ soaf_usermsgproc__() {
 	local USED_NATURE=$SOAF_USERMSGPROC_USED_NATURE
 	if [ -n "$USED_NATURE" ]
 	then
-		local FN
-		soaf_map_get_var FN $USED_NATURE $SOAF_USERMSGPROC_FN_ATTR
-		[ -n "$FN" ] && $FN $ORG "$MSG"
+		soaf_map_get_var $USED_NATURE $SOAF_USERMSGPROC_FN_ATTR
+		[ -n "$SOAF_RET" ] && $SOAF_RET $ORG "$MSG"
 	fi
 }

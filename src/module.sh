@@ -59,8 +59,8 @@ soaf_module_resolve_dep_module_() {
 		local ERR_MSG="Module not found : [$MODULE]."
 	else
 		DEP_LIST_MSG="$DEP_LIST_MSG -> [$MODULE]"
-		local DEP_STATE
-		soaf_map_get_var DEP_STATE $MODULE $SOAF_MODULE_DEP_STATE_ATTR
+		soaf_map_get_var $MODULE $SOAF_MODULE_DEP_STATE_ATTR
+		local DEP_STATE=$SOAF_RET
 		if [ "$DEP_STATE" = "$SOAF_MODULE_DEP_INPROG_S" ]
 		then
 			local ERR_MSG="Module dependance deadlock : $DEP_LIST_MSG."
@@ -68,9 +68,9 @@ soaf_module_resolve_dep_module_() {
 		then
 			soaf_map_extend $MODULE $SOAF_MODULE_DEP_STATE_ATTR \
 				$SOAF_MODULE_DEP_INPROG_S
-			local DEP_LIST dep_module
-			soaf_map_get_var DEP_LIST $MODULE $SOAF_MODULE_DEP_LIST_ATTR
-			for dep_module in $DEP_LIST
+			soaf_map_get_var $MODULE $SOAF_MODULE_DEP_LIST_ATTR
+			local dep_module
+			for dep_module in $SOAF_RET
 			do
 				soaf_module_resolve_dep_module_ $dep_module "$DEP_LIST_MSG"
 			done
@@ -98,9 +98,8 @@ soaf_module_resolve_dep() {
 
 soaf_module_version() {
 	local MODULE_NAME=$1
-	local VERSION
-	soaf_map_get_var VERSION $MODULE_NAME $SOAF_MODULE_VERSION_ATTR
-	soaf_dis_txt "$MODULE_NAME-$VERSION"
+	soaf_map_get_var $MODULE_NAME $SOAF_MODULE_VERSION_ATTR
+	soaf_dis_txt "$MODULE_NAME-$SOAF_RET"
 }
 
 ################################################################################
@@ -154,10 +153,11 @@ soaf_module_apply_fn_attr_() {
 	local MODULE_LIST=$1
 	local FN_ATTR=$2
 	local VA_NATURE=$3
-	local module FN
+	local module
 	for module in $MODULE_LIST
 	do
-		soaf_map_get_var FN $module $FN_ATTR
+		soaf_map_get_var $module $FN_ATTR
+		local FN=$SOAF_RET
 		[ -n "$FN" ] && soaf_module_call_fn_ $module $FN $VA_NATURE
 	done
 }

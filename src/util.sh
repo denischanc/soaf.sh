@@ -8,11 +8,11 @@ SOAF_UTIL_DAY_PROP="soaf.util.day"
 ################################################################################
 ################################################################################
 
-soaf_util_init() {
+soaf_util_init_() {
 	soaf_info_add_var SOAF_NOEXEC_PROG_LIST
 }
 
-soaf_create_module soaf.core.util $SOAF_VERSION "" "" soaf_util_init
+soaf_create_module soaf.core.util $SOAF_VERSION "" "" soaf_util_init_
 
 ################################################################################
 ################################################################################
@@ -77,8 +77,8 @@ soaf_cmd() {
 		fi
 		soaf_log $LOG_LEVEL "Command return : [$RET]." $LOG_NAME
 	else
-		local NOEXEC_FN
-		soaf_map_get_var NOEXEC_FN $CMD_PROG $SOAF_UTIL_NOEXEC_FN_ATTR
+		soaf_map_get_var $CMD_PROG $SOAF_UTIL_NOEXEC_FN_ATTR
+		local NOEXEC_FN=$SOAF_RET
 		SOAF_RET=
 		if [ -n "$NOEXEC_FN" ]
 		then

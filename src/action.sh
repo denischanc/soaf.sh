@@ -8,16 +8,16 @@ SOAF_ACTION_USAGE_VAR_LIST_ATTR="soaf_action_usage_var_list"
 ################################################################################
 ################################################################################
 
-soaf_action_cfg() {
+soaf_action_cfg_() {
 	SOAF_ACTION_NAME_COLOR=$SOAF_CONSOLE_FG_B_GREEN
 }
 
-soaf_action_init() {
+soaf_action_init_() {
 	soaf_usage_add_var ACTION $SOAF_DEFINE_VAR_PREFIX $SOAF_POS_PRE
 }
 
 soaf_create_module soaf.core.action $SOAF_VERSION "" \
-	soaf_action_cfg soaf_action_init
+	soaf_action_cfg_ soaf_action_init_
 
 ################################################################################
 ################################################################################
@@ -61,9 +61,10 @@ soaf_action_add_usage_var() {
 
 soaf_action_dis_usage() {
 	local ACTION=$1
-	local FN VAR_LIST
-	soaf_map_get_var FN $ACTION $SOAF_ACTION_USAGE_FN_ATTR
-	soaf_map_get_var VAR_LIST $ACTION $SOAF_ACTION_USAGE_VAR_LIST_ATTR
+	soaf_map_get_var $ACTION $SOAF_ACTION_USAGE_FN_ATTR
+	local FN=$SOAF_RET
+	soaf_map_get_var $ACTION $SOAF_ACTION_USAGE_VAR_LIST_ATTR
+	local VAR_LIST=$SOAF_RET
 	if [ -n "$FN" -o -n "$VAR_LIST" ]
 	then
 		soaf_console_msg_ctl $ACTION $SOAF_ACTION_NAME_COLOR

@@ -9,18 +9,19 @@ SOAF_APPLI_NAME_ATTR="soaf_appli_name"
 ################################################################################
 ################################################################################
 
-soaf_appli_init() {
+soaf_appli_init_() {
 	soaf_info_add_var "SOAF_APPLI_SH_DIR SOAF_APPLI_SH_NAME"
 }
 
-soaf_create_module soaf.core.appli $SOAF_VERSION "" "" soaf_appli_init
+soaf_create_module soaf.core.appli $SOAF_VERSION "" "" soaf_appli_init_
 
 ################################################################################
 ################################################################################
 
 soaf_appli_def_name() {
 	local NATURE=$1
-	soaf_map_get_var SOAF_APPLI_NAME $NATURE $SOAF_APPLI_NAME_ATTR
+	soaf_map_get_var $NATURE $SOAF_APPLI_NAME_ATTR
+	SOAF_APPLI_NAME=$SOAF_RET
 }
 
 ################################################################################

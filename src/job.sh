@@ -86,12 +86,12 @@ soaf_do_job_process_() {
 	local LOG_DIR=$3
 	local LOG_FILE=$LOG_DIR/$JOB.log
 	local LOG_ERR_FILE=$LOG_DIR/$JOB-err.log
-	local ROLL_SIZE
-	soaf_map_get_var ROLL_SIZE $JOB $SOAF_JOB_ROLL_SIZE_ATTR
+	soaf_map_get_var $JOB $SOAF_JOB_ROLL_SIZE_ATTR
+	local ROLL_SIZE=$SOAF_RET
 	soaf_do_job_roll_ $LOG_FILE $ROLL_SIZE
 	soaf_do_job_roll_ $LOG_ERR_FILE $ROLL_SIZE
-	local CMD
-	soaf_map_get_var CMD $JOB $SOAF_JOB_CMD_ATTR
+	soaf_map_get_var $JOB $SOAF_JOB_CMD_ATTR
+	local CMD=$SOAF_RET
 	if [ -z "$CMD" ]
 	then
 		soaf_log_err "No command for job : [$JOB] ???" $SOAF_JOB_LOG_NAME
@@ -105,9 +105,8 @@ soaf_do_job_process_() {
 			soaf_log_info "$JOB_UPPER OK." $SOAF_JOB_LOG_NAME
 		else
 			soaf_log_err "$JOB_UPPER KO." $SOAF_JOB_LOG_NAME
-			local IS_NOTIF
-			soaf_map_get_var IS_NOTIF $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR
-			[ -n "$IS_NOTIF" ] && soaf_notif "$JOB_UPPER job KO."
+			soaf_map_get_var $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR
+			[ -n "$SOAF_RET" ] && soaf_notif "$JOB_UPPER job KO."
 		fi
 	fi
 }
@@ -119,9 +118,9 @@ soaf_do_job_valid_() {
 	local JOB=$1
 	soaf_upper $JOB
 	local JOB_UPPER=$SOAF_RET
-	local LOG_DIR
-	soaf_map_get_var LOG_DIR $JOB $SOAF_JOB_LOG_DIR_ATTR \
+	soaf_map_get_var $JOB $SOAF_JOB_LOG_DIR_ATTR \
 		$SOAF_LOG_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB
+	local LOG_DIR=$SOAF_RET
 	soaf_mkdir $LOG_DIR "" $SOAF_JOB_LOG_NAME
 	local PID_FILE=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB.pid
 	local FN_ARGS="soaf_do_job_process_ $JOB $JOB_UPPER $LOG_DIR"

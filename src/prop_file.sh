@@ -12,21 +12,21 @@ SOAF_PF_IN_CACHE_ATTR="soaf_pf_in_cache"
 ################################################################################
 ################################################################################
 
-soaf_pf_static() {
+soaf_pf_static_() {
 	soaf_log_add_log_level_fn soaf_pf_log_level
 }
 
-soaf_pf_cfg() {
+soaf_pf_cfg_() {
 	SOAF_PF_FILE=@[SOAF_WORK_DIR]/$SOAF_APPLI_NAME.prop
 	soaf_var_add_unsubst SOAF_PF_FILE
 }
 
-soaf_pf_init() {
+soaf_pf_init_() {
 	soaf_info_add_var SOAF_PF_FILE
 }
 
-soaf_create_module soaf.extra.pf $SOAF_VERSION soaf_pf_static \
-	soaf_pf_cfg soaf_pf_init
+soaf_create_module soaf.extra.pf $SOAF_VERSION soaf_pf_static_ \
+	soaf_pf_cfg_ soaf_pf_init_
 
 ################################################################################
 ################################################################################
@@ -50,7 +50,7 @@ soaf_create_prop_file_nature() {
 ################################################################################
 ################################################################################
 
-soaf_prop_file_upd_cache() {
+soaf_prop_file_upd_cache_() {
 	local PROP_UNIQ=$1
 	local VAL=$2
 	soaf_map_extend $PROP_UNIQ $SOAF_PF_VAL_ATTR "$VAL"
@@ -60,12 +60,12 @@ soaf_prop_file_upd_cache() {
 ################################################################################
 ################################################################################
 
-soaf_prop_file_set_require() {
+soaf_prop_file_set_require_() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local FILE
-	soaf_map_get_var FILE $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
+	soaf_map_get_var $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
+	local FILE=$SOAF_RET
 	local PROP_UNIQ=$NATURE.$PROP
 	if [ -f $FILE ]
 	then
@@ -83,13 +83,13 @@ $PROP_UNIQ=$VAL
 _EOF_
 	} |& soaf_log_stdin "" $SOAF_PF_LOG_NAME
 	SOAF_PROP_FILE_NO_GET_LOG="OK"
-	soaf_prop_file_get_no_cache $NATURE $PROP
+	soaf_prop_file_get_no_cache_ $NATURE $PROP
 	SOAF_PROP_FILE_NO_GET_LOG=
 	if [ -n "$SOAF_PROP_FILE_RET" ]
 	then
 		if [ "$SOAF_PROP_FILE_VAL" = "$VAL" ]
 		then
-			soaf_prop_file_upd_cache $PROP_UNIQ "$VAL"
+			soaf_prop_file_upd_cache_ $PROP_UNIQ "$VAL"
 			local MSG="Set prop [$PROP_UNIQ] value (file : [$FILE]) : [$VAL]."
 			soaf_log_debug "$MSG" $SOAF_PF_LOG_NAME
 		else
@@ -110,18 +110,18 @@ soaf_prop_file_set() {
 	if [ -n "$SOAF_PROP_FILE_RET" ]
 	then
 		[ "$SOAF_PROP_FILE_VAL" != "$VAL" ] && \
-			soaf_prop_file_set_require $NATURE $PROP "$VAL"
+			soaf_prop_file_set_require_ $NATURE $PROP "$VAL"
 	fi
 }
 
 ################################################################################
 ################################################################################
 
-soaf_prop_file_get_no_cache() {
+soaf_prop_file_get_no_cache_() {
 	local NATURE=$1
 	local PROP=$2
-	local FILE
-	soaf_map_get_var FILE $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
+	soaf_map_get_var $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
+	local FILE=$SOAF_RET
 	local PROP_UNIQ=$NATURE.$PROP
 	SOAF_PROP_FILE_RET="OK"
 	SOAF_PROP_FILE_VAL=
@@ -150,7 +150,7 @@ soaf_prop_file_get_no_cache() {
 		local MSG="Unable to get prop (file : [$FILE]) : [$PROP_UNIQ]."
 		soaf_log_err "$MSG" $SOAF_PF_LOG_NAME
 	else
-		soaf_prop_file_upd_cache $PROP_UNIQ "$SOAF_PROP_FILE_VAL"
+		soaf_prop_file_upd_cache_ $PROP_UNIQ "$SOAF_PROP_FILE_VAL"
 		if [ -z "$SOAF_PROP_FILE_NO_GET_LOG" ]
 		then
 			local MSG="Get prop [$PROP_UNIQ] value (file : [$FILE]) :"
@@ -163,11 +163,11 @@ soaf_prop_file_get() {
 	local NATURE=$1
 	local PROP=$2
 	local PROP_UNIQ=$NATURE.$PROP
-	local IN_CACHE
-	soaf_map_get_var IN_CACHE $PROP_UNIQ $SOAF_PF_IN_CACHE_ATTR
-	if [ -n "$IN_CACHE" ]
+	soaf_map_get_var $PROP_UNIQ $SOAF_PF_IN_CACHE_ATTR
+	if [ -n "$SOAF_RET" ]
 	then
-		soaf_map_get_var SOAF_PROP_FILE_VAL $PROP_UNIQ $SOAF_PF_VAL_ATTR
+		soaf_map_get_var $PROP_UNIQ $SOAF_PF_VAL_ATTR
+		SOAF_PROP_FILE_VAL=$SOAF_RET
 		SOAF_PROP_FILE_RET="OK"
 		if [ -z "$SOAF_PROP_FILE_NO_GET_LOG" ]
 		then
@@ -175,7 +175,7 @@ soaf_prop_file_get() {
 			soaf_log_debug "$MSG [$SOAF_PROP_FILE_VAL]." $SOAF_PF_LOG_NAME
 		fi
 	else
-		soaf_prop_file_get_no_cache $NATURE $PROP
+		soaf_prop_file_get_no_cache_ $NATURE $PROP
 	fi
 }
 
@@ -200,9 +200,8 @@ soaf_prop_file_list_add() {
 		then
 			soaf_prop_file_set $NATURE $PROP "$VAL"
 		else
-			local SEP
-			soaf_map_get_var SEP $NATURE $SOAF_PF_SEP_ATTR
-			soaf_prop_file_set $NATURE $PROP "$VAL_LIST$SEP$VAL"
+			soaf_map_get_var $NATURE $SOAF_PF_SEP_ATTR
+			soaf_prop_file_set $NATURE $PROP "$VAL_LIST$SOAF_RET$VAL"
 		fi
 	fi
 }
@@ -211,8 +210,8 @@ soaf_prop_file_list_rm() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	local SEP
-	soaf_map_get_var SEP $NATURE $SOAF_PF_SEP_ATTR
+	soaf_map_get_var $NATURE $SOAF_PF_SEP_ATTR
+	local SEP=$SOAF_RET
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
 	then
@@ -246,8 +245,8 @@ soaf_prop_file_is_val() {
 		SOAF_PROP_FILE_VAL=
 		if [ -n "$VAL_LIST" ]
 		then
-			local SEP
-			soaf_map_get_var SEP $NATURE $SOAF_PF_SEP_ATTR
+			soaf_map_get_var $NATURE $SOAF_PF_SEP_ATTR
+			local SEP=$SOAF_RET
 			VAL_LIST=$SEP$VAL_LIST$SEP
 			local DIFF=${VAL_LIST/$SEP$VAL$SEP}
 			[ "$DIFF" != "$VAL_LIST" ] && SOAF_PROP_FILE_VAL=$VAL
