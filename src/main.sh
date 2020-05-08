@@ -29,6 +29,8 @@ soaf_main_create_prj_() {
 	### Makefile
 	soaf_main_tpl_makefile_cfg $SOAF_PRJ_NAME > $SOAF_PRJ_DIR/Makefile.cfg
 	soaf_main_tpl_makefile > $SOAF_PRJ_DIR/Makefile
+	### ChangeLog
+	touch $SOAF_PRJ_DIR/ChangeLog
 }
 
 ################################################################################
