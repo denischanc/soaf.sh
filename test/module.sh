@@ -19,6 +19,8 @@ test_module_ok() {
 	soaf_create_module "m5" "1.0.0"
 }
 
+soaf_arg_parse_all
+
 case $ACTION in
 module)
 	case $ERR_TYPE in
