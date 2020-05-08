@@ -13,14 +13,22 @@ soaf_arg_parse() {
 	fi
 }
 
+soaf_arg_parse_all() {
+	local arg
+	for arg in "${SOAF_ARG_ALL[@]}"
+	do
+		case $arg in
+			--help|-h) ACTION=$SOAF_DEFINE_USAGE_ACTION;;
+			*) soaf_arg_parse "$arg";;
+		esac
+	done
+}
+
 ################################################################################
 ################################################################################
 
 while [ $# -ge 1 ]
 do
-	case $1 in
-		--help | -h) ACTION=$SOAF_DEFINE_USAGE_ACTION;;
-		*) soaf_arg_parse "$1";;
-	esac
+	SOAF_ARG_ALL+=("$1")
 	shift
 done

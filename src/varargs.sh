@@ -14,10 +14,10 @@ soaf_create_varargs_nature() {
 	local ARGS
 	while [ -n "$1" ]
 	do
-		ARGS="$ARGS \"$1\""
+		ARGS+=("$1")
 		shift
 	done
-	soaf_map_extend $NATURE $SOAF_VARARGS_ARG_LIST_ATTR "$ARGS"
+	soaf_map_w_array_cat $NATURE $SOAF_VARARGS_ARG_LIST_ATTR ARGS
 }
 
 ################################################################################
@@ -30,18 +30,22 @@ soaf_varargs_fn_apply() {
 	local ARGS
 	while [ -n "$1" -a "$1" != "$SOAF_VARARGS_PP_SEP" ]
 	do
-		ARGS="$ARGS \"$1\""
+		ARGS+=("$1")
 		shift
 	done
 	shift
-	local ARGS_NATURE
-	soaf_map_get_var ARGS_NATURE $NATURE $SOAF_VARARGS_ARG_LIST_ATTR
-	ARGS="$ARGS$ARGS_NATURE"
+	soaf_map_w_array_get_var $NATURE $SOAF_VARARGS_ARG_LIST_ATTR
+	ARGS+=("${SOAF_RET[@]}")
 	while [ -n "$1" ]
 	do
-		ARGS="$ARGS \"$1\""
+		ARGS+=("$1")
 		shift
 	done
-	local CMD="$FN$ARGS"
+	local ARGS_WORD arg
+	for arg in "${ARGS[@]}"
+	do
+		ARGS_WORD+=" \"$arg\""
+	done
+	local CMD="$FN$ARGS_WORD"
 	eval "$CMD"
 }
