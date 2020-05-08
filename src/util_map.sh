@@ -31,7 +31,7 @@ soaf_map_cat() {
 	eval $SOAF_RET[$FIELD]+=\" \$VAL\"
 }
 
-soaf_map_get_var() {
+soaf_map_get() {
 	local NAME=$1
 	local FIELD=$2
 	local DFT=$3
@@ -57,7 +57,7 @@ soaf_map_w_array_cat() {
 	eval $SOAF_RET+=\(\"\${$ARRAY_VAR[@]}\"\)
 }
 
-soaf_map_w_array_get_var() {
+soaf_map_w_array_get() {
 	local NAME=$1
 	local FIELD=$2
 	soaf_map_w_array_var_ $NAME $FIELD

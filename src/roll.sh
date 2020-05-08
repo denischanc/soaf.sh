@@ -95,13 +95,13 @@ soaf_roll_proc_file_() {
 	then
 		soaf_rm $FILE "" $SOAF_ROLL_LOG_NAME
 	else
-		soaf_map_get_var $NATURE $SOAF_ROLL_FILE_EXT_FN_ATTR \
+		soaf_map_get $NATURE $SOAF_ROLL_FILE_EXT_FN_ATTR \
 			$SOAF_ROLL_FILE_EXT_DFT_FN
 		$SOAF_RET $NATURE $FILE
 		local FILE_EXT=$SOAF_ROLL_FILE_EXT_RET
 		local FILE_ROLL=$FILE-$FILE_EXT
 		soaf_cmd "mv -f $FILE $FILE_ROLL" "" $SOAF_ROLL_LOG_NAME
-		soaf_map_get_var $NATURE $SOAF_ROLL_NO_COMPRESS_ATTR
+		soaf_map_get $NATURE $SOAF_ROLL_NO_COMPRESS_ATTR
 		if [ -z "$SOAF_RET" ]
 		then
 			soaf_cmd "$SOAF_ROLL_COMPRESS_CMD $FILE_ROLL" "" \
@@ -133,11 +133,11 @@ soaf_roll_nature() {
 	local FILE=$2
 	if [ -n "$FILE" ]
 	then
-		soaf_map_get_var $NATURE $SOAF_ROLL_SIZE_ATTR $SOAF_ROLL_SIZE
+		soaf_map_get $NATURE $SOAF_ROLL_SIZE_ATTR $SOAF_ROLL_SIZE
 		local SIZE=$SOAF_RET
 		if [ -f "$FILE" ]
 		then
-			soaf_map_get_var $NATURE $SOAF_ROLL_COND_FN_ATTR
+			soaf_map_get $NATURE $SOAF_ROLL_COND_FN_ATTR
 			local COND_FN=$SOAF_RET
 			if [ -n "$COND_FN" ]
 			then
@@ -170,7 +170,7 @@ soaf_roll_cond_gt_size() {
 	local FILE_SIZE=$(stat -c %s $FILE 2> /dev/null)
 	if [ -n "$FILE_SIZE" ]
 	then
-		soaf_map_get_var $NATURE $SOAF_ROLL_FILE_SIZE_ATTR $SOAF_ROLL_FILE_SIZE
+		soaf_map_get $NATURE $SOAF_ROLL_FILE_SIZE_ATTR $SOAF_ROLL_FILE_SIZE
 		[ $FILE_SIZE -gt $SOAF_RET ] && SOAF_ROLL_COND_FN_RET="OK"
 	fi
 }
@@ -189,7 +189,7 @@ soaf_roll_cond_by_day() {
 	local NATURE=$1
 	local FILE=$2
 	local FILE_ATTR=$(echo $FILE | md5sum | awk '{print $1}')
-	soaf_map_get_var $SOAF_ROLL_FILE_DATE_MAP $FILE_ATTR
+	soaf_map_get $SOAF_ROLL_FILE_DATE_MAP $FILE_ATTR
 	local FILE_DATE=$SOAF_RET
 	local DATE_PATTERN=$SOAF_ROLL_BY_DAY_DATE_PATTERN
 	if [ -z "$FILE_DATE" ]
@@ -206,7 +206,7 @@ soaf_roll_file_ext_by_day() {
 	local NATURE=$1
 	local FILE=$2
 	local FILE_ATTR=$(echo $FILE | md5sum | awk '{print $1}')
-	soaf_map_get_var $SOAF_ROLL_FILE_DATE_MAP $FILE_ATTR
+	soaf_map_get $SOAF_ROLL_FILE_DATE_MAP $FILE_ATTR
 	local FILE_DATE=$SOAF_RET
 	soaf_map_extend $SOAF_ROLL_FILE_DATE_MAP $FILE_ATTR ""
 	SOAF_ROLL_FILE_EXT_RET=$FILE_DATE

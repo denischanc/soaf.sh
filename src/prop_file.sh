@@ -64,7 +64,7 @@ soaf_prop_file_set_require_() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	soaf_map_get_var $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
+	soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
 	local FILE=$SOAF_RET
 	local PROP_UNIQ=$NATURE.$PROP
 	if [ -f $FILE ]
@@ -120,7 +120,7 @@ soaf_prop_file_set() {
 soaf_prop_file_get_no_cache_() {
 	local NATURE=$1
 	local PROP=$2
-	soaf_map_get_var $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
+	soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
 	local FILE=$SOAF_RET
 	local PROP_UNIQ=$NATURE.$PROP
 	SOAF_PROP_FILE_RET="OK"
@@ -163,10 +163,10 @@ soaf_prop_file_get() {
 	local NATURE=$1
 	local PROP=$2
 	local PROP_UNIQ=$NATURE.$PROP
-	soaf_map_get_var $PROP_UNIQ $SOAF_PF_IN_CACHE_ATTR
+	soaf_map_get $PROP_UNIQ $SOAF_PF_IN_CACHE_ATTR
 	if [ -n "$SOAF_RET" ]
 	then
-		soaf_map_get_var $PROP_UNIQ $SOAF_PF_VAL_ATTR
+		soaf_map_get $PROP_UNIQ $SOAF_PF_VAL_ATTR
 		SOAF_PROP_FILE_VAL=$SOAF_RET
 		SOAF_PROP_FILE_RET="OK"
 		if [ -z "$SOAF_PROP_FILE_NO_GET_LOG" ]
@@ -200,7 +200,7 @@ soaf_prop_file_list_add() {
 		then
 			soaf_prop_file_set $NATURE $PROP "$VAL"
 		else
-			soaf_map_get_var $NATURE $SOAF_PF_SEP_ATTR
+			soaf_map_get $NATURE $SOAF_PF_SEP_ATTR
 			soaf_prop_file_set $NATURE $PROP "$VAL_LIST$SOAF_RET$VAL"
 		fi
 	fi
@@ -210,7 +210,7 @@ soaf_prop_file_list_rm() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
-	soaf_map_get_var $NATURE $SOAF_PF_SEP_ATTR
+	soaf_map_get $NATURE $SOAF_PF_SEP_ATTR
 	local SEP=$SOAF_RET
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
@@ -245,7 +245,7 @@ soaf_prop_file_is_val() {
 		SOAF_PROP_FILE_VAL=
 		if [ -n "$VAL_LIST" ]
 		then
-			soaf_map_get_var $NATURE $SOAF_PF_SEP_ATTR
+			soaf_map_get $NATURE $SOAF_PF_SEP_ATTR
 			local SEP=$SOAF_RET
 			VAL_LIST=$SEP$VAL_LIST$SEP
 			local DIFF=${VAL_LIST/$SEP$VAL$SEP}

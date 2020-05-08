@@ -112,7 +112,7 @@ soaf_dis_var_list() {
 	local var
 	for var in $VAR_LIST
 	do
-		soaf_map_get_var $SOAF_DISPLAY_VAR2FN_MAP $var
+		soaf_map_get $SOAF_DISPLAY_VAR2FN_MAP $var
 		local FN=$SOAF_RET
 		if [ -n "$FN" ]
 		then

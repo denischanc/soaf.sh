@@ -68,12 +68,12 @@ soaf_notif() {
 	local nature
 	for nature in $SOAF_NOTIF_NATURE_LIST
 	do
-		soaf_map_get_var $nature $SOAF_NOTIF_NB_TRY_ATTR $SOAF_NOTIF_NB_TRY_DFT
+		soaf_map_get $nature $SOAF_NOTIF_NB_TRY_ATTR $SOAF_NOTIF_NB_TRY_DFT
 		local NB_TRY=$SOAF_RET
 		local ID_TRY=1
 		while [ -n "$ID_TRY" -a ${ID_TRY:-1} -le $NB_TRY ]
 		do
-			soaf_map_get_var $nature $SOAF_NOTIF_FN_ATTR
+			soaf_map_get $nature $SOAF_NOTIF_FN_ATTR
 			local FN=$SOAF_RET
 			SOAF_NOTIF_RET=
 			[ -n "$FN" ] && $FN $nature "$MSG" $PROG $HOST

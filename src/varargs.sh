@@ -34,7 +34,7 @@ soaf_varargs_fn_apply() {
 		shift
 	done
 	shift
-	soaf_map_w_array_get_var $NATURE $SOAF_VARARGS_ARG_LIST_ATTR
+	soaf_map_w_array_get $NATURE $SOAF_VARARGS_ARG_LIST_ATTR
 	ARGS+=("${SOAF_RET[@]}")
 	while [ -n "$1" ]
 	do

@@ -128,7 +128,7 @@ soaf_engine_action_() {
 	local VA_NATURE=soaf.engine.va.action
 	soaf_create_varargs_nature $VA_NATURE $SOAF_ACTION
 	soaf_module_apply_all_fn_attr $SOAF_MODULE_PRE_ACTION_FN_ATTR $VA_NATURE
-	soaf_map_get_var $SOAF_ACTION $SOAF_ACTION_FN_ATTR
+	soaf_map_get $SOAF_ACTION $SOAF_ACTION_FN_ATTR
 	local FN=$SOAF_RET
 	[ -n "$FN" ] && $FN $SOAF_ACTION
 	soaf_module_apply_all_fn_attr $SOAF_MODULE_POST_ACTION_FN_ATTR $VA_NATURE

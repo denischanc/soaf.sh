@@ -71,7 +71,7 @@ soaf_log_init_() {
 soaf_log_prepenv_() {
 	if [ -z "$SOAF_LOG_USERMSGPROC_USED" ]
 	then
-		soaf_map_get_var $SOAF_LOG_USED_NATURE $SOAF_LOG_PREP_FN_ATTR
+		soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_PREP_FN_ATTR
 		local PREP_FN=$SOAF_RET
 		[ -n "$PREP_FN" ] && $PREP_FN $SOAF_LOG_USED_NATURE
 	fi
@@ -149,7 +149,7 @@ soaf_log_level() {
 		SOAF_LOG_RET=$SOAF_LOG_LEVEL
 		if [ -n "$NAME" ]
 		then
-			soaf_map_get_var $NAME $SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET
+			soaf_map_get $NAME $SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET
 			SOAF_LOG_RET=$SOAF_RET
 		fi
 	else
@@ -194,7 +194,7 @@ soaf_log_build_msg_() {
 	local LEVEL_LABEL=$SOAF_LOG_RET
 	if [ -n "$SOAF_LOG_COLOR" ]
 	then
-		soaf_map_get_var $SOAF_LOG_COLOR_MAP $LEVEL
+		soaf_map_get $SOAF_LOG_COLOR_MAP $LEVEL
 		soaf_console_msg_ctl $LEVEL_LABEL ${SOAF_RET:-$SOAF_CONSOLE_FG_RED}
 		LEVEL_LABEL=$SOAF_CONSOLE_RET
 	fi
@@ -273,7 +273,7 @@ soaf_log_route_() {
 	else
 		if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
 		then
-			soaf_map_get_var $SOAF_LOG_USED_NATURE $SOAF_LOG_FN_ATTR
+			soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_FN_ATTR
 			local FN=$SOAF_RET
 			[ -n "$FN" ] && $FN $SOAF_LOG_USED_NATURE $LEVEL "$MSG" $NAME
 		else

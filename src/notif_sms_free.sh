@@ -54,7 +54,7 @@ soaf_notif_sms_free_() {
 	local MSG=$2
 	local PROG=$3
 	local HOST=$4
-	soaf_map_get_var $NATURE $SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR
+	soaf_map_get $NATURE $SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR
 	local ACCOUNT=$SOAF_RET
 	soaf_net_account_login ${ACCOUNT:-unknown}
 	local USER=$SOAF_NET_RET
@@ -63,7 +63,7 @@ soaf_notif_sms_free_() {
 	if [ -n "$USER" -a -n "$PASS" ]
 	then
 		local CURL_ARGS=
-		soaf_map_get_var $NATURE $SOAF_NOTIF_SMS_FREE_PROXY_NATURE_ATTR
+		soaf_map_get $NATURE $SOAF_NOTIF_SMS_FREE_PROXY_NATURE_ATTR
 		local PROXY_NATURE=$SOAF_RET
 		if [ -n "$PROXY_NATURE" ]
 		then
@@ -78,7 +78,7 @@ soaf_notif_sms_free_() {
 			local PROXY="$PROXY_USER:$PROXY_PASS@$PROXY_HOST:$PROXY_PORT"
 			CURL_ARGS="$CURL_ARGS --proxy $PROXY"
 		fi
-		soaf_map_get_var $NATURE $SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR
+		soaf_map_get $NATURE $SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR
 		local CACERT_FILE=$SOAF_RET
 		if [ -n "$CACERT_FILE" ]
 		then

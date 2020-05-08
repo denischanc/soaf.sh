@@ -63,7 +63,7 @@ soaf_var_err_msg_notinenum_() {
 
 soaf_var_real_name_() {
 	local VAR=$1
-	soaf_map_get_var $VAR $SOAF_VAR_PREFIX_ATTR
+	soaf_map_get $VAR $SOAF_VAR_PREFIX_ATTR
 	local PREFIX=$SOAF_RET
 	[ -n "$PREFIX" ] && SOAF_VAR_RET=${PREFIX}_$VAR || SOAF_VAR_RET=$VAR
 }
@@ -80,7 +80,7 @@ soaf_var_prefix_name() {
 
 soaf_var_check_() {
 	local VAR=$1
-	soaf_map_get_var $VAR $SOAF_VAR_DFT_VAL_ATTR
+	soaf_map_get $VAR $SOAF_VAR_DFT_VAL_ATTR
 	local DFT_VAL=$SOAF_RET
 	soaf_var_real_name_ $VAR
 	local VAR_REAL=$SOAF_VAR_RET
@@ -93,12 +93,12 @@ soaf_var_check_() {
 		if [ -z "$VAL" ]
 		then
 			### Check if val empty accepted
-			soaf_map_get_var $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
+			soaf_map_get $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
 			[ -z "$SOAF_RET" ] && \
 				soaf_engine_exit "" "Variable [$VAR] not filled." \
 					$SOAF_VAR_LOG_NAME
 		else
-			soaf_map_get_var $VAR $SOAF_VAR_ENUM_ATTR
+			soaf_map_get $VAR $SOAF_VAR_ENUM_ATTR
 			local ENUM=$SOAF_RET
 			if [ -n "$ENUM" ]
 			then
@@ -173,19 +173,19 @@ soaf_var_dis() {
 	local VAR=$1
 	soaf_console_msg_ctl $VAR "$SOAF_VAR_CTL_LIST"
 	local TXT="$SOAF_CONSOLE_RET:"
-	soaf_map_get_var $VAR $SOAF_VAR_ENUM_ATTR
+	soaf_map_get $VAR $SOAF_VAR_ENUM_ATTR
 	local ENUM=$SOAF_RET
 	if [ -n "$ENUM" ]
 	then
 		soaf_list_join "$ENUM" "" "$SOAF_VAR_VAL_CTL_LIST"
 		local ENUM_DIS=$SOAF_RET_LIST
-		soaf_map_get_var $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
+		soaf_map_get $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
 		[ -n "$SOAF_RET" ] && ENUM_DIS="$ENUM_DIS|"
 		TXT="$TXT [$ENUM_DIS]"
 	else
 		TXT="$TXT '...'"
 	fi
-	soaf_map_get_var $VAR $SOAF_VAR_DFT_VAL_ATTR
+	soaf_map_get $VAR $SOAF_VAR_DFT_VAL_ATTR
 	local DFT_VAL=$SOAF_RET
 	if [ -n "$DFT_VAL" ]
 	then

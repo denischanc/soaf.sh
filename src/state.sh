@@ -115,13 +115,13 @@ soaf_state_prop_nature_() {
 
 soaf_state_inactive_file_() {
 	local NATURE=$1
-	soaf_map_get_var $NATURE $SOAF_STATE_WORK_DIR_ATTR $SOAF_WORK_DIR
+	soaf_map_get $NATURE $SOAF_STATE_WORK_DIR_ATTR $SOAF_WORK_DIR
 	SOAF_STATE_RET=$SOAF_RET/$SOAF_APPLI_NAME.soaf.state.inactive.$NATURE
 }
 
 soaf_state_rework_file_() {
 	local NATURE=$1
-	soaf_map_get_var $NATURE $SOAF_STATE_WORK_DIR_ATTR $SOAF_WORK_DIR
+	soaf_map_get $NATURE $SOAF_STATE_WORK_DIR_ATTR $SOAF_WORK_DIR
 	SOAF_STATE_RET=$SOAF_RET/$SOAF_APPLI_NAME.soaf.state.rework.$NATURE
 }
 
@@ -160,7 +160,7 @@ soaf_state_do_job_list() {
 
 soaf_state_dft_work_() {
 	local CUR_STATE=$3
-	soaf_map_get_var $CUR_STATE $SOAF_STATE_WORKING_JOB_LIST_ATTR
+	soaf_map_get $CUR_STATE $SOAF_STATE_WORKING_JOB_LIST_ATTR
 	soaf_state_do_job_list "$SOAF_RET"
 }
 
@@ -202,7 +202,7 @@ soaf_state_init_step_() {
 	local NATURE=$1
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
-	soaf_map_get_var $NATURE $SOAF_STATE_ENTRY_ATTR
+	soaf_map_get $NATURE $SOAF_STATE_ENTRY_ATTR
 	local ENTRY_STATE=$SOAF_RET
 	if [ -z "$ENTRY_STATE" ]
 	then
@@ -282,7 +282,7 @@ soaf_state_working_step_inerr_() {
 	local CUR_STATE=$3
 	local MSG="Working error in state [$CUR_STATE] of nature [$NATURE]."
 	soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
-	soaf_map_get_var $CUR_STATE $SOAF_STATE_NOTIF_ON_ERR_ATTR
+	soaf_map_get $CUR_STATE $SOAF_STATE_NOTIF_ON_ERR_ATTR
 	[ -n "$SOAF_RET" ] && soaf_notif "$MSG"
 	soaf_state_advance_step_ $PROP_NATURE $SOAF_STATE_STEP_INERR
 }
@@ -292,7 +292,7 @@ soaf_state_working_step_main_() {
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
 	local CUR_STATE=$4
-	soaf_map_get_var $CUR_STATE $SOAF_STATE_WORKING_FN_ATTR
+	soaf_map_get $CUR_STATE $SOAF_STATE_WORKING_FN_ATTR
 	local FN=$SOAF_RET
 	[ -z "$FN" ] && FN=soaf_state_dft_work_
 	local FN_ARGS="$FN $NATURE $WORK_DIR $CUR_STATE"
@@ -366,14 +366,14 @@ soaf_state_jumping_step_main_() {
 	local WORK_DIR=$2
 	local PROP_NATURE=$3
 	local PREV_STATE=$4
-	soaf_map_get_var $PREV_STATE $SOAF_STATE_NEXT_FN_ATTR
+	soaf_map_get $PREV_STATE $SOAF_STATE_NEXT_FN_ATTR
 	local FN=$SOAF_RET
 	if [ -n "$FN" ]
 	then
 		SOAF_STATE_NEXT_=
 		$FN $NATURE $WORK_DIR $PREV_STATE
 	else
-		soaf_map_get_var $PREV_STATE $SOAF_STATE_NEXT_ATTR
+		soaf_map_get $PREV_STATE $SOAF_STATE_NEXT_ATTR
 		SOAF_STATE_NEXT_=$SOAF_RET
 		if [ -z "$SOAF_STATE_NEXT_" ]
 		then
@@ -421,7 +421,7 @@ soaf_state_inerr_step_main_() {
 	local PROP_NATURE=$3
 	local CUR_STATE=$4
 	local REWORK=
-	soaf_map_get_var $CUR_STATE $SOAF_STATE_AUTO_REWORK_ATTR
+	soaf_map_get $CUR_STATE $SOAF_STATE_AUTO_REWORK_ATTR
 	if [ -n "$SOAF_RET" ]
 	then
 		REWORK="OK"
@@ -514,9 +514,9 @@ soaf_state_proc_nature_() {
 	else
 		soaf_state_prop_nature_ $NATURE
 		local PROP_NATURE=$SOAF_STATE_RET
-		soaf_map_get_var $NATURE $SOAF_STATE_PROP_FILE_ATTR
+		soaf_map_get $NATURE $SOAF_STATE_PROP_FILE_ATTR
 		soaf_create_prop_file_nature $PROP_NATURE $SOAF_RET
-		soaf_map_get_var $NATURE $SOAF_STATE_WORK_DIR_ATTR $SOAF_WORK_DIR
+		soaf_map_get $NATURE $SOAF_STATE_WORK_DIR_ATTR $SOAF_WORK_DIR
 		soaf_state_step_case_ $NATURE $SOAF_RET $PROP_NATURE
 	fi
 }

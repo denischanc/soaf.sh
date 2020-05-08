@@ -77,7 +77,7 @@ soaf_usermsgproc__() {
 	local USED_NATURE=$SOAF_USERMSGPROC_USED_NATURE
 	if [ -n "$USED_NATURE" ]
 	then
-		soaf_map_get_var $USED_NATURE $SOAF_USERMSGPROC_FN_ATTR
+		soaf_map_get $USED_NATURE $SOAF_USERMSGPROC_FN_ATTR
 		[ -n "$SOAF_RET" ] && $SOAF_RET $ORG "$MSG"
 	fi
 }

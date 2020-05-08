@@ -20,7 +20,7 @@ soaf_create_module soaf.core.appli $SOAF_VERSION "" "" soaf_appli_init_
 
 soaf_appli_def_name() {
 	local NATURE=$1
-	soaf_map_get_var $NATURE $SOAF_APPLI_NAME_ATTR
+	soaf_map_get $NATURE $SOAF_APPLI_NAME_ATTR
 	SOAF_APPLI_NAME=$SOAF_RET
 }
 

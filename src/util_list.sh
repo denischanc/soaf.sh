@@ -39,7 +39,7 @@ soaf_pmp_list_cat_w_array() {
 	for pos in $SOAF_POS_PRE $SOAF_POS_MAIN $SOAF_POS_POST
 	do
 		soaf_pmp_list_attr_ $pos
-		soaf_map_w_array_get_var $LIST_VAR $SOAF_RET_LIST
+		soaf_map_w_array_get $LIST_VAR $SOAF_RET_LIST
 		RET_LIST+=("${SOAF_RET[@]}")
 	done
 	SOAF_RET_LIST=("${RET_LIST[@]}")

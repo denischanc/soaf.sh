@@ -61,9 +61,9 @@ soaf_action_add_usage_var() {
 
 soaf_action_dis_usage() {
 	local ACTION=$1
-	soaf_map_get_var $ACTION $SOAF_ACTION_USAGE_FN_ATTR
+	soaf_map_get $ACTION $SOAF_ACTION_USAGE_FN_ATTR
 	local FN=$SOAF_RET
-	soaf_map_get_var $ACTION $SOAF_ACTION_USAGE_VAR_LIST_ATTR
+	soaf_map_get $ACTION $SOAF_ACTION_USAGE_VAR_LIST_ATTR
 	local VAR_LIST=$SOAF_RET
 	if [ -n "$FN" -o -n "$VAR_LIST" ]
 	then
