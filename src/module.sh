@@ -58,7 +58,7 @@ soaf_module_resolve_dep_module_() {
 	then
 		local ERR_MSG="Module not found : [$MODULE]."
 	else
-		DEP_LIST_MSG="$DEP_LIST_MSG -> [$MODULE]"
+		DEP_LIST_MSG+=" -> [$MODULE]"
 		soaf_map_get $MODULE $SOAF_MODULE_DEP_STATE_ATTR
 		local DEP_STATE=$SOAF_RET
 		if [ "$DEP_STATE" = "$SOAF_MODULE_DEP_INPROG_S" ]
@@ -74,7 +74,7 @@ soaf_module_resolve_dep_module_() {
 			do
 				soaf_module_resolve_dep_module_ $dep_module "$DEP_LIST_MSG"
 			done
-			SOAF_MODULE_SORT_LIST="$SOAF_MODULE_SORT_LIST $MODULE"
+			SOAF_MODULE_SORT_LIST+=" $MODULE"
 			SOAF_MODULE_SORT_R_LIST="$MODULE $SOAF_MODULE_SORT_R_LIST"
 			soaf_map_extend $MODULE $SOAF_MODULE_DEP_STATE_ATTR \
 				$SOAF_MODULE_DEP_OK_S

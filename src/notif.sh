@@ -42,7 +42,7 @@ soaf_create_notif_nature() {
 	local NATURE=$1
 	local FN=$2
 	local NB_TRY=$3
-	SOAF_NOTIF_NATURE_LIST="$SOAF_NOTIF_NATURE_LIST $NATURE"
+	SOAF_NOTIF_NATURE_LIST+=" $NATURE"
 	soaf_map_extend $NATURE $SOAF_NOTIF_FN_ATTR $FN
 	soaf_map_extend $NATURE $SOAF_NOTIF_NB_TRY_ATTR $NB_TRY
 }

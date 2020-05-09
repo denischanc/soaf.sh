@@ -41,7 +41,7 @@ soaf_create_var_nature() {
 			soaf_engine_exit_dev "$SOAF_VAR_ERR_MSG"
 		fi
 	fi
-	[ "$VAR" != "ACTION" ] && SOAF_VAR_ALL_LIST="$SOAF_VAR_ALL_LIST $VAR"
+	[ "$VAR" != "ACTION" ] && SOAF_VAR_ALL_LIST+=" $VAR"
 	soaf_map_extend $VAR $SOAF_VAR_ENUM_ATTR "$ENUM"
 	soaf_map_extend $VAR $SOAF_VAR_DFT_VAL_ATTR "$DFT_VAL"
 	soaf_map_extend $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR $ACCEPT_EMPTY
@@ -132,7 +132,7 @@ soaf_var_check_all() {
 
 soaf_var_add_unsubst() {
 	local VAR_LIST=$1
-	SOAF_VAR_UNSUBST_LIST="$SOAF_VAR_UNSUBST_LIST $VAR_LIST"
+	SOAF_VAR_UNSUBST_LIST+=" $VAR_LIST"
 }
 
 soaf_var_subst_proc() {
