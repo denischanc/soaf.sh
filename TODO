@@ -16,11 +16,12 @@
 -- continue adoc
 -- do mail notif (sms ok)
 
--- Save pid for job and state processes (add option to automatically restart)
--- fn_args_with_pid : manage state when pid is found but no process associated
-
 [_DONE_]
 
+-- fn_args_with_pid : manage state when pid is found but no process associated
+     => 85c3f7f3
+-- Save pid for job and state processes (add option to automatically restart)
+     => 85c3f7f3
 -- daemon mode (interactive) : mng of log, display => usermsgproc => 098afdd9
 -- log => 2889f88e
      -- level as 1, 2, 3, 4, ... io "DEBUG", "INFO", ... => OK
