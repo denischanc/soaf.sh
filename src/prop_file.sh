@@ -60,13 +60,23 @@ soaf_prop_file_upd_cache_() {
 ################################################################################
 ################################################################################
 
+soaf_prop_file_uniq_name_() {
+	local NATURE=$1
+	local PROP=$2
+	SOAF_PROP_FILE_RET=$SOAF_APPLI_NAME.$NATURE.$PROP
+}
+
+################################################################################
+################################################################################
+
 soaf_prop_file_set_require_() {
 	local NATURE=$1
 	local PROP=$2
 	local VAL=$3
 	soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
 	local FILE=$SOAF_RET
-	local PROP_UNIQ=$NATURE.$PROP
+	soaf_prop_file_uniq_name_ $NATURE $PROP
+	local PROP_UNIQ=$SOAF_PROP_FILE_RET
 	if [ -f $FILE ]
 	then
 		{
@@ -122,7 +132,8 @@ soaf_prop_file_get_no_cache_() {
 	local PROP=$2
 	soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
 	local FILE=$SOAF_RET
-	local PROP_UNIQ=$NATURE.$PROP
+	soaf_prop_file_uniq_name_ $NATURE $PROP
+	local PROP_UNIQ=$SOAF_PROP_FILE_RET
 	SOAF_PROP_FILE_RET="OK"
 	SOAF_PROP_FILE_VAL=
 	if [ -f $FILE ]
@@ -162,7 +173,8 @@ soaf_prop_file_get_no_cache_() {
 soaf_prop_file_get() {
 	local NATURE=$1
 	local PROP=$2
-	local PROP_UNIQ=$NATURE.$PROP
+	soaf_prop_file_uniq_name_ $NATURE $PROP
+	local PROP_UNIQ=$SOAF_PROP_FILE_RET
 	soaf_map_get $PROP_UNIQ $SOAF_PF_IN_CACHE_ATTR
 	if [ -n "$SOAF_RET" ]
 	then

@@ -5,6 +5,10 @@ readonly SOAF_UTIL_NOEXEC_FN_ATTR="soaf_util_noexec_fn"
 
 readonly SOAF_UTIL_DAY_PROP="soaf.util.day"
 
+readonly SOAF_IN_PROG_RET="in_prog"
+readonly SOAF_ERR_RET="err"
+readonly SOAF_OK_RET="ok"
+
 ################################################################################
 ################################################################################
 
@@ -59,7 +63,7 @@ soaf_cmd() {
 	local NO_CMD_OUT_ERR_LOG=$4
 	soaf_log $LOG_LEVEL "Execute command : [$CMD]." $LOG_NAME
 	local CMD_PROG=$(echo "$CMD" | awk '{print $1}')
-	local RET=
+	local RET
 	soaf_list_found "$SOAF_NOEXEC_PROG_LIST" $CMD_PROG
 	if [ -z "$SOAF_RET_LIST" ]
 	then
@@ -209,39 +213,63 @@ soaf_check_var_list() {
 ################################################################################
 ################################################################################
 
-soaf_fn_args_set_pid() {
+soaf_fn_args_set_pid_() {
 	local FN_ARGS=$1
 	local PID_FILE=$2
 	local LOG_NAME=$3
 	soaf_mkdir $(dirname $PID_FILE) "" $LOG_NAME
-	echo "$$" > $PID_FILE
-	eval "$FN_ARGS"
-	rm -f $PID_FILE
+	echo "$$" > $PID_FILE 2> /dev/null
+	if [ $? -eq 0 ]
+	then
+		eval "$FN_ARGS"
+		soaf_rm $PID_FILE
+		SOAF_RET="OK"
+	else
+		soaf_log_err "Unable to write pid in [$PID_FILE]." $LOG_NAME
+		SOAF_RET=
+	fi
 }
 
 soaf_fn_args_check_pid() {
 	local FN_ARGS=$1
 	local PID_FILE=$2
 	local LOG_NAME=$3
-	local PID_IN_PROG_MSG=$4
-	local PID_IN_PROG_MSG_LVL=${5:-$SOAF_LOG_WARN}
-	local ERR_ON_PID_WITHOUT_PROC=$6
-	local RET="OK"
+	local ERR_ON_PID_WITHOUT_PROC=$4
+	local PID=
+	if [ -f $PID_FILE ]
+	then
+		PID=$(cat $PID_FILE 2> /dev/null)
+		if [ $? -ne 0 ]
+		then
+			soaf_log_err "Unable to read pid file : [$PID_FILE]." $LOG_NAME
+			SOAF_RET=$SOAF_ERR_RET
+			return
+		fi
+	fi
+	local RET=$SOAF_OK_RET
 	local DO_FN_ARGS=
-	local PID=$(cat $PID_FILE 2> /dev/null)
 	if [ -n "$PID" ]
 	then
 		if [ -d /proc/$PID ]
 		then
-			soaf_var_subst_proc "$PID_IN_PROG_MSG" PID
-			soaf_log $PID_IN_PROG_MSG_LVL "$SOAF_VAR_RET" $LOG_NAME
+			RET=$SOAF_IN_PROG_RET
 		else
-			[ -n "$ERR_ON_PID_WITHOUT_PROC" ] && RET= || DO_FN_ARGS="OK"
+			if [ -n "$ERR_ON_PID_WITHOUT_PROC" ]
+			then
+				soaf_log_err "No process for pid in [$PID_FILE]." $LOG_NAME
+				RET=$SOAF_ERR_RET
+			else
+				DO_FN_ARGS="OK"
+			fi
 		fi
 	else
 		DO_FN_ARGS="OK"
 	fi
-	[ -n "$DO_FN_ARGS" ] && soaf_fn_args_set_pid "$FN_ARGS" $PID_FILE $LOG_NAME
+	if [ -n "$DO_FN_ARGS" ]
+	then
+		soaf_fn_args_set_pid_ "$FN_ARGS" $PID_FILE $LOG_NAME
+		[ -z "$SOAF_RET" ] && RET=$SOAF_ERR_RET
+	fi
 	SOAF_RET=$RET
 }
 

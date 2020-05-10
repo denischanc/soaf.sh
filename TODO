@@ -1,9 +1,5 @@
 
 -- log
-     -- level as 1, 2, 3, 4, ... io "DEBUG", "INFO", ...
-     -- soaf_log_stderr_ : ERROR -> >&2, ... -> >&1; rename ? console ?
-     -- fix bug on directory creation when usermsgproc; no preparation when
-        no execute fn
      -- create following loggers : to_file, to_file_n_console, to_console
 -- usermsgproc
      -- define following modes : NORMAL, CONSOLE, QUIET
@@ -12,20 +8,25 @@
 
         | NORMAL        | OK              | OK
         | QUIET         | > /dev/null     | OK
-        | NORMAL        | OK              | log_to_console
+        | CONSOLE       | OK              | log_to_console
 
 -- mng ssl certs (root to server) for free sms notif
 
 -- generate documentation (public/private)
 -- continue adoc
 -- do mail notif (sms ok)
--- daemon mode (interactive) : mng of log, display
 
 -- Save pid for job and state processes (add option to automatically restart)
 -- fn_args_with_pid : manage state when pid is found but no process associated
 
 [_DONE_]
 
+-- daemon mode (interactive) : mng of log, display => usermsgproc => 098afdd9
+-- log => 2889f88e
+     -- level as 1, 2, 3, 4, ... io "DEBUG", "INFO", ... => OK
+     -- soaf_log_stderr_ : ERROR -> >&2, ... -> >&1; rename ? console ? => OK
+     -- fix bug on directory creation when usermsgproc; no preparation when
+        no execute fn => OK
 -- roll : way to take file modif date as extension (example : roll log file)
      => adab0ef9
 -- roll : define extension format as a pattern var => adab0ef9

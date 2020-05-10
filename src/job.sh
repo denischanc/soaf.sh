@@ -9,6 +9,7 @@ readonly SOAF_JOB_CMD_ATTR="soaf_job_cmd"
 readonly SOAF_JOB_LOG_DIR_ATTR="soaf_job_log_dir"
 readonly SOAF_JOB_ROLL_SIZE_ATTR="soaf_job_roll_size"
 readonly SOAF_JOB_NOTIF_ON_ERR_ATTR="soaf_job_notif_on_err"
+readonly SOAF_JOB_ERR_ON_PID_WO_PROC_ATTR="soaf_job_err_on_pid_wo_proc"
 
 readonly SOAF_JOB_ACTION="job"
 
@@ -48,11 +49,13 @@ soaf_create_job() {
 	local LOG_DIR=$3
 	local ROLL_SIZE=$4
 	local NOTIF_ON_ERR=$5
+	local ERR_ON_PID_WO_PROC=$6
 	SOAF_JOB_LIST+=" $JOB"
 	soaf_map_extend $JOB $SOAF_JOB_CMD_ATTR "$CMD"
 	soaf_map_extend $JOB $SOAF_JOB_LOG_DIR_ATTR $LOG_DIR
 	soaf_map_extend $JOB $SOAF_JOB_ROLL_SIZE_ATTR $ROLL_SIZE
 	soaf_map_extend $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR $NOTIF_ON_ERR
+	soaf_map_extend $JOB $SOAF_JOB_ERR_ON_PID_WO_PROC_ATTR $ERR_ON_PID_WO_PROC
 }
 
 ################################################################################
@@ -83,6 +86,7 @@ soaf_do_job_process_() {
 	local JOB=$1
 	local JOB_UPPER=$2
 	local LOG_DIR=$3
+	local RET=
 	local LOG_FILE=$LOG_DIR/$JOB.log
 	local LOG_ERR_FILE=$LOG_DIR/$JOB-err.log
 	soaf_map_get $JOB $SOAF_JOB_ROLL_SIZE_ATTR
@@ -100,7 +104,7 @@ soaf_do_job_process_() {
 		soaf_cmd_info "$CMD" $SOAF_JOB_LOG_NAME "OK"
 		if [ "$SOAF_RET" = "0" ]
 		then
-			SOAF_JOB_RET="OK"
+			RET="OK"
 			soaf_log_info "$JOB_UPPER OK." $SOAF_JOB_LOG_NAME
 		else
 			soaf_log_err "$JOB_UPPER KO." $SOAF_JOB_LOG_NAME
@@ -108,6 +112,7 @@ soaf_do_job_process_() {
 			[ -n "$SOAF_RET" ] && soaf_notif "$JOB_UPPER job KO."
 		fi
 	fi
+	SOAF_JOB_RET=$RET
 }
 
 ################################################################################
@@ -122,8 +127,17 @@ soaf_do_job_valid_() {
 	soaf_mkdir $LOG_DIR "" $SOAF_JOB_LOG_NAME
 	local PID_FILE=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB.pid
 	local FN_ARGS="soaf_do_job_process_ $JOB $JOB_UPPER $LOG_DIR"
-	local MSG="$JOB_UPPER already in progress (pid: [@[PID]]) ..."
-	soaf_fn_args_check_pid "$FN_ARGS" $PID_FILE $SOAF_JOB_LOG_NAME "$MSG"
+	soaf_map_get $JOB $SOAF_JOB_ERR_ON_PID_WO_PROC_ATTR
+	soaf_fn_args_check_pid "$FN_ARGS" $PID_FILE $SOAF_JOB_LOG_NAME $SOAF_RET
+	if [ "$SOAF_RET" != "$SOAF_OK_RET" ]
+	then
+		if [ "$SOAF_RET" = "$SOAF_IN_PROG_RET" ]
+		then
+			local MSG="$JOB_UPPER already in progress (file : [$PID_FILE])."
+			soaf_log_err "$MSG" $SOAF_JOB_LOG_NAME
+		fi
+		SOAF_JOB_RET=
+	fi
 }
 
 ################################################################################
@@ -131,13 +145,13 @@ soaf_do_job_valid_() {
 
 soaf_do_job() {
 	local JOB=$1
-	SOAF_JOB_RET=
 	soaf_list_found "$SOAF_JOB_LIST" $JOB
 	if [ -n "$SOAF_RET_LIST" ]
 	then
 		soaf_do_job_valid_ $JOB
 	else
 		soaf_log_err "Unknown job : [$JOB]." $SOAF_JOB_LOG_NAME
+		SOAF_JOB_RET=
 	fi
 }
 
