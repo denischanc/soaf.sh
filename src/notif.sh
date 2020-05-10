@@ -1,12 +1,12 @@
 ################################################################################
 ################################################################################
 
-SOAF_NOTIF_LOG_NAME="soaf.notif"
+readonly SOAF_NOTIF_LOG_NAME="soaf.notif"
 
-SOAF_NOTIF_FN_ATTR="soaf_notif_fn"
-SOAF_NOTIF_NB_TRY_ATTR="soaf_notif_nb_try"
+readonly SOAF_NOTIF_FN_ATTR="soaf_notif_fn"
+readonly SOAF_NOTIF_NB_TRY_ATTR="soaf_notif_nb_try"
 
-SOAF_NOTIF_NB_TRY_DFT=3
+readonly SOAF_NOTIF_NB_TRY_DFT=3
 
 ################################################################################
 ################################################################################

@@ -1,11 +1,11 @@
 ################################################################################
 ################################################################################
 
-SOAF_DISPLAY_TXT_PRE_1="@[SOAF_TXT_PRE]"
-SOAF_DISPLAY_TXT_PRE_2="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
-SOAF_DISPLAY_TXT_PRE_3="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
+readonly SOAF_DISPLAY_TXT_PRE_1="@[SOAF_TXT_PRE]"
+readonly SOAF_DISPLAY_TXT_PRE_2="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
+readonly SOAF_DISPLAY_TXT_PRE_3="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
 
-SOAF_DISPLAY_VAR2FN_MAP="soaf.dis.var2fn"
+readonly SOAF_DISPLAY_VAR2FN_MAP="soaf.dis.var2fn"
 
 ################################################################################
 ################################################################################
@@ -83,7 +83,7 @@ soaf_dis_txt_off() {
 
 soaf_dis_txt_stdin() {
 	local line
-	soaf_console_filter_stdin | while read
+	while read -r
 	do
 		soaf_dis_txt "$REPLY"
 	done
@@ -92,7 +92,7 @@ soaf_dis_txt_stdin() {
 soaf_dis_txt_off_stdin() {
 	local OFF=$1
 	local line
-	soaf_console_filter_stdin | while read
+	while read -r
 	do
 		soaf_dis_txt_off "$REPLY" $OFF
 	done

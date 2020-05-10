@@ -1,16 +1,16 @@
 ################################################################################
 ################################################################################
 
-SOAF_JOB_ROLL_NATURE="soaf.job.roll"
+readonly SOAF_JOB_ROLL_NATURE="soaf.job.roll"
 
-SOAF_JOB_LOG_NAME="soaf.job"
+readonly SOAF_JOB_LOG_NAME="soaf.job"
 
-SOAF_JOB_CMD_ATTR="soaf_job_cmd"
-SOAF_JOB_LOG_DIR_ATTR="soaf_job_log_dir"
-SOAF_JOB_ROLL_SIZE_ATTR="soaf_job_roll_size"
-SOAF_JOB_NOTIF_ON_ERR_ATTR="soaf_job_notif_on_err"
+readonly SOAF_JOB_CMD_ATTR="soaf_job_cmd"
+readonly SOAF_JOB_LOG_DIR_ATTR="soaf_job_log_dir"
+readonly SOAF_JOB_ROLL_SIZE_ATTR="soaf_job_roll_size"
+readonly SOAF_JOB_NOTIF_ON_ERR_ATTR="soaf_job_notif_on_err"
 
-SOAF_JOB_ACTION="job"
+readonly SOAF_JOB_ACTION="job"
 
 ################################################################################
 ################################################################################
@@ -115,8 +115,7 @@ soaf_do_job_process_() {
 
 soaf_do_job_valid_() {
 	local JOB=$1
-	soaf_upper $JOB
-	local JOB_UPPER=$SOAF_RET
+	declare -u JOB_UPPER=$JOB
 	soaf_map_get $JOB $SOAF_JOB_LOG_DIR_ATTR \
 		$SOAF_LOG_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB
 	local LOG_DIR=$SOAF_RET

@@ -1,19 +1,19 @@
 ################################################################################
 ################################################################################
 
-SOAF_ROLL_SIZE_ATTR="soaf_roll_size"
-SOAF_ROLL_COND_FN_ATTR="soaf_roll_cond_fn"
-SOAF_ROLL_FILE_EXT_FN_ATTR="soaf_roll_file_ext_fn"
-SOAF_ROLL_FILE_SIZE_ATTR="soaf_roll_file_size"
-SOAF_ROLL_NO_COMPRESS_ATTR="soaf_roll_no_compress"
+readonly SOAF_ROLL_SIZE_ATTR="soaf_roll_size"
+readonly SOAF_ROLL_COND_FN_ATTR="soaf_roll_cond_fn"
+readonly SOAF_ROLL_FILE_EXT_FN_ATTR="soaf_roll_file_ext_fn"
+readonly SOAF_ROLL_FILE_SIZE_ATTR="soaf_roll_file_size"
+readonly SOAF_ROLL_NO_COMPRESS_ATTR="soaf_roll_no_compress"
 
-SOAF_ROLL_FILE_DATE_MAP="soaf.roll.file.date"
+readonly SOAF_ROLL_FILE_DATE_MAP="soaf.roll.file.date"
 
-SOAF_ROLL_LOG_NAME="soaf.roll"
+readonly SOAF_ROLL_LOG_NAME="soaf.roll"
 
-SOAF_ROLL_BY_DAY_DATE_PATTERN="%F"
+readonly SOAF_ROLL_BY_DAY_DATE_PATTERN="%F"
 
-SOAF_ROLL_FILE_EXT_DFT_FN=soaf_roll_file_ext
+readonly SOAF_ROLL_FILE_EXT_DFT_FN=soaf_roll_file_ext_
 
 ################################################################################
 ################################################################################
@@ -178,7 +178,7 @@ soaf_roll_cond_gt_size() {
 ################################################################################
 ################################################################################
 
-soaf_roll_file_ext() {
+soaf_roll_file_ext_() {
 	SOAF_ROLL_FILE_EXT_RET=$(date +$SOAF_ROLL_FILE_EXT_DATE_PATTERN)
 }
 

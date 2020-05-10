@@ -1,10 +1,10 @@
 ################################################################################
 ################################################################################
 
-SOAF_APPLI_SH_DIR=$(cd $(dirname $(which $0)); pwd)
-SOAF_APPLI_SH_NAME=$(basename $0 | sed -e s/\.sh$//)
+readonly SOAF_APPLI_SH_DIR=$(cd $(dirname $(which $0)); pwd)
+readonly SOAF_APPLI_SH_NAME=$(basename $0 | sed -e s/\.sh$//)
 
-SOAF_APPLI_NAME_ATTR="soaf_appli_name"
+readonly SOAF_APPLI_NAME_ATTR="soaf_appli_name"
 
 ################################################################################
 ################################################################################

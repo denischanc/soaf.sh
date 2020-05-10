@@ -1,30 +1,30 @@
 ################################################################################
 ################################################################################
 
-SOAF_STATE_LOG_NAME="soaf.state"
+readonly SOAF_STATE_LOG_NAME="soaf.state"
 
-SOAF_STATE_CUR_PROP="soaf.state.cur"
-SOAF_STATE_PREV_PROP="soaf.state.prev"
-SOAF_STATE_STEP_PROP="soaf.state.step"
+readonly SOAF_STATE_CUR_PROP="soaf.state.cur"
+readonly SOAF_STATE_PREV_PROP="soaf.state.prev"
+readonly SOAF_STATE_STEP_PROP="soaf.state.step"
 
-SOAF_STATE_STEP_WAITING="waiting"
-SOAF_STATE_STEP_WORKING="working"
-SOAF_STATE_STEP_SAVING="saving"
-SOAF_STATE_STEP_JUMPING="jumping"
-SOAF_STATE_STEP_INERR="in_error"
+readonly SOAF_STATE_STEP_WAITING="waiting"
+readonly SOAF_STATE_STEP_WORKING="working"
+readonly SOAF_STATE_STEP_SAVING="saving"
+readonly SOAF_STATE_STEP_JUMPING="jumping"
+readonly SOAF_STATE_STEP_INERR="in_error"
 
-SOAF_STATE_WORKING_FN_ATTR="soaf_state_working_fn"
-SOAF_STATE_WORKING_JOB_LIST_ATTR="soaf_state_working_job_list"
-SOAF_STATE_NEXT_FN_ATTR="soaf_state_next_fn"
-SOAF_STATE_NEXT_ATTR="soaf_state_next"
-SOAF_STATE_AUTO_REWORK_ATTR="soaf_state_auto_rework"
-SOAF_STATE_NOTIF_ON_ERR_ATTR="soaf_state_notif_on_err"
+readonly SOAF_STATE_WORKING_FN_ATTR="soaf_state_working_fn"
+readonly SOAF_STATE_WORKING_JOB_LIST_ATTR="soaf_state_working_job_list"
+readonly SOAF_STATE_NEXT_FN_ATTR="soaf_state_next_fn"
+readonly SOAF_STATE_NEXT_ATTR="soaf_state_next"
+readonly SOAF_STATE_AUTO_REWORK_ATTR="soaf_state_auto_rework"
+readonly SOAF_STATE_NOTIF_ON_ERR_ATTR="soaf_state_notif_on_err"
 
-SOAF_STATE_ENTRY_ATTR="soaf_state_entry"
-SOAF_STATE_WORK_DIR_ATTR="soaf_state_work_dir"
-SOAF_STATE_PROP_FILE_ATTR="soaf_state_prop_file"
+readonly SOAF_STATE_ENTRY_ATTR="soaf_state_entry"
+readonly SOAF_STATE_WORK_DIR_ATTR="soaf_state_work_dir"
+readonly SOAF_STATE_PROP_FILE_ATTR="soaf_state_prop_file"
 
-SOAF_STATE_INACTIVE_FILE_ACTION="state_inactive_file"
+readonly SOAF_STATE_INACTIVE_FILE_ACTION="state_inactive_file"
 
 ################################################################################
 ################################################################################

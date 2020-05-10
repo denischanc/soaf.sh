@@ -1,9 +1,9 @@
 ################################################################################
 ################################################################################
 
-SOAF_ACTION_FN_ATTR="soaf_action_fn"
-SOAF_ACTION_USAGE_FN_ATTR="soaf_action_usage_fn"
-SOAF_ACTION_USAGE_VAR_LIST_ATTR="soaf_action_usage_var_list"
+readonly SOAF_ACTION_FN_ATTR="soaf_action_fn"
+readonly SOAF_ACTION_USAGE_FN_ATTR="soaf_action_usage_fn"
+readonly SOAF_ACTION_USAGE_VAR_LIST_ATTR="soaf_action_usage_var_list"
 
 ################################################################################
 ################################################################################

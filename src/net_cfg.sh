@@ -1,14 +1,14 @@
 ################################################################################
 ################################################################################
 
-SOAF_NET_CFG_ACCOUNT_LOGIN_ATTR="soaf_net_cfg_account_login"
-SOAF_NET_CFG_ACCOUNT_PASSWD_ATTR="soaf_net_cfg_account_passwd"
+readonly SOAF_NET_CFG_ACCOUNT_LOGIN_ATTR="soaf_net_cfg_account_login"
+readonly SOAF_NET_CFG_ACCOUNT_PASSWD_ATTR="soaf_net_cfg_account_passwd"
 
-SOAF_NET_CFG_ENDPOINT_HOST_ATTR="soaf_net_cfg_endpoint_host"
-SOAF_NET_CFG_ENDPOINT_PORT_ATTR="soaf_net_cfg_endpoint_port"
+readonly SOAF_NET_CFG_ENDPOINT_HOST_ATTR="soaf_net_cfg_endpoint_host"
+readonly SOAF_NET_CFG_ENDPOINT_PORT_ATTR="soaf_net_cfg_endpoint_port"
 
-SOAF_NET_CFG_PROXY_ENDPOINT_ATTR="soaf_net_cfg_proxy_endpoint"
-SOAF_NET_CFG_PROXY_ACCOUNT_ATTR="soaf_net_cfg_proxy_account"
+readonly SOAF_NET_CFG_PROXY_ENDPOINT_ATTR="soaf_net_cfg_proxy_endpoint"
+readonly SOAF_NET_CFG_PROXY_ACCOUNT_ATTR="soaf_net_cfg_proxy_account"
 
 ################################################################################
 ################################################################################

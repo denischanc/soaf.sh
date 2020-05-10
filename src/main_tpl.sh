@@ -20,11 +20,8 @@ _EOF_
 soaf_main_tpl_main() {
 	local PRJ_NAME=$1
 	soaf_to_var $PRJ_NAME
-	local VAR_NAME=$SOAF_RET
-	soaf_upper $VAR_NAME
-	local UPPER_VAR_NAME=$SOAF_RET
-	soaf_lower $VAR_NAME
-	local LOWER_VAR_NAME=$SOAF_RET
+	declare -u UPPER_VAR_NAME=$SOAF_RET
+	declare -l LOWER_VAR_NAME=$SOAF_RET
 	local EOF_NAME="_EOF_"
 	cat << _EOF_
 ################################################################################

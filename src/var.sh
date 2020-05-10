@@ -1,18 +1,18 @@
 ################################################################################
 ################################################################################
 
-SOAF_VAR_LOG_NAME="soaf.var"
+readonly SOAF_VAR_LOG_NAME="soaf.var"
 
-SOAF_VAR_ENUM_ATTR="soaf_var_enum"
-SOAF_VAR_DFT_VAL_ATTR="soaf_var_dft_val"
-SOAF_VAR_ACCEPT_EMPTY_ATTR="soaf_var_accept_empty"
+readonly SOAF_VAR_ENUM_ATTR="soaf_var_enum"
+readonly SOAF_VAR_DFT_VAL_ATTR="soaf_var_dft_val"
+readonly SOAF_VAR_ACCEPT_EMPTY_ATTR="soaf_var_accept_empty"
 
-SOAF_VAR_PREFIX_ATTR="soaf_var_prefix"
+readonly SOAF_VAR_PREFIX_ATTR="soaf_var_prefix"
 
-SOAF_VAR_PAT_O="@\["
-SOAF_VAR_PAT_V="[_a-zA-Z0-9]\+"
-SOAF_VAR_PAT_C="\]"
-SOAF_VAR_PAT_G="$SOAF_VAR_PAT_O$SOAF_VAR_PAT_V$SOAF_VAR_PAT_C"
+readonly SOAF_VAR_PAT_O="@\["
+readonly SOAF_VAR_PAT_V="[_a-zA-Z0-9]\+"
+readonly SOAF_VAR_PAT_C="\]"
+readonly SOAF_VAR_PAT_G="$SOAF_VAR_PAT_O$SOAF_VAR_PAT_V$SOAF_VAR_PAT_C"
 
 ################################################################################
 ################################################################################

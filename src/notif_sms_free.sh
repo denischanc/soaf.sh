@@ -1,11 +1,11 @@
 ################################################################################
 ################################################################################
 
-SOAF_NOTIF_SMS_FREE_LOG_NAME="soaf.notif.sms.free"
+readonly SOAF_NOTIF_SMS_FREE_LOG_NAME="soaf.notif.sms.free"
 
-SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR="soaf_notif_sms_free_account"
-SOAF_NOTIF_SMS_FREE_PROXY_NATURE_ATTR="soaf_notif_sms_free_proxy_nature"
-SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR="soaf_notif_sms_free_cacert_file"
+readonly SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR="soaf_notif_sms_free_account"
+readonly SOAF_NOTIF_SMS_FREE_PROXY_NATURE_ATTR="soaf_notif_sms_free_proxy"
+readonly SOAF_NOTIF_SMS_FREE_CACERT_FILE_ATTR="soaf_notif_sms_free_cacert_file"
 
 ################################################################################
 ################################################################################

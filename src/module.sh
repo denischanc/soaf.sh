@@ -1,20 +1,20 @@
 ################################################################################
 ################################################################################
 
-SOAF_MODULE_VERSION_ATTR="soaf_module_version"
-SOAF_MODULE_STATIC_FN_ATTR="soaf_module_static_fn"
-SOAF_MODULE_CFG_FN_ATTR="soaf_module_cfg_fn"
-SOAF_MODULE_INIT_FN_ATTR="soaf_module_init_fn"
-SOAF_MODULE_PREPENV_FN_ATTR="soaf_module_prepenv_fn"
-SOAF_MODULE_PRE_ACTION_FN_ATTR="soaf_module_pre_action_fn"
-SOAF_MODULE_POST_ACTION_FN_ATTR="soaf_module_post_action_fn"
-SOAF_MODULE_EXIT_FN_ATTR="soaf_module_exit_fn"
-SOAF_MODULE_DEP_LIST_ATTR="soaf_module_dep_list"
-SOAF_MODULE_DEP_STATE_ATTR="soaf_module_dep_state"
+readonly SOAF_MODULE_VERSION_ATTR="soaf_module_version"
+readonly SOAF_MODULE_STATIC_FN_ATTR="soaf_module_static_fn"
+readonly SOAF_MODULE_CFG_FN_ATTR="soaf_module_cfg_fn"
+readonly SOAF_MODULE_INIT_FN_ATTR="soaf_module_init_fn"
+readonly SOAF_MODULE_PREPENV_FN_ATTR="soaf_module_prepenv_fn"
+readonly SOAF_MODULE_PRE_ACTION_FN_ATTR="soaf_module_pre_action_fn"
+readonly SOAF_MODULE_POST_ACTION_FN_ATTR="soaf_module_post_action_fn"
+readonly SOAF_MODULE_EXIT_FN_ATTR="soaf_module_exit_fn"
+readonly SOAF_MODULE_DEP_LIST_ATTR="soaf_module_dep_list"
+readonly SOAF_MODULE_DEP_STATE_ATTR="soaf_module_dep_state"
 
-SOAF_MODULE_DEP_UNKNOWN_S="UNKNOWN"
-SOAF_MODULE_DEP_INPROG_S="INPROG"
-SOAF_MODULE_DEP_OK_S="OK"
+readonly SOAF_MODULE_DEP_UNKNOWN_S="UNKNOWN"
+readonly SOAF_MODULE_DEP_INPROG_S="INPROG"
+readonly SOAF_MODULE_DEP_OK_S="OK"
 
 ################################################################################
 ################################################################################

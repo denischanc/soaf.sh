@@ -1,13 +1,13 @@
 ################################################################################
 ################################################################################
 
-SOAF_PF_LOG_NAME="soaf.prop_file"
+readonly SOAF_PF_LOG_NAME="soaf.prop_file"
 
-SOAF_PF_FILE_ATTR="soaf_pf_file"
-SOAF_PF_SEP_ATTR="soaf_pf_sep"
+readonly SOAF_PF_FILE_ATTR="soaf_pf_file"
+readonly SOAF_PF_SEP_ATTR="soaf_pf_sep"
 
-SOAF_PF_VAL_ATTR="soaf_pf_val"
-SOAF_PF_IN_CACHE_ATTR="soaf_pf_in_cache"
+readonly SOAF_PF_VAL_ATTR="soaf_pf_val"
+readonly SOAF_PF_IN_CACHE_ATTR="soaf_pf_in_cache"
 
 ################################################################################
 ################################################################################

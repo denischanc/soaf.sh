@@ -1,32 +1,32 @@
 ################################################################################
 ################################################################################
 
-SOAF_LOG_DEV_ERR=10
-SOAF_LOG_ERR=4
-SOAF_LOG_WARN=3
-SOAF_LOG_INFO=2
-SOAF_LOG_DEBUG=1
+readonly SOAF_LOG_DEV_ERR=10
+readonly SOAF_LOG_ERR=4
+readonly SOAF_LOG_WARN=3
+readonly SOAF_LOG_INFO=2
+readonly SOAF_LOG_DEBUG=1
 
-SOAF_LOG_DEV_ERR_LABEL="DEV.ERROR"
-SOAF_LOG_ERR_LABEL="ERROR"
-SOAF_LOG_WARN_LABEL="WARN_"
-SOAF_LOG_INFO_LABEL="INFO_"
-SOAF_LOG_DEBUG_LABEL="DEBUG"
+readonly SOAF_LOG_DEV_ERR_LABEL="DEV.ERROR"
+readonly SOAF_LOG_ERR_LABEL="ERROR"
+readonly SOAF_LOG_WARN_LABEL="WARN_"
+readonly SOAF_LOG_INFO_LABEL="INFO_"
+readonly SOAF_LOG_DEBUG_LABEL="DEBUG"
 
-SOAF_LOG_DFT_NATURE="soaf.log.default"
-SOAF_LOG_ROLL_DFT_NATURE="soaf.log.roll.default"
+readonly SOAF_LOG_DFT_NATURE="soaf.log.default"
+readonly SOAF_LOG_ROLL_DFT_NATURE="soaf.log.roll.default"
 
-SOAF_LOG_LEVEL_ATTR="soaf_log_level"
+readonly SOAF_LOG_LEVEL_ATTR="soaf_log_level"
 
-SOAF_LOG_FN_ATTR="soaf_log_fn"
-SOAF_LOG_PREP_FN_ATTR="soaf_log_prep_fn"
+readonly SOAF_LOG_FN_ATTR="soaf_log_fn"
+readonly SOAF_LOG_PREP_FN_ATTR="soaf_log_prep_fn"
 
-SOAF_LOG_UNKNOWN_S="UNKNOWN"
-SOAF_LOG_ALIVE_S="ALIVE"
-SOAF_LOG_DEAD_S="DEAD"
+readonly SOAF_LOG_UNKNOWN_S="UNKNOWN"
+readonly SOAF_LOG_ALIVE_S="ALIVE"
+readonly SOAF_LOG_DEAD_S="DEAD"
 SOAF_LOG_STATE=$SOAF_LOG_UNKNOWN_S
 
-SOAF_LOG_COLOR_MAP="soaf.log.color"
+readonly SOAF_LOG_COLOR_MAP="soaf.log.color"
 
 ################################################################################
 ################################################################################

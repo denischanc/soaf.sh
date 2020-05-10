@@ -1,10 +1,10 @@
 ################################################################################
 ################################################################################
 
-SOAF_USERMSGPROC_FN_ATTR="soaf_usermsgproc_fn"
+readonly SOAF_USERMSGPROC_FN_ATTR="soaf_usermsgproc_fn"
 
-SOAF_USERMSGPROC_TXT_ORG="TXT"
-SOAF_USERMSGPROC_LOG_ORG="LOG"
+readonly SOAF_USERMSGPROC_TXT_ORG="TXT"
+readonly SOAF_USERMSGPROC_LOG_ORG="LOG"
 
 ################################################################################
 ################################################################################

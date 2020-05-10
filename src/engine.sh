@@ -1,26 +1,27 @@
 ################################################################################
 ################################################################################
 
-SOAF_ENGINE_LOG_NAME="soaf.engine"
+readonly SOAF_ENGINE_LOG_NAME="soaf.engine"
 
-SOAF_ENGINE_EXT_MODULE_FILE="module.sh"
-SOAF_ENGINE_EXT_STATIC_FILE="static.sh"
-SOAF_ENGINE_EXT_CFG_FILE="cfg.sh"
-SOAF_ENGINE_EXT_INIT_FILE="init.sh"
-SOAF_ENGINE_EXT_PREPENV_FILE="prepenv.sh"
+readonly SOAF_ENGINE_EXT_MODULE_FILE="module.sh"
+readonly SOAF_ENGINE_EXT_STATIC_FILE="static.sh"
+readonly SOAF_ENGINE_EXT_CFG_FILE="cfg.sh"
+readonly SOAF_ENGINE_EXT_INIT_FILE="init.sh"
+readonly SOAF_ENGINE_EXT_PREPENV_FILE="prepenv.sh"
 
 SOAF_ENGINE_EXT_VF_L="SOAF_ENGINE_EXT_MODULE_FILE SOAF_ENGINE_EXT_STATIC_FILE"
 SOAF_ENGINE_EXT_VF_L+=" SOAF_ENGINE_EXT_CFG_FILE SOAF_ENGINE_EXT_INIT_FILE"
 SOAF_ENGINE_EXT_VF_L+=" SOAF_ENGINE_EXT_PREPENV_FILE"
+readonly SOAF_ENGINE_EXT_VF_L
 
-SOAF_ENGINE_UNKNOWN_S="UNKNOWN"
-SOAF_ENGINE_MODULE_S="MODULE"
-SOAF_ENGINE_STATIC_S="STATIC"
-SOAF_ENGINE_CFG_S="CFG"
-SOAF_ENGINE_INIT_S="INIT"
-SOAF_ENGINE_PREP_S="PREP"
-SOAF_ENGINE_ALIVE_S="ALIVE"
-SOAF_ENGINE_DEAD_S="DEAD"
+readonly SOAF_ENGINE_UNKNOWN_S="UNKNOWN"
+readonly SOAF_ENGINE_MODULE_S="MODULE"
+readonly SOAF_ENGINE_STATIC_S="STATIC"
+readonly SOAF_ENGINE_CFG_S="CFG"
+readonly SOAF_ENGINE_INIT_S="INIT"
+readonly SOAF_ENGINE_PREP_S="PREP"
+readonly SOAF_ENGINE_ALIVE_S="ALIVE"
+readonly SOAF_ENGINE_DEAD_S="DEAD"
 SOAF_ENGINE_STATE=$SOAF_ENGINE_UNKNOWN_S
 
 ################################################################################
@@ -127,6 +128,21 @@ soaf_engine_action_() {
 	local FN=$SOAF_RET
 	[ -n "$FN" ] && $FN $SOAF_ACTION
 	soaf_module_apply_all_fn_attr $SOAF_MODULE_POST_ACTION_FN_ATTR $VA_NATURE
+}
+
+################################################################################
+################################################################################
+
+for sig in EXIT HUP INT QUIT KILL TERM
+do
+	eval "soaf_engine_trap_$sig() { soaf_engine_trap $sig; }"
+	trap soaf_engine_trap_$sig $sig
+done
+
+soaf_engine_trap() {
+	local SIG=$1
+	local MSG="Exit on trap signal : [$SIG]."
+	soaf_engine_exit "" "$MSG" $SOAF_ENGINE_LOG_NAME
 }
 
 ################################################################################

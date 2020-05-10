@@ -1,11 +1,11 @@
 ################################################################################
 ################################################################################
 
-SOAF_MAIN_LOG_NAME="soaf.main"
+readonly SOAF_MAIN_LOG_NAME="soaf.main"
 
-SOAF_MAIN_APPLI_NATURE="soaf.main.appli"
+readonly SOAF_MAIN_APPLI_NATURE="soaf.main.appli"
 
-SOAF_MAIN_CREATE_PRJ_ACTION="create_prj"
+readonly SOAF_MAIN_CREATE_PRJ_ACTION="create_prj"
 
 ################################################################################
 ################################################################################
