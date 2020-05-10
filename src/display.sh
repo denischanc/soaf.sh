@@ -82,7 +82,7 @@ soaf_dis_txt_off() {
 
 soaf_dis_txt_stdin() {
 	local line
-	while read -r
+	while soaf_read_stdin
 	do
 		soaf_dis_txt "$REPLY"
 	done
@@ -91,7 +91,7 @@ soaf_dis_txt_stdin() {
 soaf_dis_txt_off_stdin() {
 	local OFF=$1
 	local line
-	while read -r
+	while soaf_read_stdin
 	do
 		soaf_dis_txt_off "$REPLY" $OFF
 	done
