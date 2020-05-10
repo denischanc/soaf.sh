@@ -1,10 +1,6 @@
 ################################################################################
 ################################################################################
 
-readonly SOAF_DISPLAY_TXT_PRE_1="@[SOAF_TXT_PRE]"
-readonly SOAF_DISPLAY_TXT_PRE_2="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
-readonly SOAF_DISPLAY_TXT_PRE_3="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
-
 readonly SOAF_DISPLAY_VAR2FN_MAP="soaf.dis.var2fn"
 
 ################################################################################
@@ -17,6 +13,9 @@ soaf_dis_static_() {
 soaf_dis_cfg_() {
 	SOAF_TITLE_PRE="==[[ "
 	SOAF_TXT_PRE="  "
+	SOAF_DISPLAY_TXT_PRE_1="@[SOAF_TXT_PRE]"
+	SOAF_DISPLAY_TXT_PRE_2="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
+	SOAF_DISPLAY_TXT_PRE_3="@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]@[SOAF_TXT_PRE]"
 	soaf_var_add_unsubst "SOAF_DISPLAY_TXT_PRE_1 SOAF_DISPLAY_TXT_PRE_2 \
 		SOAF_DISPLAY_TXT_PRE_3"
 }
