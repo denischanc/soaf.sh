@@ -97,9 +97,11 @@ soaf_var_check_() {
 		then
 			### Check if val empty accepted
 			soaf_map_get $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
-			[ -z "$SOAF_RET" ] && \
-				soaf_engine_exit "" "Variable [$VAR] not filled." \
-					$SOAF_VAR_LOG_NAME
+			if [ -z "$SOAF_RET" ]
+			then
+				soaf_console_err  "Variable [$VAR] not filled."
+				soaf_engine_exit
+			fi
 		else
 			soaf_map_get $VAR $SOAF_VAR_ENUM_ATTR
 			local ENUM=$SOAF_RET
@@ -110,7 +112,8 @@ soaf_var_check_() {
 				if [ -z "$SOAF_RET_LIST" ]
 				then
 					soaf_var_err_msg_notinenum_ $VAR $VAL "$ENUM"
-					soaf_engine_exit "" "$SOAF_VAR_ERR_MSG" $SOAF_VAR_LOG_NAME
+					soaf_console_err "$SOAF_VAR_ERR_MSG"
+					soaf_engine_exit
 				fi
 			fi
 		fi
