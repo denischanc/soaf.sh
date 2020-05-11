@@ -9,8 +9,6 @@ readonly SOAF_PF_SEP_ATTR="soaf_pf_sep"
 readonly SOAF_PF_VAL_ATTR="soaf_pf_val"
 readonly SOAF_PF_IN_CACHE_ATTR="soaf_pf_in_cache"
 
-readonly SOAF_PF_KEEP_PROP="soaf.prop_file.keep"
-
 ################################################################################
 ################################################################################
 
@@ -71,55 +69,42 @@ soaf_prop_file_uniq_name_() {
 ################################################################################
 ################################################################################
 
-soaf_prop_file_persist_tmp_() {
+soaf_prop_file_persist_() {
 	local PROP_UNIQ=$1
 	local VAL=$2
 	local FILE=$3
-	local FILE_TMP=$4
-	if [ -f $FILE ]
+	local FILE_TMP=$FILE.$$
+	local FILE_BUP=$FILE.bup.$$
+	[ ! -e $FILE ] && touch $FILE
+	cp -f $FILE $FILE_BUP
+	local RET=$?
+	if [ $RET -eq 0 ]
 	then
 		grep -v "^$PROP_UNIQ=" $FILE > $FILE_TMP
-	else
-		cat << _EOF_ > $FILE_TMP
-$SOAF_PF_KEEP_PROP=OK
-_EOF_
-	fi
-	cat << _EOF_ >> $FILE_TMP
+		[ $? -le 1 ] && RET=0 || RET=1
+		if [ $RET -eq 0 ]
+		then
+			cat << _EOF_ >> $FILE_TMP
 $PROP_UNIQ=$VAL
 _EOF_
-}
-
-soaf_prop_file_check_() {
-	local PROP=$1
-	local VAL=$2
-	local FILE=$3
-	local VAL_FND=$(grep "^$PROP=" $FILE 2> /dev/null)
-	VAL_FND=${VAL_FND#$PROP=}
-	[ "$VAL_FND" = "$VAL" ] && SOAF_PROP_FILE_RET="OK" || SOAF_PROP_FILE_RET=
-}
-
-soaf_prop_file_check_all_() {
-	local PROP_UNIQ=$1
-	local VAL=$2
-	local FILE=$3
-	soaf_prop_file_check_ $SOAF_PF_KEEP_PROP "OK" $FILE
-	[ -n "$SOAF_PROP_FILE_RET" ] && \
-		soaf_prop_file_check_ $PROP_UNIQ "$VAL" $FILE
-}
-
-soaf_prop_file_persist_() {
-	local FILE=$1
-	local FILE_TMP=$2
-	local CMD="mv -f $FILE_TMP $FILE"
-	soaf_log_prep_cmd_err "$CMD" $SOAF_PF_LOG_NAME
-	eval "$SOAF_LOG_RET"
-	if [ $? -eq 0 ]
-	then
-		SOAF_PROP_FILE_RET="OK"
-	else
-		soaf_log_cmd_err $SOAF_PF_LOG_NAME
-		SOAF_PROP_FILE_RET=
+			RET=$?
+		fi
+		if [ $RET -eq 0 ]
+		then
+			mv -f $FILE_TMP $FILE
+			RET=$?
+			if [ $RET -ne 0 ]
+			then
+				rm -f $FILE_TMP
+				local MSG="Unable to update file : [$FILE],"
+				MSG+=" backup : [$FILE_BUP], tmp : [$FILE_TMP]."
+				soaf_engine_exit "" "$MSG" $SOAF_PF_LOG_NAME
+			fi
+		fi
 	fi
+	[ -f $FILE_BUP ] && rm -f $FILE_BUP
+	[ -f $FILE_TMP ] && rm -f $FILE_TMP
+	SOAF_PROP_FILE_RET=$RET
 }
 
 soaf_prop_file_set_require_() {
@@ -128,25 +113,24 @@ soaf_prop_file_set_require_() {
 	local VAL=$3
 	soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
 	local FILE=$SOAF_RET
-	soaf_mkdir $(dirname $FILE) "" $SOAF_PF_LOG_NAME
-	local FILE_TMP=$FILE.$$
 	soaf_prop_file_uniq_name_ $NATURE $PROP
 	local PROP_UNIQ=$SOAF_PROP_FILE_RET
-	soaf_prop_file_persist_tmp_ $PROP_UNIQ "$VAL" $FILE $FILE_TMP |& \
-		soaf_log_stdin "" $SOAF_PF_LOG_NAME
-	soaf_prop_file_check_all_ $PROP_UNIQ "$VAL" $FILE_TMP
-	if [ -n "$SOAF_PROP_FILE_RET" ]
-	then
-		soaf_prop_file_persist_ $FILE $FILE_TMP
-	fi
-	if [ -n "$SOAF_PROP_FILE_RET" ]
+	soaf_mkdir $(dirname $FILE) "" $SOAF_PF_LOG_NAME
+	local CMD="soaf_prop_file_persist_ $PROP_UNIQ \"$VAL\" $FILE"
+	soaf_log_prep_cmd_err "$CMD" $SOAF_PF_LOG_NAME
+	eval "$SOAF_LOG_RET"
+	local RET=$SOAF_PROP_FILE_RET
+	soaf_log_cmd_err $SOAF_PF_LOG_NAME
+	if [ $RET -eq 0 ]
 	then
 		soaf_prop_file_upd_cache_ $PROP_UNIQ "$VAL"
 		local MSG="Set prop [$PROP_UNIQ] value (file : [$FILE]) : [$VAL]."
 		soaf_log_debug "$MSG" $SOAF_PF_LOG_NAME
+		SOAF_PROP_FILE_RET="OK"
 	else
 		local MSG="Unable to set prop (file : [$FILE]) : [$PROP_UNIQ]."
 		soaf_log_err "$MSG" $SOAF_PF_LOG_NAME
+		SOAF_PROP_FILE_RET=
 	fi
 }
 
@@ -170,8 +154,9 @@ soaf_prop_file_set() {
 soaf_prop_file_get_in_file_() {
 	local PROP_UNIQ=$1
 	local FILE=$2
+	local VAR_LINE
 	soaf_log_prep_cmd_err "grep \"^$PROP_UNIQ=\" $FILE" $SOAF_PF_LOG_NAME
-	local VAR_LINE=$(eval "$SOAF_LOG_RET")
+	VAR_LINE=$(eval "$SOAF_LOG_RET")
 	local RET=$?
 	soaf_log_cmd_err $SOAF_PF_LOG_NAME
 	if [ $RET -ge 2 ]
@@ -185,12 +170,10 @@ soaf_prop_file_get_in_file_() {
 
 soaf_prop_file_get_no_cache_() {
 	local NATURE=$1
-	local PROP=$2
+	local PROP_UNIQ=$2
 	soaf_map_get $NATURE $SOAF_PF_FILE_ATTR $SOAF_PF_FILE
 	local FILE=$SOAF_RET
-	soaf_prop_file_uniq_name_ $NATURE $PROP
-	local PROP_UNIQ=$SOAF_PROP_FILE_RET
-	if [ -f $FILE ]
+	if [ -e $FILE ]
 	then
 		soaf_prop_file_get_in_file_ $PROP_UNIQ $FILE
 	else
@@ -201,13 +184,17 @@ soaf_prop_file_get_no_cache_() {
 	then
 		local MSG="Unable to get prop (file : [$FILE]) : [$PROP_UNIQ]."
 		soaf_log_err "$MSG" $SOAF_PF_LOG_NAME
+		SOAF_PROP_FILE_RET=
 	else
-		soaf_prop_file_upd_cache_ $PROP_UNIQ "$SOAF_PROP_FILE_VAL"
+		local VAL=$SOAF_PROP_FILE_VAL
+		soaf_prop_file_upd_cache_ $PROP_UNIQ "$VAL"
 		if [ -z "$SOAF_PROP_FILE_NO_GET_LOG" ]
 		then
 			local MSG="Get prop [$PROP_UNIQ] value (file : [$FILE]) :"
-			soaf_log_debug "$MSG [$SOAF_PROP_FILE_VAL]." $SOAF_PF_LOG_NAME
+			soaf_log_debug "$MSG [$VAL]." $SOAF_PF_LOG_NAME
 		fi
+		SOAF_PROP_FILE_VAL=$VAL
+		SOAF_PROP_FILE_RET="OK"
 	fi
 }
 
@@ -220,15 +207,16 @@ soaf_prop_file_get() {
 	if [ -n "$SOAF_RET" ]
 	then
 		soaf_map_get $PROP_UNIQ $SOAF_PF_VAL_ATTR
-		SOAF_PROP_FILE_VAL=$SOAF_RET
-		SOAF_PROP_FILE_RET="OK"
+		local VAL=$SOAF_RET
 		if [ -z "$SOAF_PROP_FILE_NO_GET_LOG" ]
 		then
 			local MSG="Get prop [$PROP_UNIQ] value in cache :"
-			soaf_log_debug "$MSG [$SOAF_PROP_FILE_VAL]." $SOAF_PF_LOG_NAME
+			soaf_log_debug "$MSG [$VAL]." $SOAF_PF_LOG_NAME
 		fi
+		SOAF_PROP_FILE_VAL=$VAL
+		SOAF_PROP_FILE_RET="OK"
 	else
-		soaf_prop_file_get_no_cache_ $NATURE $PROP
+		soaf_prop_file_get_no_cache_ $NATURE $PROP_UNIQ
 	fi
 }
 
@@ -293,17 +281,18 @@ soaf_prop_file_is_val() {
 	soaf_prop_file_get $NATURE $PROP
 	if [ -n "$SOAF_PROP_FILE_RET" ]
 	then
-		local VAL_LIST=$SOAF_PROP_FILE_VAL
-		SOAF_PROP_FILE_VAL_LIST_PRIV=$VAL_LIST
-		SOAF_PROP_FILE_VAL=
-		if [ -n "$VAL_LIST" ]
+		SOAF_PROP_FILE_VAL_LIST_PRIV=$SOAF_PROP_FILE_VAL
+		if [ -n "$SOAF_PROP_FILE_VAL" ]
 		then
+			local VAL_LIST=$SOAF_PROP_FILE_VAL
 			soaf_map_get $NATURE $SOAF_PF_SEP_ATTR
 			local SEP=$SOAF_RET
 			VAL_LIST=$SEP$VAL_LIST$SEP
 			local DIFF=${VAL_LIST/$SEP$VAL$SEP}
-			[ "$DIFF" != "$VAL_LIST" ] && SOAF_PROP_FILE_VAL=$VAL
+			[ "$DIFF" != "$VAL_LIST" ] && SOAF_PROP_FILE_VAL=$VAL || \
+				SOAF_PROP_FILE_VAL=
 		fi
+		SOAF_PROP_FILE_RET="OK"
 	else
 		SOAF_PROP_FILE_VAL=
 	fi

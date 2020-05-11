@@ -102,8 +102,6 @@ test_init_job() {
 test_prop_file_nature() {
 	local TEST_PROP_NATURE=$1
 	###-------------------------------------------------------------------------
-	rm -f $SOAF_PF_FILE
-	###-------------------------------------------------------------------------
 	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.0"
 	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.1"
 	soaf_prop_file_set_add $TEST_PROP_NATURE $TEST_TEST_PROP "3.14.10"
@@ -128,9 +126,13 @@ test_prop_file_nature() {
 	soaf_dis_txt "Ret : [$SOAF_PROP_FILE_RET] = [OK]"
 	soaf_dis_txt "Val : [$SOAF_PROP_FILE_VAL] = []"
 	###-------------------------------------------------------------------------
+	soaf_prop_file_list_add $TEST_PROP_NATURE $TEST_TEST_PROP "not empty"
+	soaf_prop_file_list_add $TEST_PROP_NATURE $TEST_TEST_PROP "not empty"
+	###-------------------------------------------------------------------------
 }
 
 test_prop_file() {
+	rm -f $SOAF_PF_FILE
 	test_prop_file_nature $TEST_PROP_NATURE_1
 	test_prop_file_nature $TEST_PROP_NATURE_2
 }
