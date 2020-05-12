@@ -1,6 +1,4 @@
 
--- log
-     -- create following loggers : to_file, to_file_n_console, to_console
 -- usermsgproc
      -- define following modes : NORMAL, CONSOLE, QUIET
 
@@ -20,6 +18,8 @@
 
 [_DONE_]
 
+-- log => ff0fc960
+     -- create following loggers : to_file, to_file_n_console, to_console
 -- fn_args_with_pid : manage state when pid is found but no process associated
      => 85c3f7f3
 -- Save pid for job and state processes (add option to automatically restart)
