@@ -1,19 +1,18 @@
 
-### Copy/paste next line in init-sms-free.sh and replace [login|passwd] :
-### soaf_create_net_account "test.sms.free.account" "[login]" "[passwd]"
-TEST_INIT_SMS_FREE_FILE=$TEST_HOME/init-sms-free.sh
-if [ -f $TEST_INIT_SMS_FREE_FILE ]
+### Define TEST_SMS_FREE_LOGIN and TEST_SMS_FREE_PASSWD in ext/init.sh
+### TEST_SMS_FREE_LOGIN=[login]
+### TEST_SMS_FREE_PASSWD=[passwd]
+if [ -n "$TEST_SMS_FREE_LOGIN" -a -n "$TEST_SMS_FREE_PASSWD" ]
 then
-	. $TEST_INIT_SMS_FREE_FILE
+	soaf_create_net_account "test.sms.free.account" \
+		"$TEST_SMS_FREE_LOGIN" "$TEST_SMS_FREE_PASSWD"
 	soaf_create_notif_sms_free_nature "test.notif.sms.free" \
 		"test.sms.free.account"
 fi
 
-### Copy/paste next line in init-mail.sh and replace [mail_to_addr] :
-### MAIL_TO_ADDR="[mail_to_addr]"
-TEST_INIT_MAIL_FILE=$TEST_HOME/init-mail.sh
-if [ -f $TEST_INIT_MAIL_FILE ]
+### Define TEST_TO_ADDR in ext/init.sh
+### TEST_TO_ADDR=[mail address]
+if [ -n "$TEST_TO_ADDR" ]
 then
-	. $TEST_INIT_MAIL_FILE
-	soaf_create_notif_mail_nature "test.notif.mail" "$MAIL_TO_ADDR"
+	soaf_create_notif_mail_nature "test.notif.mail" "$TEST_TO_ADDR"
 fi

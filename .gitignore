@@ -2,6 +2,7 @@ soaf.sh-*.tar.*
 src/soaf.sh
 test/log
 test/notif
+test/ext
 test/test.prop
 test/init-sms-free.sh
 doc/soaf.sh.html

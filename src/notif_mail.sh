@@ -12,7 +12,12 @@ soaf_notif_mail_static_() {
 	soaf_log_add_log_level_fn soaf_notif_mail_log_level
 }
 
-soaf_create_module soaf.extra.notif.mail $SOAF_VERSION soaf_notif_mail_static_
+soaf_notif_mail_cfg_() {
+	SOAF_NOTIF_MAIL_CMD=mail
+}
+
+soaf_create_module soaf.extra.notif.mail $SOAF_VERSION \
+	soaf_notif_mail_static_ soaf_notif_mail_cfg_
 
 ################################################################################
 ################################################################################
@@ -42,8 +47,9 @@ soaf_notif_mail_() {
 	local PROG=$3
 	local HOST=$4
 	local SUBJ="[$HOST:$PROG] Notification"
+	local CMD="echo \"$MSG\" | "
 	soaf_map_get $NATURE $SOAF_NOTIF_MAIL_TO_ADDR_ATTR
-	local CMD="echo \"$MSG\" | mail -s \"$SUBJ\" \"$SOAF_RET\""
+	CMD+="$SOAF_NOTIF_MAIL_CMD -s \"$SUBJ\" \"$SOAF_RET\""
 	soaf_log_prep_cmd_err "$CMD" $SOAF_NOTIF_MAIL_LOG_NAME
 	eval "$SOAF_LOG_RET"
 	local RET=$?

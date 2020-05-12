@@ -14,7 +14,7 @@ TEST_PROP_NATURE_2="test.prop.2"
 
 TEST_TEST_PROP="test"
 
-SOAF_ENGINE_EXT_ALL_DIR=$TEST_HOME
+SOAF_ENGINE_EXT_ALL_DIR="$TEST_HOME/ext $TEST_HOME"
 
 make -C $TEST_HOME/.. > /dev/null 2>&1
 . $TEST_HOME/../src/soaf.sh
