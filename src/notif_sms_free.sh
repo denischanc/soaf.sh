@@ -19,7 +19,7 @@ soaf_notif_sms_free_cfg_() {
 	SOAF_NOTIF_SMS_FREE_CURL_ARGS_EXT="--ipv4"
 }
 
-soaf_create_module soaf.extra.notif_sms_free $SOAF_VERSION \
+soaf_create_module soaf.extra.notif.sms_free $SOAF_VERSION \
 	soaf_notif_sms_free_static_ soaf_notif_sms_free_cfg_
 
 ################################################################################
@@ -38,7 +38,8 @@ soaf_create_notif_sms_free_nature() {
 	local ACCOUNT=$2
 	local PROXY_NATURE=$3
 	local CACERT_FILE=$4
-	soaf_create_notif_nature $NATURE soaf_notif_sms_free_
+	local NB_TRY=$5
+	soaf_create_notif_nature $NATURE soaf_notif_sms_free_ $NB_TRY
 	soaf_map_extend $NATURE $SOAF_NOTIF_SMS_FREE_ACCOUNT_ATTR $ACCOUNT
 	soaf_map_extend $NATURE $SOAF_NOTIF_SMS_FREE_PROXY_NATURE_ATTR \
 		$PROXY_NATURE
