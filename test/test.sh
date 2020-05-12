@@ -82,7 +82,7 @@ test_init_display() {
 ################################################################################
 
 test_init_space() {
-	soaf_cfg_set TEST_SPACE "    "
+	TEST_SPACE=${TEST_SPACE:-    }
 	soaf_info_add_var TEST_SPACE
 }
 

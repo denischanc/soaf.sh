@@ -36,10 +36,10 @@ soaf_engine_log_level() {
 ################################################################################
 
 soaf_engine_source_ext_cfg_() {
-	soaf_cfg_set SOAF_ENGINE_EXT_GLOB_DIR /etc/$SOAF_APPLI_NAME
-	soaf_cfg_set SOAF_ENGINE_EXT_LOC_DIR $HOME/.$SOAF_APPLI_NAME
-	soaf_cfg_set SOAF_ENGINE_EXT_ALL_DIR \
-		"$SOAF_ENGINE_EXT_GLOB_DIR $SOAF_ENGINE_EXT_LOC_DIR"
+	SOAF_ENGINE_EXT_GLOB_DIR=${SOAF_ENGINE_EXT_GLOB_DIR:-/etc/$SOAF_APPLI_NAME}
+	SOAF_ENGINE_EXT_LOC_DIR=${SOAF_ENGINE_EXT_LOC_DIR:-$HOME/.$SOAF_APPLI_NAME}
+	local DFT="$SOAF_ENGINE_EXT_GLOB_DIR $SOAF_ENGINE_EXT_LOC_DIR"
+	SOAF_ENGINE_EXT_ALL_DIR=${SOAF_ENGINE_EXT_ALL_DIR:-$DFT}
 }
 
 soaf_engine_source_ext_() {

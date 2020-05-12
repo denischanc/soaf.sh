@@ -1,5 +1,5 @@
 
-.PHONY: all dist-gz dist-bz dist-xz dist dist-clean install clean
+.PHONY: all dist-gz dist-bz dist-xz dist dist-clean install clean cygwin-docker
 
 include Makefile.cfg
 
@@ -90,3 +90,6 @@ install: all
 clean:
 	rm -rf $(EXE_TGT) $(LIB_TGT) $(EXTRA_CLEAN)
 	make dist-clean
+
+cygwin-docker: all
+	docker run -it -v "$$(cygpath -ma .)":/home/soaf centos

@@ -13,8 +13,12 @@ readonly SOAF_LOG_WARN_LABEL="WARN_"
 readonly SOAF_LOG_INFO_LABEL="INFO_"
 readonly SOAF_LOG_DEBUG_LABEL="DEBUG"
 
-readonly SOAF_LOG_DFT_NATURE="soaf.log.default"
-readonly SOAF_LOG_ROLL_DFT_NATURE="soaf.log.roll.default"
+readonly SOAF_LOG_TO_FILE_NATURE="soaf.log.to_file"
+readonly SOAF_LOG_TO_CONSOLE_NATURE="soaf.log.to_console"
+readonly SOAF_LOG_TO_FILE_CONSOLE_NATURE="soaf.log.to_file_console"
+
+readonly SOAF_LOG_ROLL_WAY_GT="gt"
+readonly SOAF_LOG_ROLL_WAY_BYDAY="byday"
 
 readonly SOAF_LOG_LEVEL_ATTR="soaf_log_level"
 
@@ -39,8 +43,6 @@ soaf_log_cfg_() {
 	SOAF_LOG_LEVEL=$SOAF_LOG_INFO
 	SOAF_LOG_LEVEL_NOT_ALIVE=$SOAF_LOG_ERR
 	###---------------
-	SOAF_LOG_ROLL_NATURE=$SOAF_LOG_ROLL_DFT_NATURE
-	###---------------
 	SOAF_LOG_DIR=@[SOAF_WORK_DIR]/log
 	SOAF_LOG_FILE=@[SOAF_LOG_DIR]/$SOAF_APPLI_NAME.log
 	SOAF_LOG_CMD_OUT_ERR_DIR=@[SOAF_LOG_DIR]
@@ -58,14 +60,46 @@ soaf_log_cfg_() {
 
 soaf_log_init_() {
 	soaf_info_add_var "SOAF_LOG_LEVEL SOAF_LOG_LEVEL_NOT_ALIVE"
-	soaf_dis_var_w_fn SOAF_LOG_LEVEL soaf_log_val_of_lvl_var_
-	soaf_dis_var_w_fn SOAF_LOG_LEVEL_NOT_ALIVE soaf_log_val_of_lvl_var_
+	soaf_dis_var_w_fn SOAF_LOG_LEVEL soaf_log_label_of_lvl_var_
+	soaf_dis_var_w_fn SOAF_LOG_LEVEL_NOT_ALIVE soaf_log_label_of_lvl_var_
 	soaf_info_add_var "SOAF_LOG_DIR SOAF_LOG_FILE SOAF_LOG_USED_NATURE"
 	soaf_info_add_var SOAF_LOG_CMD_OUT_ERR_DIR
-	###---------------
-	[ -z "$SOAF_LOG_USED_NATURE" ] && soaf_create_log_dft_
-	[ "$SOAF_LOG_ROLL_NATURE" = "$SOAF_LOG_ROLL_DFT_NATURE" ] && \
-		soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_DFT_NATURE
+	soaf_info_add_var "SOAF_LOG_TO_FILE_NATURE SOAF_LOG_TO_CONSOLE_NATURE"
+	soaf_info_add_var SOAF_LOG_TO_FILE_CONSOLE_NATURE
+	soaf_log_init_log_
+	soaf_log_init_roll_
+}
+
+soaf_log_init_log_() {
+	if [ -z "$SOAF_LOG_USED_NATURE" ]
+	then
+		case $SOAF_LOG_IN_NATURE in
+		$SOAF_LOG_TO_CONSOLE_NATURE)
+			soaf_create_log_to_console_
+			;;
+		$SOAF_LOG_TO_FILE_CONSOLE_NATURE)
+			soaf_create_log_to_file_console_
+			;;
+		*)
+			soaf_create_log_to_file_
+			;;
+		esac
+	fi
+}
+
+soaf_log_init_roll_() {
+	if [ -z "$SOAF_LOG_ROLL_NATURE" ]
+	then
+		SOAF_LOG_ROLL_NATURE="soaf.log.roll"
+		case $SOAF_LOG_ROLL_WAY in
+		$SOAF_LOG_ROLL_WAY_BYDAY)
+			soaf_create_roll_by_day_nature $SOAF_LOG_ROLL_NATURE
+			;;
+		*)
+			soaf_create_roll_cond_gt_nature $SOAF_LOG_ROLL_NATURE
+			;;
+		esac
+	fi
 }
 
 soaf_log_prepenv_() {
@@ -103,9 +137,18 @@ soaf_create_log_nature() {
 ################################################################################
 ################################################################################
 
-soaf_create_log_dft_() {
-	soaf_create_log_nature $SOAF_LOG_DFT_NATURE soaf_log_dft_ \
-		soaf_log_dft_prep_
+soaf_create_log_to_file_() {
+	soaf_create_log_nature $SOAF_LOG_TO_FILE_NATURE \
+		soaf_log_to_file_ soaf_log_to_file_prep_
+}
+
+soaf_create_log_to_console_() {
+	soaf_create_log_nature $SOAF_LOG_TO_CONSOLE_NATURE soaf_log_to_console_
+}
+
+soaf_create_log_to_file_console_() {
+	soaf_create_log_nature $SOAF_LOG_TO_FILE_CONSOLE_NATURE \
+		soaf_log_to_file_console_ soaf_log_to_file_console_prep_
 }
 
 ################################################################################
@@ -142,21 +185,6 @@ soaf_log_stop() {
 ################################################################################
 ################################################################################
 
-soaf_log_level() {
-	local NAME=$1
-	if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
-	then
-		SOAF_LOG_RET=$SOAF_LOG_LEVEL
-		if [ -n "$NAME" ]
-		then
-			soaf_map_get $NAME $SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET
-			SOAF_LOG_RET=$SOAF_RET
-		fi
-	else
-		SOAF_LOG_RET=${SOAF_LOG_LEVEL_NOT_ALIVE:-$SOAF_LOG_ERR}
-	fi
-}
-
 soaf_log_label_level_() {
 	local LEVEL=$1
 	case $LEVEL in
@@ -168,7 +196,7 @@ soaf_log_label_level_() {
 	esac
 }
 
-soaf_log_val_of_lvl_var_() {
+soaf_log_label_of_lvl_var_() {
 	local VAR=$1
 	eval soaf_log_label_level_ \$$VAR
 	SOAF_RET=$SOAF_LOG_RET
@@ -205,7 +233,7 @@ soaf_log_build_msg_() {
 ################################################################################
 ################################################################################
 
-soaf_log_dft_() {
+soaf_log_to_file_() {
 	### local NATURE=$1
 	local LEVEL=$2
 	local MSG=$3
@@ -220,10 +248,37 @@ soaf_log_dft_() {
 	printf "$SOAF_LOG_RET\n" >> $SOAF_LOG_FILE
 }
 
-soaf_log_dft_prep_() {
+soaf_log_to_file_prep_() {
 	local LOG_DIR=$(dirname $SOAF_LOG_FILE)
 	mkdir -p $LOG_DIR |& soaf_log_stdin "" "soaf.log"
 	[ ! -d $LOG_DIR ] && soaf_engine_exit
+}
+
+################################################################################
+################################################################################
+
+soaf_log_to_console_() {
+	### local NATURE=$1
+	local LEVEL=$2
+	local MSG=$3
+	local NAME=$4
+	soaf_log_console_ $LEVEL "$MSG" $NAME
+}
+
+################################################################################
+################################################################################
+
+soaf_log_to_file_console_() {
+	local NATURE=$1
+	local LEVEL=$2
+	local MSG=$3
+	local NAME=$4
+	soaf_log_to_file_ $NATURE $LEVEL "$MSG" $NAME
+	soaf_log_to_console_ $NATURE $LEVEL "$MSG" $NAME
+}
+
+soaf_log_to_file_console_prep_() {
+	soaf_log_to_file_prep_
 }
 
 ################################################################################
@@ -249,6 +304,24 @@ soaf_log_usermsgproc_() {
 	local NAME=$3
 	soaf_log_build_msg_ $LEVEL "$MSG" $NAME
 	soaf_usermsgproc__ $SOAF_USERMSGPROC_LOG_ORG "$SOAF_LOG_RET"
+}
+
+################################################################################
+################################################################################
+
+soaf_log_level() {
+	local NAME=$1
+	if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
+	then
+		SOAF_LOG_RET=$SOAF_LOG_LEVEL
+		if [ -n "$NAME" ]
+		then
+			soaf_map_get $NAME $SOAF_LOG_LEVEL_ATTR $SOAF_LOG_RET
+			SOAF_LOG_RET=$SOAF_RET
+		fi
+	else
+		SOAF_LOG_RET=${SOAF_LOG_LEVEL_NOT_ALIVE:-$SOAF_LOG_ERR}
+	fi
 }
 
 ################################################################################
