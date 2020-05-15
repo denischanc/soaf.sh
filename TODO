@@ -13,10 +13,9 @@
 -- generate documentation (public/private)
 -- continue adoc
 
--- Manage tmp directory
-
 [_DONE_]
 
+-- Manage tmp directory => 0954b84d
 -- do mail notif (sms ok) => caf6a8c1
 -- log => ff0fc960
      -- create following loggers : to_file, to_file_n_console, to_console
