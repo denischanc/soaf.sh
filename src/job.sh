@@ -87,29 +87,34 @@ soaf_do_job_process_() {
 	local JOB_UPPER=$2
 	local LOG_DIR=$3
 	local RET=
-	local LOG_FILE=$LOG_DIR/$JOB.log
-	local LOG_ERR_FILE=$LOG_DIR/$JOB-err.log
-	soaf_map_get $JOB $SOAF_JOB_ROLL_SIZE_ATTR
-	local ROLL_SIZE=$SOAF_RET
-	soaf_do_job_roll_ $LOG_FILE $ROLL_SIZE
-	soaf_do_job_roll_ $LOG_ERR_FILE $ROLL_SIZE
 	soaf_map_get $JOB $SOAF_JOB_CMD_ATTR
 	local CMD=$SOAF_RET
 	if [ -z "$CMD" ]
 	then
 		soaf_log_err "No command for job : [$JOB] ???" $SOAF_JOB_LOG_NAME
 	else
-		CMD+=" > $LOG_FILE 2> $LOG_ERR_FILE"
+		local LOG_FILE=$LOG_DIR/$JOB.log
+		local LOG_ERR_FILE=$LOG_DIR/$JOB-err.log
+		soaf_map_get $JOB $SOAF_JOB_ROLL_SIZE_ATTR
+		local ROLL_SIZE=$SOAF_RET
+		soaf_do_job_roll_ $LOG_FILE $ROLL_SIZE
+		soaf_do_job_roll_ $LOG_ERR_FILE $ROLL_SIZE
 		soaf_log_info "Start $JOB_UPPER ..." $SOAF_JOB_LOG_NAME
+		local IN_PROG_FILE=$LOG_DIR/$JOB.inprog
+		touch $IN_PROG_FILE 2> /dev/null
+		CMD+=" > $LOG_FILE 2> $LOG_ERR_FILE"
 		soaf_cmd_info "$CMD" $SOAF_JOB_LOG_NAME "OK"
-		if [ "$SOAF_RET" = "0" ]
+		RET=$SOAF_RET
+		soaf_rm $IN_PROG_FILE "" $SOAF_JOB_LOG_NAME
+		if [ $RET -eq 0 ]
 		then
-			RET="OK"
 			soaf_log_info "$JOB_UPPER OK." $SOAF_JOB_LOG_NAME
+			RET="OK"
 		else
 			soaf_log_err "$JOB_UPPER KO." $SOAF_JOB_LOG_NAME
 			soaf_map_get $JOB $SOAF_JOB_NOTIF_ON_ERR_ATTR
 			[ -n "$SOAF_RET" ] && soaf_notif "$JOB_UPPER job KO."
+			RET=
 		fi
 	fi
 	SOAF_JOB_RET=$RET
