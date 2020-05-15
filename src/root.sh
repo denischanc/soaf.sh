@@ -15,6 +15,7 @@ soaf_root_cfg_() {
 
 soaf_root_init_() {
 	soaf_info_add_var "SOAF_WORK_DIR SOAF_RUN_DIR SOAF_TMP_DIR"
+	soaf_dis_var_w_fn SOAF_TMP_DIR soaf_root_var_subst_pid_
 }
 
 soaf_root_exit_() {
@@ -24,3 +25,12 @@ soaf_root_exit_() {
 
 soaf_create_module soaf.core.root $SOAF_VERSION "" \
 	soaf_root_cfg_ soaf_root_init_ "" "" "" soaf_root_exit_ "" $SOAF_POS_PRE
+
+################################################################################
+################################################################################
+
+soaf_root_var_subst_pid_() {
+	local VAR=$1
+	local PID_PAT=${SOAF_VAR_PAT_O}PID$SOAF_VAR_PAT_C
+	eval SOAF_RET=\$\(echo \$$VAR \| sed -e "s/$$/\$PID_PAT/g"\)
+}
