@@ -12,12 +12,12 @@
 
 -- generate documentation (public/private)
 -- continue adoc
--- do mail notif (sms ok)
 
 -- Manage tmp directory
 
 [_DONE_]
 
+-- do mail notif (sms ok) => caf6a8c1
 -- log => ff0fc960
      -- create following loggers : to_file, to_file_n_console, to_console
 -- fn_args_with_pid : manage state when pid is found but no process associated
