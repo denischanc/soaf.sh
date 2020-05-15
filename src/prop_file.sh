@@ -75,6 +75,7 @@ soaf_prop_file_persist_() {
 	local FILE=$3
 	local FILE_TMP=$FILE.$$
 	local FILE_BUP=$FILE.bup.$$
+	soaf_mkdir $(dirname $FILE) "" $SOAF_PF_LOG_NAME
 	[ ! -e $FILE ] && touch $FILE
 	cp -f $FILE $FILE_BUP
 	local RET=$?
@@ -115,7 +116,6 @@ soaf_prop_file_set_require_() {
 	local FILE=$SOAF_RET
 	soaf_prop_file_uniq_name_ $NATURE $PROP
 	local PROP_UNIQ=$SOAF_PROP_FILE_RET
-	soaf_mkdir $(dirname $FILE) "" $SOAF_PF_LOG_NAME
 	local CMD="soaf_prop_file_persist_ $PROP_UNIQ \"$VAL\" $FILE"
 	soaf_log_prep_cmd_err "$CMD" $SOAF_PF_LOG_NAME
 	eval "$SOAF_LOG_RET"

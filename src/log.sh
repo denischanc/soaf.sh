@@ -1,6 +1,8 @@
 ################################################################################
 ################################################################################
 
+readonly SOAF_LOG_THIS_NAME="soaf.log"
+
 readonly SOAF_LOG_DEV_ERR=10
 readonly SOAF_LOG_ERR=4
 readonly SOAF_LOG_WARN=3
@@ -250,7 +252,7 @@ soaf_log_to_file_() {
 
 soaf_log_to_file_prep_() {
 	local LOG_DIR=$(dirname $SOAF_LOG_FILE)
-	mkdir -p $LOG_DIR |& soaf_log_stdin "" "soaf.log"
+	mkdir -p $LOG_DIR |& soaf_log_stdin "" $SOAF_LOG_THIS_NAME
 	[ ! -d $LOG_DIR ] && soaf_engine_exit
 }
 

@@ -85,7 +85,6 @@ soaf_do_job_roll_() {
 soaf_do_job_process_() {
 	local JOB=$1
 	local JOB_UPPER=$2
-	local LOG_DIR=$3
 	local RET=
 	soaf_map_get $JOB $SOAF_JOB_CMD_ATTR
 	local CMD=$SOAF_RET
@@ -93,6 +92,9 @@ soaf_do_job_process_() {
 	then
 		soaf_log_err "No command for job : [$JOB] ???" $SOAF_JOB_LOG_NAME
 	else
+		soaf_map_get $JOB $SOAF_JOB_LOG_DIR_ATTR \
+			$SOAF_LOG_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB
+		local LOG_DIR=$SOAF_RET
 		local LOG_FILE=$LOG_DIR/$JOB.log
 		local LOG_ERR_FILE=$LOG_DIR/$JOB-err.log
 		soaf_map_get $JOB $SOAF_JOB_ROLL_SIZE_ATTR
@@ -100,6 +102,7 @@ soaf_do_job_process_() {
 		soaf_do_job_roll_ $LOG_FILE $ROLL_SIZE
 		soaf_do_job_roll_ $LOG_ERR_FILE $ROLL_SIZE
 		soaf_log_info "Start $JOB_UPPER ..." $SOAF_JOB_LOG_NAME
+		soaf_mkdir $LOG_DIR "" $SOAF_JOB_LOG_NAME
 		local IN_PROG_FILE=$LOG_DIR/$JOB.inprog
 		touch $IN_PROG_FILE 2> /dev/null
 		CMD+=" > $LOG_FILE 2> $LOG_ERR_FILE"
@@ -126,12 +129,8 @@ soaf_do_job_process_() {
 soaf_do_job_valid_() {
 	local JOB=$1
 	declare -u JOB_UPPER=$JOB
-	soaf_map_get $JOB $SOAF_JOB_LOG_DIR_ATTR \
-		$SOAF_LOG_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB
-	local LOG_DIR=$SOAF_RET
-	soaf_mkdir $LOG_DIR "" $SOAF_JOB_LOG_NAME
 	local PID_FILE=$SOAF_RUN_DIR/$SOAF_APPLI_NAME.soaf.job.$JOB.pid
-	local FN_ARGS="soaf_do_job_process_ $JOB $JOB_UPPER $LOG_DIR"
+	local FN_ARGS="soaf_do_job_process_ $JOB $JOB_UPPER"
 	soaf_map_get $JOB $SOAF_JOB_ERR_ON_PID_WO_PROC_ATTR
 	soaf_fn_args_check_pid "$FN_ARGS" $PID_FILE $SOAF_JOB_LOG_NAME $SOAF_RET
 	if [ "$SOAF_RET" != "$SOAF_OK_RET" ]
