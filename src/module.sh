@@ -98,8 +98,11 @@ soaf_module_resolve_dep() {
 
 soaf_module_version() {
 	local MODULE_NAME=$1
+	soaf_console_msg_ctl $MODULE_NAME "$SOAF_THEME_VAL_CTL_LIST"
+	local TXT="$SOAF_CONSOLE_RET-"
 	soaf_map_get $MODULE_NAME $SOAF_MODULE_VERSION_ATTR
-	soaf_dis_txt "$MODULE_NAME-$SOAF_RET"
+	soaf_console_msg_ctl "$SOAF_RET" "$SOAF_THEME_VER_CTL_LIST"
+	soaf_dis_txt "$TXT$SOAF_CONSOLE_RET"
 }
 
 ################################################################################

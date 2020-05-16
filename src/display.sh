@@ -48,8 +48,7 @@ soaf_dis_route_() {
 
 soaf_dis_title() {
 	local MSG=$1
-	soaf_console_msg_ctl "$MSG" \
-		"$SOAF_CONSOLE_FG_B_BLUE $SOAF_CONSOLE_CTL_UNDERLINE"
+	soaf_console_msg_ctl "$MSG" "$SOAF_THEME_TITLE_CTL_LIST"
 	soaf_dis_route_ "$SOAF_TITLE_PRE$SOAF_CONSOLE_RET"
 }
 
@@ -120,6 +119,9 @@ soaf_dis_var_list() {
 		else
 			eval local VAL=\$$var
 		fi
-		soaf_dis_txt "$var = [$VAL]"
+		soaf_console_msg_ctl $var "$SOAF_THEME_VAR_CTL_LIST"
+		local TXT="$SOAF_CONSOLE_RET = ["
+		soaf_console_msg_ctl "$VAL" "$SOAF_THEME_VVAL_CTL_LIST"
+		soaf_dis_txt "$TXT$SOAF_CONSOLE_RET]"
 	done
 }

@@ -17,16 +17,6 @@ readonly SOAF_VAR_PAT_G="$SOAF_VAR_PAT_O$SOAF_VAR_PAT_V$SOAF_VAR_PAT_C"
 ################################################################################
 ################################################################################
 
-soaf_var_cfg_() {
-	SOAF_VAR_CTL_LIST=$SOAF_CONSOLE_FG_B_MAGENTA
-	SOAF_VAR_VAL_CTL_LIST="$SOAF_CONSOLE_FG_CYAN $SOAF_CONSOLE_CTL_ITALIC"
-}
-
-soaf_create_module soaf.core.var $SOAF_VERSION "" soaf_var_cfg_
-
-################################################################################
-################################################################################
-
 soaf_create_var_nature() {
 	local VAR=$1
 	local ENUM=$2
@@ -177,13 +167,13 @@ soaf_var_subst_all() {
 
 soaf_var_dis() {
 	local VAR=$1
-	soaf_console_msg_ctl $VAR "$SOAF_VAR_CTL_LIST"
+	soaf_console_msg_ctl $VAR "$SOAF_THEME_VAR_CTL_LIST"
 	local TXT="$SOAF_CONSOLE_RET:"
 	soaf_map_get $VAR $SOAF_VAR_ENUM_ATTR
 	local ENUM=$SOAF_RET
 	if [ -n "$ENUM" ]
 	then
-		soaf_list_join "$ENUM" "" "$SOAF_VAR_VAL_CTL_LIST"
+		soaf_list_join "$ENUM" "" "$SOAF_THEME_ENUM_CTL_LIST"
 		local ENUM_DIS=$SOAF_RET_LIST
 		soaf_map_get $VAR $SOAF_VAR_ACCEPT_EMPTY_ATTR
 		[ -n "$SOAF_RET" ] && ENUM_DIS+="|"
@@ -195,7 +185,7 @@ soaf_var_dis() {
 	local DFT_VAL=$SOAF_RET
 	if [ -n "$DFT_VAL" ]
 	then
-		soaf_console_msg_ctl "$DFT_VAL" $SOAF_CONSOLE_CTL_BOLD
+		soaf_console_msg_ctl "$DFT_VAL" "$SOAF_THEME_VVAL_CTL_LIST"
 		TXT+=" (default: '$SOAF_CONSOLE_RET')"
 	fi
 	soaf_dis_txt "$TXT"

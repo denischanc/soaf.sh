@@ -32,8 +32,6 @@ readonly SOAF_LOG_ALIVE_S="ALIVE"
 readonly SOAF_LOG_DEAD_S="DEAD"
 SOAF_LOG_STATE=$SOAF_LOG_UNKNOWN_S
 
-readonly SOAF_LOG_COLOR_MAP="soaf.log.color"
-
 ################################################################################
 ################################################################################
 
@@ -52,12 +50,6 @@ soaf_log_cfg_() {
 	SOAF_LOG_CMD_ERR_FILE=@[SOAF_LOG_CMD_OUT_ERR_DIR]/$SOAF_APPLI_NAME.cmd.err
 	soaf_var_add_unsubst "SOAF_LOG_DIR SOAF_LOG_FILE SOAF_LOG_CMD_OUT_ERR_DIR"
 	soaf_var_add_unsubst "SOAF_LOG_CMD_OUT_FILE SOAF_LOG_CMD_ERR_FILE"
-	###---------------
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_DEV_ERR $SOAF_CONSOLE_FG_RED
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_ERR $SOAF_CONSOLE_FG_RED
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_WARN $SOAF_CONSOLE_FG_YELLOW
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_INFO $SOAF_CONSOLE_FG_MAGENTA
-	soaf_map_extend $SOAF_LOG_COLOR_MAP $SOAF_LOG_DEBUG $SOAF_CONSOLE_FG_CYAN
 }
 
 soaf_log_init_() {
@@ -215,7 +207,7 @@ soaf_log_build_msg_() {
 	then
 		if [ -n "$SOAF_LOG_COLOR" ]
 		then
-			soaf_console_msg_ctl $NAME $SOAF_CONSOLE_CTL_BOLD
+			soaf_console_msg_ctl $NAME "$SOAF_THEME_VAL_CTL_LIST"
 			NAME=$SOAF_CONSOLE_RET
 		fi
 		MSG="{$NAME} $MSG"
@@ -224,7 +216,7 @@ soaf_log_build_msg_() {
 	local LEVEL_LABEL=$SOAF_LOG_RET
 	if [ -n "$SOAF_LOG_COLOR" ]
 	then
-		soaf_map_get $SOAF_LOG_COLOR_MAP $LEVEL
+		soaf_map_get $SOAF_THEME_LOG_CTL $LEVEL
 		soaf_console_msg_ctl $LEVEL_LABEL ${SOAF_RET:-$SOAF_CONSOLE_FG_RED}
 		LEVEL_LABEL=$SOAF_CONSOLE_RET
 	fi

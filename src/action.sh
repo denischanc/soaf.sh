@@ -8,10 +8,6 @@ readonly SOAF_ACTION_USAGE_VAR_LIST_ATTR="soaf_action_usage_var_list"
 ################################################################################
 ################################################################################
 
-soaf_action_cfg_() {
-	SOAF_ACTION_NAME_COLOR=$SOAF_CONSOLE_FG_B_GREEN
-}
-
 soaf_action_init_() {
 	soaf_action_list
 	soaf_create_var_usage_exp ACTION "" "$SOAF_ACTION_RET_LIST" \
@@ -19,7 +15,7 @@ soaf_action_init_() {
 }
 
 soaf_create_module soaf.core.action $SOAF_VERSION "" \
-	soaf_action_cfg_ soaf_action_init_ "" "" "" "" "" $SOAF_POS_PRE
+	"" soaf_action_init_ "" "" "" "" "" $SOAF_POS_PRE
 
 ################################################################################
 ################################################################################
@@ -69,7 +65,7 @@ soaf_action_dis_usage() {
 	local VAR_LIST=$SOAF_RET
 	if [ -n "$FN" -o -n "$VAR_LIST" ]
 	then
-		soaf_console_msg_ctl $ACTION $SOAF_ACTION_NAME_COLOR
+		soaf_console_msg_ctl $ACTION "$SOAF_THEME_VAL_CTL_LIST"
 		soaf_dis_title "ACTION=$SOAF_CONSOLE_RET"
 		[ -n "$FN" ] && $FN $ACTION
 		for var in $VAR_LIST

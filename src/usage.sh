@@ -6,18 +6,12 @@ readonly SOAF_USAGE_ACTION="usage"
 ################################################################################
 ################################################################################
 
-soaf_usage_cfg_() {
-	SOAF_USAGE_VAR_CTL_LIST=$SOAF_CONSOLE_FG_B_MAGENTA
-	SOAF_USAGE_VAL_CTL_LIST="$SOAF_CONSOLE_FG_CYAN $SOAF_CONSOLE_CTL_ITALIC"
-}
-
 soaf_usage_init_() {
 	soaf_create_action $SOAF_USAGE_ACTION soaf_usage_ "" $SOAF_POS_PRE
 	soaf_no_prepenv_action $SOAF_USAGE_ACTION
 }
 
-soaf_create_module soaf.core.usage $SOAF_VERSION "" \
-	soaf_usage_cfg_ soaf_usage_init_
+soaf_create_module soaf.core.usage $SOAF_VERSION "" "" soaf_usage_init_
 
 ################################################################################
 ################################################################################
@@ -52,11 +46,11 @@ soaf_usage_add_var_exp() {
 soaf_usage_() {
 	soaf_dis_title "USAGE"
 	soaf_pmp_list_cat SOAF_USAGE_VAR
-	soaf_list_join "$SOAF_RET_LIST" "" "$SOAF_USAGE_VAL_CTL_LIST"
+	soaf_list_join "$SOAF_RET_LIST" "" "$SOAF_THEME_ENUM_CTL_LIST"
 	local VAR_LIST=$SOAF_RET_LIST
-	soaf_console_msg_ctl "usage" "$SOAF_USAGE_VAR_CTL_LIST"
+	soaf_console_msg_ctl "usage" "$SOAF_THEME_VAR_CTL_LIST"
 	local USAGE_DIS=$SOAF_CONSOLE_RET
-	soaf_console_msg_ctl "variable" "$SOAF_USAGE_VAR_CTL_LIST"
+	soaf_console_msg_ctl "variable" "$SOAF_THEME_VAR_CTL_LIST"
 	local VARIABLE_DIS=$SOAF_CONSOLE_RET
 	soaf_dis_txt_stdin << _EOF_
 $USAGE_DIS: $0 ([variable]=[value])*
