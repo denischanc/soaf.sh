@@ -12,7 +12,7 @@ soaf_create_varargs_nature() {
 	local NATURE=$1
 	shift
 	local ARGS
-	while [ -n "$1" ]
+	while [ $# -gt 0 ]
 	do
 		ARGS+=("$1")
 		shift
@@ -28,15 +28,15 @@ soaf_varargs_fn_apply() {
 	local FN=$2
 	shift 2
 	local ARGS
-	while [ -n "$1" -a "$1" != "$SOAF_VARARGS_PP_SEP" ]
+	while [ $# -gt 0 -a "$1" != "$SOAF_VARARGS_PP_SEP" ]
 	do
 		ARGS+=("$1")
 		shift
 	done
-	shift
+	[ $# -gt 0 ] && shift
 	soaf_map_w_array_get $NATURE $SOAF_VARARGS_ARG_LIST_ATTR
 	ARGS+=("${SOAF_RET[@]}")
-	while [ -n "$1" ]
+	while [ $# -gt 0 ]
 	do
 		ARGS+=("$1")
 		shift
