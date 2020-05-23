@@ -242,7 +242,7 @@ soaf_log_to_file_() {
 		SOAF_LOG_ROLL_IN=
 	fi
 	soaf_log_build_msg_ $LEVEL "$MSG" $NAME
-	printf "$SOAF_LOG_RET\n" >> $SOAF_LOG_FILE
+	echo -e "$SOAF_LOG_RET" >> $SOAF_LOG_FILE
 }
 
 soaf_log_to_file_prep_() {

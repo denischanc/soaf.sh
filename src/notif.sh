@@ -58,7 +58,7 @@ soaf_notif_in_file_() {
 	local LOG_MSG="Notification message posted in [$NOTIF_FILE]."
 	soaf_log_err "$LOG_MSG" $SOAF_NOTIF_LOG_NAME
 	soaf_mkdir $SOAF_NOTIF_DIR "" $SOAF_NOTIF_LOG_NAME
-	printf "[$HOST:$PROG] $MSG\n" >> $NOTIF_FILE
+	echo "[$HOST:$PROG] $MSG" >> $NOTIF_FILE
 }
 
 soaf_notif() {

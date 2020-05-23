@@ -68,10 +68,10 @@ soaf_console_msg_ctl() {
 
 soaf_console_info() {
 	local MSG=$1
-	printf "$MSG\n"
+	echo -e "$MSG"
 }
 
 soaf_console_err() {
 	local MSG=$1
-	printf "$MSG\n" >&2
+	echo -e "$MSG" >&2
 }
