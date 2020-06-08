@@ -6,7 +6,7 @@
 ################################################################################
 ################################################################################
 
-readonly SOAF_CONSOLE_ESC="\x1B"
+readonly SOAF_CONSOLE_ESC="\033"
 
 readonly SOAF_CONSOLE_CTL_BOLD=1
 readonly SOAF_CONSOLE_CTL_ITALIC=3
