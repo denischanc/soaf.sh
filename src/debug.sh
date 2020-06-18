@@ -24,6 +24,17 @@ soaf_debug_add_source_line_fn() {
 ################################################################################
 ################################################################################
 
+soaf_debug_expand() {
+	local SOURCE=$1
+	local LINE1=$2
+	local LINE2=$3
+	soaf_debug_add_source_line_fn $SOURCE $LINE1 soaf_debug_expand_start_
+	soaf_debug_add_source_line_fn $SOURCE $LINE2 soaf_debug_expand_stop_
+}
+
+################################################################################
+################################################################################
+
 soaf_debug_main_fn() {
 	local FN=$1
 	soaf_debug_activate_
@@ -43,6 +54,7 @@ soaf_debug_ret_fn() {
 ################################################################################
 
 soaf_debug_process_() {
+	set +x
 	local SOURCE=${BASH_SOURCE[1]}
 	local SOAF_RET
 	soaf_map_get SOAF_DEBUG_SOURCE_BN $SOURCE
@@ -57,7 +69,21 @@ soaf_debug_process_() {
 	$SOAF_DEBUG_MAIN_FN
 	SOAF_DEBUG_RET=0
 	$SOAF_DEBUG_RET_FN
+	[ -n "$SOAF_DEBUG_EXPAND_ACTIVE" ] && set -x
 	return $SOAF_DEBUG_RET
+}
+
+################################################################################
+################################################################################
+
+soaf_debug_expand_start_() {
+	SOAF_DEBUG_EXPAND_ACTIVE="OK"
+	set -x
+}
+
+soaf_debug_expand_stop_() {
+	set +x
+	SOAF_DEBUG_EXPAND_ACTIVE=
 }
 
 ################################################################################
