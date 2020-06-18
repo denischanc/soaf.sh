@@ -1,13 +1,4 @@
 
--- usermsgproc
-     -- define following modes : NORMAL, CONSOLE, QUIET
-
-        | MODE          | TXT             | LOG
-
-        | NORMAL        | OK              | OK
-        | QUIET         | > /dev/null     | OK
-        | CONSOLE       | OK              | log_to_console
-
 -- mng ssl certs (root to server) for free sms notif
 
 -- generate documentation (public/private)
@@ -15,6 +6,14 @@
 
 [_DONE_]
 
+-- usermsgproc => 820a4c35
+     -- define following modes : NORMAL, CONSOLE, QUIET
+
+  | MODE    | TXT         | LOG            | HOW
+
+  | NORMAL  | OK          | OK             | NOTHING
+  | QUIET   | > /dev/null | OK             | SOAF_CONSOLE_QUIET="OK"
+  | CONSOLE | OK          | log_to_console | SOAF_LOG_IN_NATURE=".to_console"
 -- Manage tmp directory => 0954b84d
 -- do mail notif (sms ok) => caf6a8c1
 -- log => ff0fc960
