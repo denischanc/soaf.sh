@@ -1,4 +1,4 @@
-[0.10.0]
+[1.0.0]
 
 -- Rm log level of error output argument on soaf_cmd,
      use cmd return code instead
@@ -11,6 +11,7 @@
 -- Action to create a soaf project
 -- Manage pid to determine if job already in progress
 -- Add static stage
+-- Add debug feature
 
 [0.9.0]
 
