@@ -35,10 +35,6 @@ SOAF_LOG_STATE=$SOAF_LOG_UNKNOWN_S
 ################################################################################
 ################################################################################
 
-soaf_log_static_() {
-	soaf_usermsgproc_add_use_fn soaf_log_use_usermsgproc
-}
-
 soaf_log_cfg_() {
 	SOAF_LOG_LEVEL=$SOAF_LOG_INFO
 	SOAF_LOG_LEVEL_NOT_ALIVE=$SOAF_LOG_ERR
@@ -100,24 +96,14 @@ soaf_log_init_roll_() {
 }
 
 soaf_log_prepenv_() {
-	if [ -z "$SOAF_LOG_USERMSGPROC_USED" ]
-	then
-		soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_PREP_FN_ATTR
-		local PREP_FN=$SOAF_RET
-		[ -n "$PREP_FN" ] && $PREP_FN $SOAF_LOG_USED_NATURE
-	fi
+	soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_PREP_FN_ATTR
+	local PREP_FN=$SOAF_RET
+	[ -n "$PREP_FN" ] && $PREP_FN $SOAF_LOG_USED_NATURE
 	SOAF_LOG_STATE=$SOAF_LOG_ALIVE_S
 }
 
-soaf_create_module soaf.core.log $SOAF_VERSION soaf_log_static_ \
+soaf_create_module soaf.core.log $SOAF_VERSION "" \
 	soaf_log_cfg_ soaf_log_init_ soaf_log_prepenv_ "" "" "" "" $SOAF_POS_PRE
-
-################################################################################
-################################################################################
-
-soaf_log_use_usermsgproc() {
-	SOAF_LOG_USERMSGPROC_USED="OK"
-}
 
 ################################################################################
 ################################################################################
@@ -337,18 +323,13 @@ soaf_log_route_() {
 	local LEVEL=$1
 	local MSG=$2
 	local NAME=$3
-	if [ -n "$SOAF_LOG_USERMSGPROC_USED" ]
+	if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
 	then
-		soaf_log_usermsgproc_ $LEVEL "$MSG" $NAME
+		soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_FN_ATTR
+		local FN=$SOAF_RET
+		[ -n "$FN" ] && $FN $SOAF_LOG_USED_NATURE $LEVEL "$MSG" $NAME
 	else
-		if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
-		then
-			soaf_map_get $SOAF_LOG_USED_NATURE $SOAF_LOG_FN_ATTR
-			local FN=$SOAF_RET
-			[ -n "$FN" ] && $FN $SOAF_LOG_USED_NATURE $LEVEL "$MSG" $NAME
-		else
-			soaf_log_console_ $LEVEL "$MSG" $NAME
-		fi
+		soaf_log_console_ $LEVEL "$MSG" $NAME
 	fi
 }
 

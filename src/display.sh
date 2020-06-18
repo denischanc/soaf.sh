@@ -6,10 +6,6 @@ readonly SOAF_DISPLAY_VAR2FN_MAP="soaf.dis.var2fn"
 ################################################################################
 ################################################################################
 
-soaf_dis_static_() {
-	soaf_usermsgproc_add_use_fn soaf_dis_use_usermsgproc
-}
-
 soaf_dis_cfg_() {
 	SOAF_TITLE_PRE="==[[ "
 	SOAF_TXT_PRE="  "
@@ -20,28 +16,7 @@ soaf_dis_cfg_() {
 	soaf_var_add_unsubst "SOAF_DISPLAY_TXT_PRE_3"
 }
 
-soaf_create_module soaf.core.display $SOAF_VERSION soaf_dis_static_ \
-	soaf_dis_cfg_
-
-################################################################################
-################################################################################
-
-soaf_dis_use_usermsgproc() {
-	SOAF_DIS_USERMSGPROC_USED="OK"
-}
-
-################################################################################
-################################################################################
-
-soaf_dis_route_() {
-	local MSG=$1
-	if [ -n "$SOAF_DIS_USERMSGPROC_USED" ]
-	then
-		soaf_usermsgproc__ $SOAF_USERMSGPROC_TXT_ORG "$MSG"
-	else
-		soaf_console_info "$MSG"
-	fi
-}
+soaf_create_module soaf.core.display $SOAF_VERSION "" soaf_dis_cfg_
 
 ################################################################################
 ################################################################################
@@ -49,12 +24,12 @@ soaf_dis_route_() {
 soaf_dis_title() {
 	local MSG=$1
 	soaf_console_msg_ctl "$MSG" "$SOAF_THEME_TITLE_CTL_LIST"
-	soaf_dis_route_ "$SOAF_TITLE_PRE$SOAF_CONSOLE_RET"
+	soaf_console_info "$SOAF_TITLE_PRE$SOAF_CONSOLE_RET"
 }
 
 soaf_dis_txt() {
 	local MSG=$1
-	soaf_dis_route_ "$SOAF_TXT_PRE$MSG"
+	soaf_console_info "$SOAF_TXT_PRE$MSG"
 }
 
 soaf_dis_txt_off() {
@@ -73,7 +48,7 @@ soaf_dis_txt_off() {
 		done
 		eval $VAR=\$TXT_PRE
 	fi
-	soaf_dis_route_ "$TXT_PRE$MSG"
+	soaf_console_info "$TXT_PRE$MSG"
 }
 
 ################################################################################

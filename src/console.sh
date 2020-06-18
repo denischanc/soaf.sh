@@ -68,7 +68,7 @@ soaf_console_msg_ctl() {
 
 soaf_console_info() {
 	local MSG=$1
-	echo -e "$MSG"
+	[ -z "$SOAF_CONSOLE_QUIET" ] && echo -e "$MSG"
 }
 
 soaf_console_err() {
