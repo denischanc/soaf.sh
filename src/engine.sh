@@ -3,15 +3,16 @@
 
 readonly SOAF_ENGINE_LOG_NAME="soaf.engine"
 
+readonly SOAF_ENGINE_EXT_DEBUG_FILE="debug.sh"
 readonly SOAF_ENGINE_EXT_MODULE_FILE="module.sh"
 readonly SOAF_ENGINE_EXT_STATIC_FILE="static.sh"
 readonly SOAF_ENGINE_EXT_CFG_FILE="cfg.sh"
 readonly SOAF_ENGINE_EXT_INIT_FILE="init.sh"
 readonly SOAF_ENGINE_EXT_PREPENV_FILE="prepenv.sh"
 
-SOAF_ENGINE_EXT_VF_L="SOAF_ENGINE_EXT_MODULE_FILE SOAF_ENGINE_EXT_STATIC_FILE"
-SOAF_ENGINE_EXT_VF_L+=" SOAF_ENGINE_EXT_CFG_FILE SOAF_ENGINE_EXT_INIT_FILE"
-SOAF_ENGINE_EXT_VF_L+=" SOAF_ENGINE_EXT_PREPENV_FILE"
+SOAF_ENGINE_EXT_VF_L="SOAF_ENGINE_EXT_DEBUG_FILE SOAF_ENGINE_EXT_MODULE_FILE"
+SOAF_ENGINE_EXT_VF_L+=" SOAF_ENGINE_EXT_STATIC_FILE SOAF_ENGINE_EXT_CFG_FILE"
+SOAF_ENGINE_EXT_VF_L+=" SOAF_ENGINE_EXT_INIT_FILE SOAF_ENGINE_EXT_PREPENV_FILE"
 readonly SOAF_ENGINE_EXT_VF_L
 
 readonly SOAF_ENGINE_UNKNOWN_S="UNKNOWN"
@@ -50,6 +51,13 @@ soaf_engine_source_ext_() {
 		local PATH_=$d/$FILE
 		[ -f $PATH_ ] && . $PATH_
 	done
+}
+
+################################################################################
+################################################################################
+
+soaf_engine_debug_() {
+	soaf_engine_source_ext_ $SOAF_ENGINE_EXT_DEBUG_FILE
 }
 
 ################################################################################
@@ -175,6 +183,7 @@ soaf_engine() {
 	local APPLI_NATURE=$1
 	soaf_appli_def_name $APPLI_NATURE
 	soaf_engine_source_ext_cfg_
+	soaf_engine_debug_
 	soaf_engine_module_
 	soaf_engine_static_
 	soaf_engine_cfg_

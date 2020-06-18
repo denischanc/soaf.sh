@@ -36,6 +36,7 @@ soaf_map_get() {
 	local FIELD=$2
 	local DFT=$3
 	soaf_map_var_ $NAME
+	declare -Ag $SOAF_RET
 	eval SOAF_RET=\${$SOAF_RET[$FIELD]:-\$DFT}
 }
 

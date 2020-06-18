@@ -70,8 +70,8 @@ soaf_notif() {
 	do
 		soaf_map_get $nature $SOAF_NOTIF_NB_TRY_ATTR $SOAF_NOTIF_NB_TRY_DFT
 		local NB_TRY=$SOAF_RET
-		local ID_TRY=1
-		while [ -n "$ID_TRY" -a ${ID_TRY:-1} -le $NB_TRY ]
+		declare -i ID_TRY=0
+		while [ $ID_TRY -lt $NB_TRY ]
 		do
 			soaf_map_get $nature $SOAF_NOTIF_FN_ATTR
 			local FN=$SOAF_RET
@@ -81,12 +81,12 @@ soaf_notif() {
 			then
 				local LOG_MSG="Notif of nature [$nature] OK."
 				soaf_log_debug "$LOG_MSG" $SOAF_NOTIF_LOG_NAME
-				ID_TRY=
+				ID_TRY=$NB_TRY
 			else
 				local LOG_MSG="Notif of nature [$nature] KO."
 				soaf_log_err "$LOG_MSG" $SOAF_NOTIF_LOG_NAME
-				ID_TRY=$(($ID_TRY + 1))
-				[ $ID_TRY -gt $NB_TRY ] && \
+				ID_TRY+=1
+				[ $ID_TRY -ge $NB_TRY ] && \
 					soaf_notif_in_file_ "$MSG" $PROG $HOST
 			fi
 		done
