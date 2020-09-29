@@ -1,8 +1,9 @@
-
 Guide of "Shell rOot Api Framework"
 ===================================
 Denis Chancogne <denis.chancogne@free.fr>
-:toc:
+v1.0.0, 25/07/2020
+:toc: left
+:sectnums:
 
 == Quick startup
 
