@@ -1,7 +1,5 @@
 Shell Oriented Application Factory
 ==================================
-Denis Chancogne <denis.chancogne@free.fr>
-v1.0.0
 
 include::attributes[]
 

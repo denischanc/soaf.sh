@@ -1,13 +1,11 @@
 Download soaf.sh
 ================
-Denis Chancogne <denis.chancogne@free.fr>
-v1.0.0
 
 include::attributes[]
 
 == Unstable
 
-* {url-home-soaf}/download/{DIST_VERSION}[latest version ({DIST_VERSION})^]
+* {url-home-soaf}/download/dev[devel version ({DIST_VERSION})^]
 
 == Stable
 
