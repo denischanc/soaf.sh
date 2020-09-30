@@ -34,7 +34,8 @@ endif
 
 MAKEFILE_LIST = Makefile Makefile.cfg
 
-DIST_FILE_LIST = $(MAKEFILE_LIST) $(SRC_LIST) $(ADOC_LIST) $(EXTRA_DIST)
+EXTRA_DIST_ALL = $(EXTRA_DIST) $(EXTRA_ADOC_INCLUDE)
+DIST_FILE_LIST = $(MAKEFILE_LIST) $(SRC_LIST) $(ADOC_LIST) $(EXTRA_DIST_ALL)
 
 ASCIIDOCTOR_DOCKER_IMG = $(USER)/asciidoctor
 ADOC_IMG_DOCKERFILE = docker/image/Dockerfile
@@ -50,6 +51,7 @@ usage:
 	@echo "  DIST_VERSION = [ distribution version ]"
 	@echo "  EXTRA_DIST = [ extra distribution files ]"
 	@echo "  EXTRA_CLEAN = [ extra clean files ]"
+	@echo "  EXTRA_ADOC_INCLUDE = [ extra adoc include files ]"
 	@echo "Usage : make [usage|all|doc|dist|install|clean|centos-docker]"
 	@echo "  usage : display this usage"
 	@echo "  all : create exe/lib and doc"
@@ -84,10 +86,11 @@ $(EXE_TGT) $(LIB_TGT): $(SRC_LIST) $(MAKEFILE_LIST)
 
 doc: asciidoctor-docker-image $(DOC_HTML_LIST)
 
-%.html: %.adoc
+%.html: %.adoc $(EXTRA_ADOC_INCLUDE)
 	[[ -n "$(OS_CYGWIN)" ]] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=.; \
 	docker run -v "$$SRC_VOL":/documents $(ASCIIDOCTOR_DOCKER_IMG) \
-	asciidoctor -r asciidoctor-diagram -o $@ $<
+	asciidoctor -r asciidoctor-diagram -o $@ \
+	-a DIST_VERSION=$(DIST_VERSION) $<
 
 dist-gz:
 	make dist DIST_TAR_Z="z" DIST_TAR_EXT=".tar.gz"

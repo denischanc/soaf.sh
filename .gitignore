@@ -5,6 +5,6 @@ test/notif
 test/ext
 test/test.prop
 test/init-sms-free.sh
-doc/soaf.sh.html
+doc/*.html
 tmp
 docker
