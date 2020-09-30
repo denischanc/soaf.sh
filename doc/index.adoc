@@ -1,0 +1,17 @@
+Shell Oriented Application Factory
+==================================
+Denis Chancogne <denis.chancogne@free.fr>
+v1.0.0
+
+include::attributes[]
+
+== About
+
+soaf is a library to implement shell application.
+
+== Links
+
+* {url-home-soaf}/download.html[Download^]
+* {url-home-soaf}/install.html[Install^]
+* {url-home-soaf}/getting-started.html[Getting started^]
+* {url-home-soaf}/docs.html[Docs^]
