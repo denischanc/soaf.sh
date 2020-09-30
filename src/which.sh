@@ -7,22 +7,25 @@ readonly SOAF_WHICH_FILE=/usr/bin/which
 ################################################################################
 
 soaf_which() {
-	local APPLI_SH=$1
+	local PROG=$1
 	if [ -x $SOAF_WHICH_FILE ]
 	then
-		$SOAF_WHICH_FILE $APPLI_SH
+		$SOAF_WHICH_FILE $PROG
 	else
-		if [ -x $APPLI_SH ]
+		if [ -x $PROG ]
 		then
-			echo $APPLI_SH
+			echo $PROG
 		else
 			local _path
-			for _path in $(echo $PATH | tr -d ':')
+			for _path in ${PATH//:/ }
 			do
-				local PATH_SH=$_path/$APPLI_SH
-				[ -x $PATH_SH ] && echo $PATH_SH
+				local PROG_PATH=$_path/$PROG
+				if [ -x $PROG_PATH ]
+				then
+					echo $PROG_PATH
+					return
+				fi
 			done
-			echo $APPLI_SH
 		fi
 	fi
 }

@@ -132,8 +132,7 @@ soaf_var_subst_proc() {
 	local VAL=$1
 	local VAR=$2
 	eval local VAR_VAL=\$$VAR
-	local RULE="sµ$SOAF_VAR_PAT_O$VAR${SOAF_VAR_PAT_C}µ${VAR_VAL}µg"
-	SOAF_VAR_RET=$(echo "$VAL" | sed -e "$RULE")
+	SOAF_VAR_RET=${VAL//$SOAF_VAR_PAT_O$VAR${SOAF_VAR_PAT_C}/$VAR_VAL}
 }
 
 soaf_var_subst_() {

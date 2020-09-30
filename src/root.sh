@@ -32,5 +32,5 @@ soaf_create_module soaf.core.root $SOAF_VERSION "" \
 soaf_root_var_subst_pid_() {
 	local VAR=$1
 	local PID_PAT=${SOAF_VAR_PAT_O}PID$SOAF_VAR_PAT_C
-	eval SOAF_RET=\$\(echo \$$VAR \| sed -e "s/$$/\$PID_PAT/g"\)
+	eval SOAF_RET=\${$VAR//$$/$PID_PAT}
 }
