@@ -1,0 +1,109 @@
+soaf.sh changelog
+=================
+
+.1.0.0
+****
+* Rm log level of error output argument on soaf_cmd,
+  use cmd return code instead
+* Use ipv4 only on free sms notif and
+  error output log level on success is debug (not error)
+* Add retry in case of notif error, after nb retries put msg in file
+* Add ext fn for roll nature
+* Resolve module dependencies
+* Variable content substitution
+* Action to create a soaf project
+* Manage pid to determine if job already in progress
+* Add static stage
+* Add debug feature
+****
+
+.0.9.0
+****
+* Add module mng
+* New way to choose logger
+* Add log level of error output argument on soaf_cmd
+* Add debug output on free sms notif
+* Log on stderr while it is not prepared
+* Replace USER of soaf.sh lib by APPLI
+* New way to display usage and check usage variables
+* New way to manage application nature
+****
+
+.0.8.1
+****
+* Add mng of --help and -h options into cfg
+* Fix bug on CLI options as --dummy ...
+****
+
+.0.8.0
+****
+* Add cache for prop_file feature
+****
+
+.0.7.0
+****
+* Add display fns from stdin
+* Add checking of usage define variables
+* Add engine exit fn
+****
+
+.0.6.0
+****
+* Add feature to call user pre/post action fns
+****
+
+.0.5.0
+****
+* Add fn to define usage var
+****
+
+.0.4.1
+****
+* Modify display usage : add ACTION var at the beginning
+****
+
+.0.4.0
+****
+* New way to add usage variables and define them with prefix :
+  always use soaf_usage_add_var()
+* Rename define.sh fns
+****
+
+.0.3.1
+****
+* clean code : modify variable names (delete _NATURE ...)
+* clean notif_sms_free feature used in test
+****
+
+.0.3.0
+****
+* notif feature : created natures are all used
+* notif_sms_free feature : create a nature to be used
+* job feature : modify notif msg
+****
+
+.0.2.1
+****
+* roll feature : only 1 call to prepare cmd out/err
+* job feature : option to notif on error
+****
+
+.0.2.0
+****
+* add job feature
+* add state feature
+* add prop_file feature
+* add notif feature
+* add engine cfg, init, prepenv parts
+****
+
+.0.1.1
+****
+* add this ChangeLog
+* fix SOAF_RET inside replacement fn
+****
+
+.0.1.0
+****
+* first version
+****

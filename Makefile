@@ -1,8 +1,9 @@
 
-.PHONY: all usage doc
+.PHONY: usage all init exe_lib_tgt doc
 .PHONY: dist-gz dist-bz dist-xz dist dist-clean
 .PHONY: install clean centos-docker
 .PHONY: asciidoctor-docker-image do-asciidoctor-docker-image doc-clean
+.PHONY: test-clean
 
 OS = $(shell uname -o)
 ifeq ($(OS),Cygwin)
@@ -38,10 +39,13 @@ EXTRA_DIST_ALL = $(EXTRA_DIST) $(EXTRA_ADOC_INCLUDE)
 DIST_FILE_LIST = $(MAKEFILE_LIST) $(SRC_LIST) $(ADOC_LIST) $(EXTRA_DIST_ALL)
 
 ASCIIDOCTOR_DOCKER_IMG = $(USER)/asciidoctor
-ADOC_IMG_DOCKERFILE = docker/image/Dockerfile
+ADOC_IMG_DOCKERFILE = docker/doc/image/Dockerfile
+
+CHANGELOG_ADOC_FILE = ChangeLog.adoc
 
 usage:
 	@echo "Create 'Makefile.cfg' file with :"
+	@echo
 	@echo "  EXE_TGT = [ executable target ] or"
 	@echo "  LIB_TGT = [ library target ]"
 	@echo "  SRC_LIST = [ source files ]"
@@ -52,10 +56,15 @@ usage:
 	@echo "  EXTRA_DIST = [ extra distribution files ]"
 	@echo "  EXTRA_CLEAN = [ extra clean files ]"
 	@echo "  EXTRA_ADOC_INCLUDE = [ extra adoc include files ]"
-	@echo "Usage : make [usage|all|doc|dist|install|clean|centos-docker]"
-	@echo "  usage : display this usage"
-	@echo "  all : create exe/lib and doc"
-	@echo "  doc : create documentation"
+	@echo
+	@echo "Usage : make [usage|all|init|exe_lib_tgt|doc|"
+	@echo "              dist|install|clean|centos-docker]"
+	@echo
+	@echo "  usage : display this usage (default)"
+	@echo "  all : execute targets with *"
+	@echo "  init (*) : initialize the project"
+	@echo "  exe_lib_tgt (*) : create '$(EXE_TGT) $(LIB_TGT)'"
+	@echo "  doc (*) : create documentation"
 	@echo "  dist (= dist-xz) : create distribution with format xz"
 	@echo "  dist-gz : create distribution with format gz"
 	@echo "  dist-bz : create distribution with format bz2"
@@ -63,7 +72,19 @@ usage:
 	@echo "  clean : clean created files/directories"
 	@echo "  centos-docker : start centos container"
 
-all: $(EXE_TGT) $(LIB_TGT) doc
+all:
+	@for tgt in init exe_lib_tgt doc; \
+	do \
+		make $$tgt; \
+	done
+
+init:
+	[ -f $(CHANGELOG_ADOC_FILE) -a -d doc -a \
+		! -f doc/$(CHANGELOG_ADOC_FILE) ] && \
+	cp $(CHANGELOG_ADOC_FILE) doc || \
+	true
+
+exe_lib_tgt: $(EXE_TGT) $(LIB_TGT)
 
 $(EXE_TGT) $(LIB_TGT): $(SRC_LIST) $(MAKEFILE_LIST)
 	@echo "#!/bin/sh" > $@
@@ -85,6 +106,9 @@ $(EXE_TGT) $(LIB_TGT): $(SRC_LIST) $(MAKEFILE_LIST)
 	@chmod a+x $@
 
 doc: asciidoctor-docker-image $(DOC_HTML_LIST)
+
+doc/$(CHANGELOG_ADOC_FILE): $(CHANGELOG_ADOC_FILE)
+	cp -f $< $@
 
 %.html: %.adoc $(EXTRA_ADOC_INCLUDE)
 	[[ -n "$(OS_CYGWIN)" ]] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=.; \
@@ -138,8 +162,8 @@ install: all
 	done
 
 clean:
-	rm -rf $(EXE_TGT) $(LIB_TGT) $(DOC_HTML_LIST) $(EXTRA_CLEAN)
-	make dist-clean doc-clean
+	rm -rf $(EXE_TGT) $(LIB_TGT) $(EXTRA_CLEAN) tmp docker
+	make dist-clean doc-clean test-clean
 
 centos-docker: all
 	[[ -n "$(OS_CYGWIN)" ]] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=.; \
@@ -158,7 +182,11 @@ $(ADOC_IMG_DOCKERFILE): Makefile
 	TAG=DOCKERFILE; grep "#$$TAG" Makefile | sed -e "s/^#$$TAG###//" > $@
 
 doc-clean:
-	rm -rf .asciidoctor docker $(GEN_PNG_LIST)
+	rm -f $(DOC_HTML_LIST) $(GEN_PNG_LIST) doc/$(CHANGELOG_ADOC_FILE)
+	rm -rf .asciidoctor
+
+test-clean:
+	rm -rf test/log test/notif test/run test/tmp.* test/test.prop
 
 #DOCKERFILE###FROM centos
 #DOCKERFILE###

@@ -10,3 +10,7 @@ include::attributes[]
 == Stable
 
 * {url-home-soaf}/download/1.0.0[version 1.0.0^]
+
+== Source
+
+* https://github.com/denischanc/soaf.sh[Github source^]

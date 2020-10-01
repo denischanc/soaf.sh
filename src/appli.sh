@@ -2,6 +2,7 @@
 ################################################################################
 
 readonly SOAF_APPLI_SH_DIR=$(cd $(dirname "$(soaf_which $0)"); pwd)
+readonly SOAF_APPLI_SH_FILE=$SOAF_APPLI_SH_DIR/$(basename $0)
 readonly SOAF_APPLI_SH_NAME=$(basename $0 .sh)
 
 readonly SOAF_APPLI_NAME_ATTR="soaf_appli_name"

@@ -2,9 +2,11 @@ soaf.sh-*.tar.*
 src/soaf.sh
 test/log
 test/notif
+test/run
+test/tmp.*
 test/ext
 test/test.prop
-test/init-sms-free.sh
 doc/*.html
+doc/ChangeLog.adoc
 tmp
 docker

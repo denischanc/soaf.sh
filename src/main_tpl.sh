@@ -90,6 +90,6 @@ SRC_LIST = \\
   \$(SRC_DIR)/version.sh \\
   \$(SRC_DIR)/main.sh
 
-EXTRA_DIST = ChangeLog
+EXTRA_DIST = \$(CHANGELOG_ADOC_FILE)
 _EOF_
 }

@@ -9,7 +9,8 @@ soaf is a library to implement shell application.
 
 == Links
 
-* {url-home-soaf}/download.html[Download^]
-* {url-home-soaf}/install.html[Install^]
-* {url-home-soaf}/getting-started.html[Getting started^]
-* {url-home-soaf}/docs.html[Docs^]
+* {url-home-soaf}/download.html[Download]
+* {url-home-soaf}/install.html[Install]
+* {url-home-soaf}/getting-started.html[Getting started]
+* {url-home-soaf}/docs.html[Docs]
+* {url-home-soaf}/ChangeLog.html[ChangeLog]
