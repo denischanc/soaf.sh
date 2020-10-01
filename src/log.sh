@@ -281,17 +281,6 @@ soaf_log_console_() {
 ################################################################################
 ################################################################################
 
-soaf_log_usermsgproc_() {
-	local LEVEL=$1
-	local MSG=$2
-	local NAME=$3
-	soaf_log_build_msg_ $LEVEL "$MSG" $NAME
-	soaf_usermsgproc__ $SOAF_USERMSGPROC_LOG_ORG "$SOAF_LOG_RET"
-}
-
-################################################################################
-################################################################################
-
 soaf_log_level() {
 	local NAME=$1
 	if [ "$SOAF_LOG_STATE" = "$SOAF_LOG_ALIVE_S" ]
