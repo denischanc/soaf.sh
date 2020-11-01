@@ -3,7 +3,6 @@
 .PHONY: dist-gz dist-bz dist-xz dist dist-clean
 .PHONY: install clean centos-docker
 .PHONY: asciidoctor-docker-image do-asciidoctor-docker-image doc-clean
-.PHONY: test-clean
 
 OS = $(shell uname -o)
 ifeq ($(OS),Cygwin)
@@ -191,7 +190,7 @@ install: all
 
 clean:
 	rm -rf $(EXE_TGT) $(LIB_TGT) $(EXTRA_CLEAN) tmp docker
-	make dist-clean doc-clean test-clean
+	make dist-clean doc-clean
 
 centos-docker: all
 	[[ -n "$(OS_CYGWIN)" ]] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=.; \
@@ -212,9 +211,6 @@ $(ADOC_IMG_DOCKERFILE): Makefile
 doc-clean:
 	rm -f $(DOC_HTML_LIST) $(GEN_PNG_LIST) doc/$(CHANGELOG_ADOC_FILE)
 	rm -rf .asciidoctor
-
-test-clean:
-	rm -rf test/log test/notif test/run test/tmp.* test/test.prop
 
 #DOCKERFILE###FROM centos
 #DOCKERFILE###
