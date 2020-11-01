@@ -5,7 +5,7 @@ include::attributes[]
 
 == Unstable
 
-* {url-home-soaf}/download/dev[devel version ({DIST_VERSION})^]
+* {url-home-soaf}/download/dev[development version^]
 
 == Stable
 

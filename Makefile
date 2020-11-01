@@ -144,7 +144,7 @@ doc/$(CHANGELOG_ADOC_FILE): $(CHANGELOG_ADOC_FILE)
 	[[ -n "$(OS_CYGWIN)" ]] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=.; \
 	docker run -v "$$SRC_VOL":/documents $(ASCIIDOCTOR_DOCKER_IMG) \
 	asciidoctor -r asciidoctor-diagram -o $@ \
-	-a DIST_VERSION=$(DIST_VERSION) $<
+	-a revnumber=$(DIST_VERSION) $<
 
 dist-gz:
 	make dist DIST_TAR_Z="z" DIST_TAR_EXT=".tar.gz"
