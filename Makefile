@@ -34,6 +34,8 @@ endif
 
 MAKEFILE_LIST = Makefile Makefile.cfg
 
+SRC_LIST_ALL = $(SRC_GENERATED_LIST) $(SRC_LIST)
+
 EXTRA_DIST_ALL = $(EXTRA_DIST) $(EXTRA_ADOC_INCLUDE)
 DIST_FILE_LIST = $(MAKEFILE_LIST) $(SRC_LIST) $(ADOC_LIST) $(EXTRA_DIST_ALL)
 
@@ -58,6 +60,7 @@ usage:
 	@echo "  EXE_TGT = [ executable target ] or"
 	@echo "  LIB_TGT = [ library target ]"
 	@echo "  SRC_LIST = [ source files ]"
+	@echo "  SRC_GENERATED_LIST = [ generated source files ]"
 	@echo "  ADOC_LIST = [ adoc files ]"
 	@echo "  GEN_PNG_LIST = [ generated PNG files ]"
 	@echo "  DIST_NAME = [ distribution name ]"
@@ -113,9 +116,9 @@ src/define_.sh: $(MAKEFILE_LIST)
 #DEFINE_###
 #DEFINE_###readonly @DIST_DEFINE_VAR_PREFIX@_CHANGELOG_ADOC_FILE=@CHANGELOG_ADOC_FILE@
 
-$(EXE_TGT) $(LIB_TGT): $(SRC_LIST) $(MAKEFILE_LIST)
+$(EXE_TGT) $(LIB_TGT): $(SRC_LIST_ALL) $(MAKEFILE_LIST)
 	@echo "#!/bin/sh" > $@
-	@for f in $(SRC_LIST); \
+	@for f in $(SRC_LIST_ALL); \
 	do \
 		echo "Cat: [$$f]->[$@]"; \
 		if [ "$$f" = "Makefile" ]; \
@@ -189,7 +192,8 @@ install: all
 	done
 
 clean:
-	rm -rf $(EXE_TGT) $(LIB_TGT) $(EXTRA_CLEAN) tmp docker
+	rm -rf $(SRC_GENERATED_LIST) $(EXE_TGT) $(LIB_TGT) $(EXTRA_CLEAN)
+	rm -rf tmp docker
 	make dist-clean doc-clean
 
 centos-docker: all
