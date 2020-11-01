@@ -11,7 +11,7 @@ soaf_usage_init_() {
 	soaf_no_prepenv_action $SOAF_USAGE_ACTION
 }
 
-soaf_create_module soaf.core.usage $SOAF_VERSION "" "" soaf_usage_init_
+soaf_create_module soaf.core.usage $SOAF_DIST_VERSION "" "" soaf_usage_init_
 
 ################################################################################
 ################################################################################

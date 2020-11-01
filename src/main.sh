@@ -23,16 +23,13 @@ soaf_main_create_prj_() {
 	local SRC_DIR=$SOAF_PRJ_DIR/src
 	soaf_mkdir $SRC_DIR $SOAF_LOG_INFO $SOAF_MAIN_LOG_NAME
 	### src
-	soaf_main_tpl_version $SOAF_PRJ_NAME > $SRC_DIR/version.sh
 	soaf_main_tpl_main $SOAF_PRJ_NAME > $SRC_DIR/main.sh
-	cat $0 > $SRC_DIR/$SOAF_NAME
+	cat $SOAF_APPLI_SH_FILE > $SRC_DIR/$SOAF_DIST_NAME
 	### Makefile
 	soaf_main_tpl_makefile_cfg $SOAF_PRJ_NAME > $SOAF_PRJ_DIR/Makefile.cfg
 	soaf_main_tpl_makefile > $SOAF_PRJ_DIR/Makefile
 	### ChangeLog
-	local CHANGELOG_ADOC_FILE=$(grep "^CHANGELOG_ADOC_FILE = " \
-		$SOAF_APPLI_SH_FILE | awk '{print $3}')
-	touch $SOAF_PRJ_DIR/$CHANGELOG_ADOC_FILE
+	touch $SOAF_PRJ_DIR/$SOAF_CHANGELOG_ADOC_FILE
 }
 
 ################################################################################
@@ -58,7 +55,7 @@ soaf_main_() {
 ################################################################################
 ################################################################################
 
-if [ "$(basename $0)" = "$SOAF_NAME" ]
+if [ "$(basename $0)" = "$SOAF_DIST_NAME" ]
 then
 	soaf_main_
 fi

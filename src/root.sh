@@ -23,7 +23,7 @@ soaf_root_exit_() {
 		soaf_rm $SOAF_TMP_DIR "" $SOAF_ROOT_LOG_NAME
 }
 
-soaf_create_module soaf.core.root $SOAF_VERSION "" \
+soaf_create_module soaf.core.root $SOAF_DIST_VERSION "" \
 	soaf_root_cfg_ soaf_root_init_ "" "" "" soaf_root_exit_ "" $SOAF_POS_PRE
 
 ################################################################################

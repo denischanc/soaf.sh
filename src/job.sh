@@ -29,7 +29,7 @@ soaf_job_init_() {
 	fi
 }
 
-soaf_create_module soaf.extra.job $SOAF_VERSION soaf_job_static_ \
+soaf_create_module soaf.extra.job $SOAF_DIST_VERSION soaf_job_static_ \
 	"" soaf_job_init_
 
 ################################################################################

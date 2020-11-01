@@ -11,7 +11,7 @@ soaf_theme_cfg_() {
 	soaf_theme_dft_
 }
 
-soaf_create_module soaf.core.theme $SOAF_VERSION "" soaf_theme_cfg_
+soaf_create_module soaf.core.theme $SOAF_DIST_VERSION "" soaf_theme_cfg_
 
 ################################################################################
 ################################################################################

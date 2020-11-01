@@ -42,7 +42,7 @@ soaf_state_init_() {
 	fi
 }
 
-soaf_create_module soaf.extra.state $SOAF_VERSION soaf_state_static_ \
+soaf_create_module soaf.extra.state $SOAF_DIST_VERSION soaf_state_static_ \
 	"" soaf_state_init_
 
 ################################################################################

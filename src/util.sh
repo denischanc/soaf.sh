@@ -16,7 +16,7 @@ soaf_util_init_() {
 	soaf_info_add_var SOAF_NOEXEC_PROG_LIST
 }
 
-soaf_create_module soaf.core.util $SOAF_VERSION "" "" soaf_util_init_
+soaf_create_module soaf.core.util $SOAF_DIST_VERSION "" "" soaf_util_init_
 
 ################################################################################
 ################################################################################

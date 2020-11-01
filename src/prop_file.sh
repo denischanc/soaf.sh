@@ -25,7 +25,7 @@ soaf_pf_init_() {
 	soaf_info_add_var SOAF_PF_FILE
 }
 
-soaf_create_module soaf.extra.pf $SOAF_VERSION soaf_pf_static_ \
+soaf_create_module soaf.extra.pf $SOAF_DIST_VERSION soaf_pf_static_ \
 	soaf_pf_cfg_ soaf_pf_init_
 
 ################################################################################

@@ -102,7 +102,7 @@ soaf_log_prepenv_() {
 	SOAF_LOG_STATE=$SOAF_LOG_ALIVE_S
 }
 
-soaf_create_module soaf.core.log $SOAF_VERSION "" \
+soaf_create_module soaf.core.log $SOAF_DIST_VERSION "" \
 	soaf_log_cfg_ soaf_log_init_ soaf_log_prepenv_ "" "" "" "" $SOAF_POS_PRE
 
 ################################################################################

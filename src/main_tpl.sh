@@ -1,25 +1,10 @@
 ################################################################################
 ################################################################################
 
-soaf_main_tpl_version() {
-	local PRJ_NAME=$1
-	soaf_to_upper_var $PRJ_NAME
-	local UPPER_VAR_NAME=$SOAF_RET
-	cat << _EOF_
-################################################################################
-################################################################################
-
-${UPPER_VAR_NAME}_NAME="$PRJ_NAME"
-${UPPER_VAR_NAME}_VERSION="1.0.0-dev"
-_EOF_
-}
-
-################################################################################
-################################################################################
-
 soaf_main_tpl_main() {
 	local PRJ_NAME=$1
-	soaf_to_var $PRJ_NAME
+	local APPLI_NAME=${PRJ_NAME%.sh}
+	soaf_to_var $APPLI_NAME
 	declare -u UPPER_VAR_NAME=$SOAF_RET
 	declare -l LOWER_VAR_NAME=$SOAF_RET
 	local EOF_NAME="_EOF_"
@@ -27,9 +12,9 @@ soaf_main_tpl_main() {
 ################################################################################
 ################################################################################
 
-${UPPER_VAR_NAME}_LOG_NAME="$PRJ_NAME"
+${UPPER_VAR_NAME}_LOG_NAME="$APPLI_NAME"
 
-${UPPER_VAR_NAME}_APPLI_NATURE="$PRJ_NAME.appli"
+${UPPER_VAR_NAME}_APPLI_NATURE="$APPLI_NAME.appli"
 
 ${UPPER_VAR_NAME}_HW_ACTION="hello_world"
 
@@ -73,21 +58,19 @@ _EOF_
 ################################################################################
 
 soaf_main_tpl_makefile_cfg() {
+	local PRJ_NAME=$1
 	cat << _EOF_
 
 SRC_DIR = src
-VER_FILE = \$(SRC_DIR)/version.sh
 
-DIST_NAME = \\
-  \$(shell grep "_NAME=" \$(VER_FILE) | awk -F\" '{print \$\$2}')
-DIST_VERSION = \\
-  \$(shell grep "_VERSION=" \$(VER_FILE) | awk -F\" '{print \$\$2}')
+DIST_NAME = $PRJ_NAME
+DIST_VERSION = 1.0.0-dev
 
 EXE_TGT = \$(SRC_DIR)/\$(DIST_NAME)
 
 SRC_LIST = \\
-  \$(SRC_DIR)/$SOAF_NAME \\
-  \$(SRC_DIR)/version.sh \\
+  \$(SRC_DIR)/$SOAF_DIST_NAME \\
+  \$(SRC_DIR)/define_.sh \\
   \$(SRC_DIR)/main.sh
 
 EXTRA_DIST = \$(CHANGELOG_ADOC_FILE)

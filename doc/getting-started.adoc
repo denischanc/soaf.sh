@@ -1,0 +1,40 @@
+soaf.sh : getting started
+=========================
+
+include::attributes[]
+
+== Download soaf.sh
+
+See {url-home-soaf}/download.html[download page].
+
+== Install soaf.sh
+
+See {url-home-soaf}/install.html[install page].
+
+== Hello-world project
+
+.Creation
+[source, shell]
+----
+$> soaf.sh ACTION=create_prj PRJ_DIR=hello-world
+$> cd hello-world
+$> make all
+----
+
+.Test
+[source, shell]
+----
+### Display usage
+$> ./src/hello-world
+### Action hello_world
+$> ./src/hello-world ACTION=hello_world NAME=yourname
+----
+
+.Installation
+[source, shell]
+----
+$> make install INSTALL_DIR=/usr/local/hello-world
+$> /usr/local/hello-world/bin/hello-world
+----
+
+To continue, see {url-home-soaf}/docs.html[docs page].

@@ -16,7 +16,7 @@ soaf_notif_mail_cfg_() {
 	SOAF_NOTIF_MAIL_CMD=mail
 }
 
-soaf_create_module soaf.extra.notif.mail $SOAF_VERSION \
+soaf_create_module soaf.extra.notif.mail $SOAF_DIST_VERSION \
 	soaf_notif_mail_static_ soaf_notif_mail_cfg_
 
 ################################################################################

@@ -7,12 +7,12 @@ readonly SOAF_VERSION_ACTION="version"
 ################################################################################
 
 soaf_version_init_() {
-	soaf_info_add_var SOAF_VERSION
+	soaf_info_add_var SOAF_DIST_VERSION
 	soaf_create_action $SOAF_VERSION_ACTION soaf_version_ "" $SOAF_POS_PRE
 	soaf_no_prepenv_action $SOAF_VERSION_ACTION
 }
 
-soaf_create_module soaf.core.version $SOAF_VERSION "" "" soaf_version_init_
+soaf_create_module soaf.core.version $SOAF_DIST_VERSION "" "" soaf_version_init_
 
 ################################################################################
 ################################################################################

@@ -16,7 +16,7 @@ soaf_dis_cfg_() {
 	soaf_var_add_unsubst "SOAF_DISPLAY_TXT_PRE_3"
 }
 
-soaf_create_module soaf.core.display $SOAF_VERSION "" soaf_dis_cfg_
+soaf_create_module soaf.core.display $SOAF_DIST_VERSION "" soaf_dis_cfg_
 
 ################################################################################
 ################################################################################

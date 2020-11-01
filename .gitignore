@@ -1,5 +1,6 @@
 soaf.sh-*.tar.*
 src/soaf.sh
+src/define_.sh
 test/log
 test/notif
 test/run
