@@ -61,17 +61,16 @@ soaf_main_tpl_makefile_cfg() {
 	local PRJ_NAME=$1
 	cat << _EOF_
 
-SRC_DIR = src
-
 DIST_NAME = $PRJ_NAME
 DIST_VERSION = 1.0.0-dev
 
-EXE_TGT = \$(SRC_DIR)/\$(DIST_NAME)
+EXE_TGT = src/\$(DIST_NAME)
 
 SRC_LIST = \\
-  \$(SRC_DIR)/$SOAF_DIST_NAME \\
-  \$(SRC_DIR)/define_.sh \\
-  \$(SRC_DIR)/main.sh
+  src/$SOAF_DIST_NAME \\
+  src/main.sh
+
+SRC_GENERATED_LIST = src/define_.sh
 
 EXTRA_DIST = \$(CHANGELOG_ADOC_FILE)
 _EOF_
