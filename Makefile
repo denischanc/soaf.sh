@@ -1,5 +1,5 @@
 
-.PHONY: usage all init exe_lib_tgt doc
+.PHONY: usage info all init exe_lib_tgt doc
 .PHONY: dist-gz dist-bz dist-xz dist dist-clean
 .PHONY: install clean centos-docker
 .PHONY: asciidoctor-docker-image do-asciidoctor-docker-image doc-clean
@@ -13,8 +13,15 @@ ifneq ($(MAKECMDGOALS),usage)
 include Makefile.cfg
 endif
 
+CHANGELOG_ADOC_FILE = ChangeLog.adoc
+
 ifeq ($(ADOC_LIST),)
 ADOC_LIST = $(wildcard doc/*.adoc)
+ifeq ($(wildcard doc/$(CHANGELOG_ADOC_FILE)),)
+ifeq ($(wildcard $(CHANGELOG_ADOC_FILE)),$(CHANGELOG_ADOC_FILE))
+ADOC_LIST += doc/$(CHANGELOG_ADOC_FILE)
+endif
+endif
 endif
 DOC_HTML_LIST = $(ADOC_LIST:.adoc=.html)
 
@@ -42,8 +49,6 @@ DIST_FILE_LIST = $(MAKEFILE_LIST) $(SRC_LIST) $(ADOC_LIST) $(EXTRA_DIST_ALL)
 ASCIIDOCTOR_DOCKER_IMG = $(USER)/asciidoctor
 ADOC_IMG_DOCKERFILE = docker/doc/image/Dockerfile
 
-CHANGELOG_ADOC_FILE = ChangeLog.adoc
-
 DIST_DEFINE_VAR_PREFIX = $(shell echo $(patsubst %.sh,%,$(DIST_NAME)) | \
 	sed -e "s/[^a-zA-Z0-9]/_/g" | tr '[a-z]' '[A-Z]')
 
@@ -53,6 +58,10 @@ DIST_DEFINE_SUBST_VAR_LIST = DIST_DEFINE_VAR_PREFIX DIST_NAME DIST_VERSION \
 	DIST_DEFINE_DATETIME CHANGELOG_ADOC_FILE
 DIST_DEFINE_SED_ARGS = $(foreach var,$(DIST_DEFINE_SUBST_VAR_LIST), \
 	-e "s!@$(var)@!$($(var))!g")
+
+INFO_VAR_LIST = EXE_TGT LIB_TGT SRC_LIST SRC_GENERATED_LIST ADOC_LIST \
+	GEN_PNG_LIST DIST_NAME DIST_VERSION EXTRA_DIST EXTRA_CLEAN \
+	EXTRA_ADOC_INCLUDE
 
 usage:
 	@echo "Create 'Makefile.cfg' file with :"
@@ -73,8 +82,8 @@ usage:
 	@echo "              dist|install|clean|centos-docker]"
 	@echo
 	@echo "  usage : display this usage (default)"
+	@echo "  info : display infos (variable values)"
 	@echo "  all : execute targets with *"
-	@echo "  init (*) : initialize the project"
 	@echo "  exe_lib_tgt (*) : create '$(EXE_TGT) $(LIB_TGT)'"
 	@echo "  doc (*) : create documentation"
 	@echo "  dist (= dist-xz) : create distribution with format xz"
@@ -84,17 +93,10 @@ usage:
 	@echo "  clean : clean created files/directories"
 	@echo "  centos-docker : start centos container"
 
-all:
-	@for tgt in init exe_lib_tgt doc; \
-	do \
-		make $$tgt; \
-	done
+info:
+	@$(foreach var,$(INFO_VAR_LIST),echo "$(var)=[$($(var))]";)
 
-init:
-	[ -f $(CHANGELOG_ADOC_FILE) -a -d doc -a \
-		! -f doc/$(CHANGELOG_ADOC_FILE) ] && \
-	cp $(CHANGELOG_ADOC_FILE) doc || \
-	true
+all: exe_lib_tgt doc
 
 exe_lib_tgt: $(EXE_TGT) $(LIB_TGT)
 
