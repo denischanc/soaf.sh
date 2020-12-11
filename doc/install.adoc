@@ -1,9 +1,12 @@
 Install soaf.sh
 ===============
+Denis Chancogne <denis.chancogne@free.fr>
 
 include::attributes[]
 
-You must {url-home-soaf}/download.html[download^] a distribution :
+include::link-site[]
+
+You must link:download.html[download^] a distribution :
 *soaf.sh-x.y.z.tar.xz* for example. You want to install soaf.sh
 in the directory : */usr/local/soaf.sh* for example.
 
