@@ -6,8 +6,8 @@ include::attributes[]
 
 include::link-site[]
 
-You must link:download.html[download^] a distribution :
-*soaf.sh-x.y.z.tar.xz* for example. You want to install soaf.sh
+First, you need to link:download.html[download^] a distribution :
+*soaf.sh-x.y.z.tar.xz* for example. Then, if you want to install it
 in the directory : */usr/local/soaf.sh* for example.
 
 .Installation

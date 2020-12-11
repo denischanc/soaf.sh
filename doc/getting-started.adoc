@@ -16,7 +16,7 @@ See link:install.html[install page].
 
 == Hello-world project
 
-.Creation
+.Creation and compilation
 [source, shell]
 ----
 $> soaf.sh ACTION=create_prj PRJ_DIR=hello-world
@@ -30,7 +30,7 @@ $> make all
 ### Display usage
 $> ./src/hello-world
 ### Action hello_world
-$> ./src/hello-world ACTION=hello_world NAME=yourname
+$> ./src/hello-world ACTION=hello_world NAME=[your name]
 ----
 
 .Installation
