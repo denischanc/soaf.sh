@@ -40,4 +40,4 @@ $> make install INSTALL_DIR=/usr/local/hello-world
 $> /usr/local/hello-world/bin/hello-world
 ----
 
-To continue, see link:docs.html[docs page].
+To continue, see link:user-manual.html[user manual].

@@ -15,5 +15,5 @@ soaf is a library to implement shell application.
 * link:download.html[Download]
 * link:install.html[Install]
 * link:getting-started.html[Getting started]
-* link:docs.html[Docs]
+* link:user-manual.html[User manual]
 * link:ChangeLog.html[ChangeLog^]

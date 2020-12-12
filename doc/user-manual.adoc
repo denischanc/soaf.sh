@@ -1,0 +1,42 @@
+soaf.sh user manual
+===================
+Denis Chancogne <denis.chancogne@free.fr>
+:toc: left
+
+include::attributes[]
+
+include::link-site[]
+
+== States
+
+Engine execute following states and update *SOAF_ENGINE_STATE* variable.
+
+[ditaa, states]
+----
+/-------------------------------------------------------\
+| Configure extern files                                |
+| cBLU                                                  |
+| Use  SOAF_ENGINE_EXT_GLOB_DIR SOAF_ENGINE_EXT_LOC_DIR |
+|      SOAF_ENGINE_EXT_ALL_DIR                          |
+\---------------------------+---------------------------/
+                            |
+                            v
+/-------------------------------------------------------\
+| Source debug file(s)                                  |
+| cBLU                                                  |
+| Use  SOAF_ENGINE_EXT_DEBUG_FILE                       |
+\---------------------------+---------------------------/
+                            |
+                            v
+/-------------------------------------------------------\
+| Source module file(s) and resolve dependences         |
+| cBLU                                                  |
+| Use  SOAF_ENGINE_EXT_MODULE_FILE                      |
+\---------------------------+---------------------------/
+----
+
+== Logging
+
+== Coding rules
+
+== Debugging

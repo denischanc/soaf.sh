@@ -9,5 +9,7 @@ test/ext
 test/test.prop
 doc/*.html
 doc/ChangeLog.adoc
+doc/.asciidoctor
+doc/states.png
 tmp
 docker
