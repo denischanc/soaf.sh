@@ -216,7 +216,7 @@ $(ADOC_IMG_DOCKERFILE): Makefile
 
 doc-clean:
 	rm -f $(DOC_HTML_LIST) $(GEN_PNG_LIST) doc/$(CHANGELOG_ADOC_FILE)
-	rm -rf .asciidoctor
+	rm -rf doc/.asciidoctor
 
 #DOCKERFILE###FROM centos
 #DOCKERFILE###
