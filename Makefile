@@ -144,7 +144,7 @@ doc/$(CHANGELOG_ADOC_FILE): $(CHANGELOG_ADOC_FILE)
 
 %.html: %.adoc $(EXTRA_ADOC_INCLUDE)
 	[[ -n "$(OS_CYGWIN)" ]] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=.; \
-	docker run -v "$$SRC_VOL":/documents $(ASCIIDOCTOR_DOCKER_IMG) \
+	docker run --rm -v "$$SRC_VOL":/documents $(ASCIIDOCTOR_DOCKER_IMG) \
 	asciidoctor -r asciidoctor-diagram -o $@ \
 	-a revnumber=$(DIST_VERSION) $<
 
