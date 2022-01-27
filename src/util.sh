@@ -241,7 +241,7 @@ soaf_fn_args_check_pid() {
 	local DO_FN_ARGS=
 	if [ -n "$PID" ]
 	then
-		if [ -d /proc/$PID ]
+		if grep -qs "$SOAF_PROC_BASENAME" /proc/$PID/cmdline
 		then
 			RET=$SOAF_IN_PROG_RET
 		else

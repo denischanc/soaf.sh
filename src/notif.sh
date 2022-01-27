@@ -63,7 +63,7 @@ soaf_notif_in_file_() {
 
 soaf_notif() {
 	local MSG=$1
-	local PROG=$(basename $0)
+	local PROG=$SOAF_PROC_BASENAME
 	local HOST=$(hostname -f)
 	local nature
 	for nature in $SOAF_NOTIF_NATURE_LIST
