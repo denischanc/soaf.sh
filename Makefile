@@ -47,7 +47,6 @@ EXTRA_DIST_ALL = $(EXTRA_DIST) $(EXTRA_ADOC_INCLUDE)
 DIST_FILE_LIST = $(MAKEFILE_LIST) $(SRC_LIST) $(ADOC_LIST) $(EXTRA_DIST_ALL)
 
 ASCIIDOCTOR_DOCKER_IMG = $(USER)/asciidoctor
-ADOC_IMG_DOCKERFILE = docker/doc/image/Dockerfile
 
 DIST_DEFINE_VAR_PREFIX = $(shell echo $(patsubst %.sh,%,$(DIST_NAME)) | \
 	sed -e "s/[^a-zA-Z0-9]/_/g" | tr '[a-z]' '[A-Z]')
@@ -143,7 +142,7 @@ doc/$(CHANGELOG_ADOC_FILE): $(CHANGELOG_ADOC_FILE)
 	cp -f $< $@
 
 %.html: %.adoc $(EXTRA_ADOC_INCLUDE)
-	[[ -n "$(OS_CYGWIN)" ]] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=.; \
+	[ -n "$(OS_CYGWIN)" ] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=$$PWD; \
 	docker run --rm -v "$$SRC_VOL":/documents $(ASCIIDOCTOR_DOCKER_IMG) \
 	asciidoctor -r asciidoctor-diagram -o $@ \
 	-a revnumber=$(DIST_VERSION) $<
@@ -195,24 +194,20 @@ install: all
 
 clean:
 	rm -rf $(SRC_GENERATED_LIST) $(EXE_TGT) $(LIB_TGT) $(EXTRA_CLEAN)
-	rm -rf tmp docker
+	rm -rf tmp
 	make dist-clean doc-clean
 
 centos-docker: all
-	[[ -n "$(OS_CYGWIN)" ]] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=.; \
+	[ -n "$(OS_CYGWIN)" ] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=$$PWD; \
 	docker run -it -v "$$SRC_VOL":/home/soaf centos
 
 asciidoctor-docker-image:
 	@[ -z "$$(docker image ls -q $(ASCIIDOCTOR_DOCKER_IMG))" ] && \
 	make do-asciidoctor-docker-image || true
 
-do-asciidoctor-docker-image: $(ADOC_IMG_DOCKERFILE)
-	cat $(ADOC_IMG_DOCKERFILE) | \
+do-asciidoctor-docker-image: Makefile
+	TAG=DOCKERFILE; grep "^#$$TAG" Makefile | sed -e "s/^#$$TAG###//" | \
 	docker build -t $(ASCIIDOCTOR_DOCKER_IMG) -
-
-$(ADOC_IMG_DOCKERFILE): Makefile
-	mkdir -p $$(dirname $@)
-	TAG=DOCKERFILE; grep "^#$$TAG" Makefile | sed -e "s/^#$$TAG###//" > $@
 
 doc-clean:
 	rm -f $(DOC_HTML_LIST) $(GEN_PNG_LIST) doc/$(CHANGELOG_ADOC_FILE)
