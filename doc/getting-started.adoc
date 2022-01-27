@@ -6,10 +6,6 @@ include::attributes[]
 
 include::link-site[]
 
-== Download soaf.sh
-
-See link:download.html[download page].
-
 == Install soaf.sh
 
 See link:install.html[install page].

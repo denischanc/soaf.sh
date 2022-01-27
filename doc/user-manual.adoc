@@ -7,7 +7,61 @@ include::attributes[]
 
 include::link-site[]
 
-== States
+== How it works
+
+=== Create application
+
+First, you create your application nature (*soaf_create_appli_nature*), as
+arguments functions that define lifecycle of your application.
+
+Lifecycle is defined by following states :
+
+* cfg
+* init
+* prepenv
+* pre_action
+* post_action
+* exit
+
+.cfg state
+****
+This is the configuration state. In this state, you must define values
+of variables.
+****
+
+.init state
+****
+This is the init state. In this state, you must create natures that will be
+used later, create actions of your application.
+****
+
+.prepenv state
+****
+This is the prepare environment state. In this state, you must prepare your
+environment, create directories, files required, ...
+****
+
+.pre_action state
+****
+This is the pre action state. In this state, you do all stuff before action
+execution.
+****
+
+.post_action state
+****
+This is the post action state. In this state, you do all stuff after action
+execution.
+****
+
+.exit state
+****
+This is the exit state. In this state, you do all stuff before application
+exiting.
+****
+
+=== Create action
+
+== Engine
 
 Engine execute following states and update *SOAF_ENGINE_STATE* variable.
 

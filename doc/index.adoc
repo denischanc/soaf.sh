@@ -10,7 +10,7 @@ include::link-site[]
 
 soaf is a library to implement shell application.
 
-== Links
+== Summary
 
 * link:download.html[Download]
 * link:install.html[Install]
