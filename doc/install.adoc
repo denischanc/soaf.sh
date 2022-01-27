@@ -13,7 +13,7 @@ in the directory : */usr/local/soaf.sh* for example.
 .Installation
 [source, shell]
 ----
-$> wget {url-home-soaf}/download/x.y.z/soaf.sh-x.y.z.tar.xz
+$> wget $URL_SOAF_HOME/download/x.y.z/soaf.sh-x.y.z.tar.xz
 $> tar xf soaf.sh-x.y.z.tar.xz
 $> cd soaf.sh-x.y.z
 $> make install INSTALL_DIR=/usr/local/soaf.sh
@@ -23,6 +23,8 @@ $> export SOAF_HOME=/usr/local/soaf.sh
 $> export PATH=$PATH:$SOAF_HOME/bin
 $> soaf.sh
 ----
+
+NOTE: _URL_SOAF_HOME_=*{url-soaf-home}*
 
 NOTE: To be able to execute soaf.sh from everywhere in future shell sessions,
 you need to keep bin installation directory in your PATH, so you need to
