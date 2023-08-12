@@ -445,7 +445,8 @@ soaf_state_inerr_step_main_() {
 			MSG+=" step [$SOAF_STATE_STEP_INERR]"
 			MSG+=" (touch [$REWORK_FILE] to rework)."
 			soaf_log_err "$MSG" $SOAF_STATE_LOG_NAME
-			soaf_notif "$MSG"
+			soaf_map_get $CUR_STATE $SOAF_STATE_NOTIF_ON_ERR_ATTR
+			[ -n "$SOAF_RET" ] && soaf_notif "$MSG"
 			SOAF_STATE_RET="OK"
 		fi
 	fi
