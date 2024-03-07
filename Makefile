@@ -1,5 +1,5 @@
 
-.PHONY: usage info all init exe_lib_tgt doc
+.PHONY: usage info all exe_lib_tgt doc
 .PHONY: dist-gz dist-bz dist-xz dist dist-clean
 .PHONY: install clean centos-docker
 .PHONY: asciidoctor-docker-image do-asciidoctor-docker-image doc-clean
@@ -77,8 +77,8 @@ usage:
 	@echo "  EXTRA_CLEAN = [ extra clean files ]"
 	@echo "  EXTRA_ADOC_INCLUDE = [ extra adoc include files ]"
 	@echo
-	@echo "Usage : make [usage|all|init|exe_lib_tgt|doc|"
-	@echo "              dist|install|clean|centos-docker]"
+	@echo "Usage : make [usage|info|all|exe_lib_tgt|doc|dist|dist-gz|"
+	@echo "              dist-bz|install|clean|centos-docker]"
 	@echo
 	@echo "  usage : display this usage (default)"
 	@echo "  info : display infos (variable values)"

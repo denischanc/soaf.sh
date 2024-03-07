@@ -16,7 +16,7 @@ TEST_TEST_PROP="test"
 
 SOAF_ENGINE_EXT_ALL_DIR="$TEST_HOME/ext $TEST_HOME"
 
-make -C $TEST_HOME/.. init src/soaf.sh > /dev/null 2>&1
+make -C $TEST_HOME/.. src/soaf.sh > /dev/null 2>&1
 . $TEST_HOME/../src/soaf.sh
 
 test_cfg() {
