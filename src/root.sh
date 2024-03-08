@@ -19,8 +19,11 @@ soaf_root_init_() {
 }
 
 soaf_root_exit_() {
-	[ -d $SOAF_TMP_DIR -a -z "$SOAF_KEEP_TMP_DIR" ] && \
-		soaf_rm $SOAF_TMP_DIR "" $SOAF_ROOT_LOG_NAME
+	if [ -n "$SOAF_TMP_DIR" -a -z "$SOAF_KEEP_TMP_DIR" ]
+	then
+		[ -d $SOAF_TMP_DIR ] && \
+			soaf_rm $SOAF_TMP_DIR "" $SOAF_ROOT_LOG_NAME
+	fi
 }
 
 soaf_create_module soaf.core.root $SOAF_DIST_VERSION "" \
