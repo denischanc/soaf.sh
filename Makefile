@@ -1,13 +1,8 @@
 
 .PHONY: usage info all exe_lib_tgt doc
 .PHONY: dist-gz dist-bz dist-xz dist dist-clean
-.PHONY: install clean centos-docker
+.PHONY: install clean alpine-docker
 .PHONY: asciidoctor-docker-image do-asciidoctor-docker-image doc-clean
-
-OS = $(shell uname -o)
-ifeq ($(OS),Cygwin)
-OS_CYGWIN = T
-endif
 
 ifneq ($(MAKECMDGOALS),usage)
 include Makefile.cfg
@@ -46,7 +41,7 @@ SRC_LIST_ALL = $(SRC_GENERATED_LIST) $(SRC_LIST)
 EXTRA_DIST_ALL = $(EXTRA_DIST) $(EXTRA_ADOC_INCLUDE)
 DIST_FILE_LIST = $(MAKEFILE_LIST) $(SRC_LIST) $(ADOC_LIST) $(EXTRA_DIST_ALL)
 
-ASCIIDOCTOR_DOCKER_IMG = $(USER)/asciidoctor
+ASCIIDOCTOR_DOCKER_IMG = soaf/asciidoctor
 
 DIST_DEFINE_VAR_PREFIX = $(shell echo $(patsubst %.sh,%,$(DIST_NAME)) | \
 	sed -e "s/[^a-zA-Z0-9]/_/g" | tr '[a-z]' '[A-Z]')
@@ -78,7 +73,7 @@ usage:
 	@echo "  EXTRA_ADOC_INCLUDE = [ extra adoc include files ]"
 	@echo
 	@echo "Usage : make [usage|info|all|exe_lib_tgt|doc|dist|dist-gz|"
-	@echo "              dist-bz|install|clean|centos-docker]"
+	@echo "              dist-bz|install|clean|alpine-docker]"
 	@echo
 	@echo "  usage : display this usage (default)"
 	@echo "  info : display infos (variable values)"
@@ -90,7 +85,7 @@ usage:
 	@echo "  dist-bz : create distribution with format bz2"
 	@echo "  install : install exe/lib in INSTALL_DIR directory"
 	@echo "  clean : clean created files/directories"
-	@echo "  centos-docker : start centos container"
+	@echo "  alpine-docker : start alpine container"
 
 info:
 	@$(foreach var,$(INFO_VAR_LIST),echo "$(var)=[$($(var))]";)
@@ -142,8 +137,8 @@ doc/$(CHANGELOG_ADOC_FILE): $(CHANGELOG_ADOC_FILE)
 	cp -f $< $@
 
 %.html: %.adoc $(EXTRA_ADOC_INCLUDE)
-	[ -n "$(OS_CYGWIN)" ] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=$$PWD; \
-	docker run --rm -v "$$SRC_VOL":/documents $(ASCIIDOCTOR_DOCKER_IMG) \
+	docker run --rm -v $$PWD:/ws -u $$(id -u):$$(id -g) \
+	-e HOME=/ws/.home -w /ws $(ASCIIDOCTOR_DOCKER_IMG) \
 	asciidoctor -r asciidoctor-diagram -o $@ \
 	-a revnumber=$(DIST_VERSION) $<
 
@@ -194,16 +189,17 @@ install: all
 
 clean:
 	rm -rf $(SRC_GENERATED_LIST) $(EXE_TGT) $(LIB_TGT) $(EXTRA_CLEAN)
-	rm -rf tmp
+	rm -rf tmp .home
 	make dist-clean doc-clean
 
-centos-docker: all
-	[ -n "$(OS_CYGWIN)" ] && SRC_VOL=$$(cygpath -ma .) || SRC_VOL=$$PWD; \
-	docker run -it -v "$$SRC_VOL":/home/soaf centos
+alpine-docker: all
+	docker run --rm -it -v $$PWD:/ws -u $$(id -u):$$(id -g) \
+	-e HOME=/ws/.home -w /ws alpine
 
 asciidoctor-docker-image:
-	@[ -z "$$(docker image ls -q $(ASCIIDOCTOR_DOCKER_IMG))" ] && \
-	make do-asciidoctor-docker-image || true
+	@if [ -z "$$(docker image ls -q $(ASCIIDOCTOR_DOCKER_IMG))" ]; then \
+		make do-asciidoctor-docker-image; \
+	else true; fi
 
 do-asciidoctor-docker-image: Makefile
 	TAG=DOCKERFILE; grep "^#$$TAG" Makefile | sed -e "s/^#$$TAG###//" | \
@@ -213,11 +209,9 @@ doc-clean:
 	rm -f $(DOC_HTML_LIST) $(GEN_PNG_LIST) doc/$(CHANGELOG_ADOC_FILE)
 	rm -rf doc/.asciidoctor
 
-#DOCKERFILE###FROM centos
+#DOCKERFILE###FROM alpine
 #DOCKERFILE###
-#DOCKERFILE###RUN yum install -y ruby java python2 graphviz
+#DOCKERFILE###RUN apk add ruby openjdk21 font-dejavu
 #DOCKERFILE###
 #DOCKERFILE###RUN gem install asciidoctor asciidoctor-pdf asciidoctor-diagram
 #DOCKERFILE###RUN gem install coderay pygments.rb
-#DOCKERFILE###
-#DOCKERFILE###WORKDIR /documents
